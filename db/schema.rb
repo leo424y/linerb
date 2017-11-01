@@ -12,6 +12,9 @@
 
 ActiveRecord::Schema.define(version: 20171101084434) do
 
+  # These are extensions that must be enabled in order to support this database
+  enable_extension "plpgsql"
+
   create_table "logs", force: :cascade do |t|
     t.string "area"
     t.integer "count"
