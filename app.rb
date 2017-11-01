@@ -23,7 +23,7 @@ post '/callback' do
       when Line::Bot::Event::MessageType::Text
         message = {
           type: 'text',
-          text: event.message['text']
+          text: "你提供的資訊是：#{event.message['text']} 謝謝你，我收到囉！明早向你報告統計結果"
         }
         client.reply_message(event['replyToken'], message)
       end
