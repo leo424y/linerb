@@ -1,5 +1,9 @@
 require 'sinatra'   # gem 'sinatra'
 require 'line/bot'  # gem 'line-bot-api'
+require "sinatra/activerecord"
+
+set :database, {adapter: "sqlite3", database: "linerb.sqlite3"}
+
 
 def client
   @client ||= Line::Bot::Client.new { |config|
@@ -22,9 +26,10 @@ post '/callback' do
       case event.type
       when Line::Bot::Event::MessageType::Text
         m = event.message['text'].split(' ')
+        Log.create(area: m[0], count: m[1])
         message = {
           type: 'text',
-          text: "你提供的資訊是：在#{m[0]}跑了#{m[1]}單。謝謝你，我收到囉！明早向你報告統計結果啦"
+          text: "你提供的資訊是：在#{m[0]}跑了#{m[1]}單。謝謝你，我收到囉！明早向你報告統計結果啦#{Log.last}"
         }
         client.reply_message(event['replyToken'], message)
       end
