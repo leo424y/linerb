@@ -2,8 +2,7 @@ require 'sinatra'   # gem 'sinatra'
 require 'line/bot'  # gem 'line-bot-api'
 require "sinatra/activerecord"
 
-set :database, {adapter: "sqlite3", database: "linerb.sqlite3"}
-
+set :database_file, "config/database.yml"
 
 def client
   @client ||= Line::Bot::Client.new { |config|
