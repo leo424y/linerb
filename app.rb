@@ -2,6 +2,8 @@ require 'sinatra'   # gem 'sinatra'
 require 'line/bot'  # gem 'line-bot-api'
 require "sinatra/activerecord"
 
+ActiveRecord::Base.establish_connection(ENV['DATABASE_URL'] || 'postgres://localhost/mydb')
+
 set :database_file, "config/database.yml"
 
 def client
