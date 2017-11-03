@@ -26,10 +26,12 @@ post '/callback' do
     when Line::Bot::Event::Message
       case event.type
       when Line::Bot::Event::MessageType::Text
-        Log.create(area: m[0], info: m[1])
 
         reply = case m
-        when /區/ then m = event.message['text'].split(%r{區\s*}); "#{m[0]}區 #{Log.where(area: m[0]).pluck(:info)}"
+        when /區/ then
+          m = event.message['text'].split(%r{區\s*})
+          Log.create(area: m[0], info: m[1])
+          "#{m[0]}區 #{Log.where(area: m[0]).pluck(:info)}"
         when /你好/ then "😄"
         else ''
         end
