@@ -31,7 +31,7 @@ post '/callback' do
           end
         when /你好/ then "😄"
         else
-          tips = Log.where("info LIKE ?", "車禍")
+          tips = Log.where("info LIKE ?", "%車禍%")
           "#{tips.pluck(:area)}有車禍資訊，請小心#{tips.pluck(:info)}"
         end
 
