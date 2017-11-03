@@ -27,10 +27,10 @@ post '/callback' do
       case event.type
       when Line::Bot::Event::MessageType::Text
         m = event.message['text'].split(%r{區\s*})
-        Log.create(area: m[0], count: m[1])
+        Log.create(area: m[0], info: m[1])
 
         reply = case m[0]
-        when '西' then "你提供的資訊是：在#{m[0]}區發現#{m[1]}。謝謝你，我收到囉！想知道更多#{m[0]}區情報？請輸入：#{m[0]}區 #{Log.where(area: m[0]+'區').count}"
+        when '西' then "你提供的資訊是：在#{m[0]}區發現#{m[1]}。謝謝你，我收到囉！想知道更多#{m[0]}區情報？請輸入：#{m[0]}區 #{Log.where(area: m[0]+'區').pluck(:info)}"
         end
 
         message = {
