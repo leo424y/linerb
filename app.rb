@@ -29,10 +29,10 @@ post '/callback' do
             Log.create(area: m[0], info: m[1])
             "#{m[0]}區 #{Log.where(area: m[0]).order(id: :desc).pluck(:info)}"
           end
-        when /跑了/ then
+        when /我跑了/ then
           run_number = m.gsub(/[^0-9]/, '')
           Log.create(area: '跑單', info: run_number)
-          "目前跑#{run_number}單的伙伴，共有#{Log.where(info: run_number).count}人了，實在是太拼了，加油！"
+          "目前跑#{run_number}單的伙伴共有#{Log.where(info: run_number).count}人，大家實在是太拼了，加油！送餐平安，日日平安"
         when /你好/ then "😄"
         when /車禍/ then
           tips = Log.where("info LIKE ?", "%車禍%")
