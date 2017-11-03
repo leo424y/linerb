@@ -30,9 +30,11 @@ post '/callback' do
             "#{m[0]}區 #{Log.where(area: m[0]).order(id: :desc).pluck(:info)}"
           end
         when /你好/ then "😄"
-        else
+        when /車禍/ then
           tips = Log.where("info LIKE ?", "%車禍%")
-          "#{tips.pluck(:area)}有車禍資訊，請小心#{tips.pluck(:info)}"
+          "#{tips.pluck(:area)}區有車禍資訊，請小心#{tips.pluck(:info)}"
+        else
+          "請輸入OO區XXX(天候路況店家等有益大家的情報) ex. 北區下大雨 可一併看該區其它情報"
         end
 
         message = {
