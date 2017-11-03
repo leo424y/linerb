@@ -1,7 +1,7 @@
 require 'sinatra'   # gem 'sinatra'
 require 'line/bot'  # gem 'line-bot-api'
 require "sinatra/activerecord"
-require './config/environments'
+# require './config/environments'
 
 def client
   @client ||= Line::Bot::Client.new { |config|
