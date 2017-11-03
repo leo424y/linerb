@@ -33,7 +33,7 @@ post '/callback' do
           all_number = Log.group(:info).count.keys
           all_msg = ''
           all_number.each do |a|
-            all_msg << ("達#{a}單共#{Log.group(:info).count[a]}人" if a.is_i)
+            all_msg << ("達#{a}單共#{Log.group(:info).count[a]}人" if (a.to_f > 0))
           end
 
           run_number = m.gsub(/[^0-9]/, '')
