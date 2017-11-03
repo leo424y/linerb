@@ -19,6 +19,7 @@ GEM
     line-bot-api (1.2.2)
     minitest (5.10.3)
     mustermann (1.0.1)
+    pg (0.21.0)
     rack (2.0.3)
     rack-protection (2.0.0)
       rack
@@ -41,6 +42,7 @@ PLATFORMS
 
 DEPENDENCIES
   line-bot-api
+  pg
   rake
   sinatra
   sinatra-activerecord
