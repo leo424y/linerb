@@ -23,11 +23,11 @@ post '/callback' do
     when Line::Bot::Event::Message
       case event.type
       when Line::Bot::Event::MessageType::Text
-        m = event.message['text'].split(' ')
+        m = event.message['text'].split(%r{區\s*})
         # Log.create(area: m[0], count: m[1])
         message = {
           type: 'text',
-          text: "你提供的資訊是：在#{m[0]}跑了#{m[1]}單。謝謝你，我收到囉！明早向你報告統計結果啦"
+          text: "你提供的資訊是：在#{m[0]}發現#{m[1]}。謝謝你，我收到囉！明早向你報告統計結果啦"
         }
         client.reply_message(event['replyToken'], message)
       end
