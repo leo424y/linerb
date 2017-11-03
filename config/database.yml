@@ -5,13 +5,6 @@ development:
   password: 'yy'
   pool: 5
   timeout: 5000
-test:
-  adapter: postgresql
-  database: line_test
-  username: 'yy'
-  password: 'yy'
-  pool: 5
-  timeout: 5000
 
 production:
   adapter: postgresql
