@@ -31,7 +31,7 @@ post '/callback' do
         when /區/ then
           m = m.split(%r{區\s*})
           Log.create(area: m[0], info: m[1])
-          "#{m[0]}區 #{Log.where(area: m[0]).order(id: :desc).pluck(:info)}"
+          "#{m[0]}區 #{Log.where(area: m[0], created_at: (Date.today-1..Date.today)).order(id: :desc).pluck(:info)}"
         when /你好/ then "😄"
         else ''
         end
