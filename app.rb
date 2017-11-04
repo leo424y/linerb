@@ -27,7 +27,7 @@ post '/callback' do
           m = m.split(%r{區\s*})
           if m[1]
             Log.create(area: m[0], info: m[1])
-            "#{m[0]}區 #{Log.where(area: m[0]).order(id: :desc).pluck(:info)}"
+            "#{m[0]}區 #{Log.where(area: m[0]).order(id: :desc).pluck(:info).join('🚴')}"
           end
         when /我跑了/ then
           run_number = m.gsub(/[^0-9]/, '')
