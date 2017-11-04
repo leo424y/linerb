@@ -36,7 +36,7 @@ post '/callback' do
           all_number = Log.where(area: '跑單數').group(:info).count.keys
           all_msg = ''
           all_number.each do |a|
-            all_msg << ("達#{a}單共#{Log.group(:info).count[a]}人；")
+            all_msg << ("達#{a}單#{Log.group(:info).count[a]}人🚴")
           end
 
           "目前累計跑#{run_number}單的猴主人共有#{Log.where(info: run_number).count}人。#{all_msg} 讓🐵優猴繼續為你加油！🚴送餐平安，日日平安🚴"
