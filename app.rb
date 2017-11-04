@@ -33,7 +33,7 @@ post '/callback' do
           m = m.split(%r{我覺得\s*})
           if m[1]
             Log.create(area: '我覺得', info: m[1])
-            "猴主人們最近覺得#{Log.where(area: '我覺得').order(id: :desc).pluck(:info).join('🚴')}"
+            "猴主人們最近覺得：#{Log.where(area: '我覺得').order(id: :desc).pluck(:info).join('🚴')}"
           end
         when /我跑了/ then
           run_number = m.gsub(/[^0-9]/, '')
