@@ -45,7 +45,7 @@ post '/callback' do
           tips = Log.where("info LIKE ?", "%車禍%")
           "#{tips.pluck(:area)}區有車禍資訊，請小心#{tips.pluck(:info)}"
         else
-          "🍌請餵我【OO區X】(X是天候路況店家等情報) 例：東西南北區下大雨 可一併看該區其他情報🍌"
+          "🍌請餵我【OO區X】(X是天候路況店家等情報) 例：東西南北區下大雨 可一併看該區其他情報 🍌餵我【我跑了(數量)單】看看多少夥伴與你一樣拼🍌餵我【全區加油】為奔波的自己與彼此打氣！"
         end
 
         message = {
