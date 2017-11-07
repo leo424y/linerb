@@ -35,7 +35,8 @@ post '/callback' do
           m = m.split(%r{區\s*})
           if m[1]
             Log.create(area: m[0], info: m[1])
-            "#{m[0]}區 #{Log.where(area: m[0]).order(id: :desc).pluck(:info).join('🚴')}"
+
+            "#{m[0]}區 #{Log.where(area: m[0]).where("created_at >= ?", Time.zone.now.beginning_of_day).order(id: :desc).pluck(:info).join('🚴')}"
           end
         when /我覺得/ then
           m = m.split(%r{我覺得\s*})
