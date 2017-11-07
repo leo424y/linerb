@@ -32,6 +32,7 @@ post '/callback' do
         }
 
         client.reply_message(event['replyToken'], message)
+        Place.all.inspect
       when Line::Bot::Event::MessageType::Text
         m = event.message['text']
         reply = case m
