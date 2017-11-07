@@ -20,6 +20,14 @@ post '/callback' do
     case event
     when Line::Bot::Event::Message
       case event.type
+      when Line::Bot::Event::MessageType::Location
+        l = event.message['address']
+        message = {
+          type: 'address',
+          text: l
+        }
+
+        client.reply_message(event['replyToken'], message)
       when Line::Bot::Event::MessageType::Text
         m = event.message['text']
         reply = case m
