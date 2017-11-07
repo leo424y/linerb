@@ -23,7 +23,7 @@ post '/callback' do
       when Line::Bot::Event::MessageType::Location
         l = event.message['address']
         message = {
-          type: 'address',
+          type: 'text',
           text: l
         }
 
