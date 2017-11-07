@@ -28,7 +28,7 @@ post '/callback' do
         Place.create(address: l)
         message = {
           type: 'text',
-          text: Place.all.inspect
+          text: "你已回報位置：#{l}"
         }
 
         client.reply_message(event['replyToken'], message)
