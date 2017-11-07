@@ -29,7 +29,7 @@ post '/callback' do
         Place.create(address: l)
         message = {
           type: 'text',
-          text: "#{area}區 #{Log.where(area: area).where('created_at >= ?', (Time.now - 60*60*24*3) ).order(id: :desc).pluck(:info).join('🚴')}"
+          text: "#{area}區 #{Log.where(area: area).where('created_at >= ?', (Time.now - 60*60*24*7) ).order(id: :desc).pluck(:info).join('🚴')}"
         }
 
         client.reply_message(event['replyToken'], message)
@@ -47,7 +47,7 @@ post '/callback' do
           if m[1]
             Log.create(area: m[0], info: m[1])
 
-            "#{m[0]}區 #{Log.where(area: m[0]).where('created_at >= ?', (Time.now - 60*60*24*3) ).order(id: :desc).pluck(:info).join('🚴')}"
+            "#{m[0]}區 #{Log.where(area: m[0]).where('created_at >= ?', (Time.now - 60*60*24*7) ).order(id: :desc).pluck(:info).join('🚴')}"
           end
         when /我覺得/ then
           m = m.split(%r{我覺得\s*})
