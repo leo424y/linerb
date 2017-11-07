@@ -13,6 +13,9 @@ end
 class Log < ActiveRecord::Base
 end
 
+class Place < ActiveRecord::Base
+end
+
 post '/callback' do
   body = request.body.read
   events = client.parse_events_from(body)
@@ -22,6 +25,7 @@ post '/callback' do
       case event.type
       when Line::Bot::Event::MessageType::Location
         l = event.message['address']
+        Place.create(address: l)
         message = {
           type: 'text',
           text: l
