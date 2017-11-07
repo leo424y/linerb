@@ -28,11 +28,10 @@ post '/callback' do
         Place.create(address: l)
         message = {
           type: 'text',
-          text: l
+          text: Place.all.inspect
         }
 
         client.reply_message(event['replyToken'], message)
-        Place.all.inspect
       when Line::Bot::Event::MessageType::Text
         m = event.message['text']
         reply = case m
