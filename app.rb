@@ -31,6 +31,12 @@ post '/callback' do
       when Line::Bot::Event::MessageType::Text
         m = event.message['text']
         reply = case m
+        when /鴿子在/ then
+          m = m.split(%r{鴿子在\s*})
+          if m[1]
+            Log.create(area: '鴿子', info: m[1])
+            "謝謝猴主人回報#{m[1]}有鴿子"
+          end
         when /區/ then
           m = m.split(%r{區\s*})
           if m[1]
@@ -46,12 +52,6 @@ post '/callback' do
           end
         when /鴿子/ then
             "猴主人回報這些地方有鴿子：#{Log.where(area: '有鴿子').order(id: :desc).pluck(:info).join('🚴')}"
-        when /鴿子在/ then
-          m = m.split(%r{鴿子在\s*})
-          if m[1]
-            Log.create(area: '鴿子', info: m[1])
-            "謝謝猴主人回報#{m[1]}有鴿子"
-          end
         when /我跑了/ then
           run_number = m.gsub(/[^0-9]/, '')
           Log.create(area: '跑單數', info: run_number)
