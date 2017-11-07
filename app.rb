@@ -51,7 +51,7 @@ post '/callback' do
             "猴主人們最近覺得：#{Log.where(area: '我覺得').order(id: :desc).pluck(:info).join('🚴')}"
           end
         when /鴿子/ then
-            "猴主人回報這些地方有鴿子：#{Log.where(area: '有鴿子').order(id: :desc).pluck(:info).join('🚴')}"
+            "猴主人回報這些地方有鴿子：#{Log.where(area: '鴿子').order(id: :desc).pluck(:info).join('🚴')}"
         when /我跑了/ then
           run_number = m.gsub(/[^0-9]/, '')
           Log.create(area: '跑單數', info: run_number)
