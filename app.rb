@@ -25,10 +25,11 @@ post '/callback' do
       case event.type
       when Line::Bot::Event::MessageType::Location
         l = event.message['address']
+        area = l.string_between_markers("台中市", "區")
         Place.create(address: l)
         message = {
           type: 'text',
-          text: "你已回報位置：#{l}"
+          text: "#{area}區 #{Log.where(area: area).where('created_at >= ?', (Time.now - 60*60*24*3) ).order(id: :desc).pluck(:info).join('🚴')}"
         }
 
         client.reply_message(event['replyToken'], message)
@@ -92,4 +93,10 @@ post '/callback' do
   }
 
   "OK"
+end
+
+class String
+  def string_between_markers marker1, marker2
+    self[/#{Regexp.escape(marker1)}(.*?)#{Regexp.escape(marker2)}/m, 1]
+  end
 end
