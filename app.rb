@@ -38,7 +38,7 @@ post '/callback' do
         reply = case m
         when /罰單/ then
           m = m.split(%r{罰單\s*})
-          if m[1].is_a? Integer
+          if m[1].to_f > 0
             Log.create(area: '罰單', info: m[1])
             "謝謝提升國庫#{m[1]}銀兩，目前累計#{Log.where(area: '罰單').sum(:info)}"
           elsif m[1].nil?
