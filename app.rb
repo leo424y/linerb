@@ -37,14 +37,14 @@ post '/callback' do
       when Line::Bot::Event::MessageType::Text
         m = event.message['text']
         reply = case m
-        when /罰單/ then
-          m = m.split(%r{罰單\s*})
-          if (m[1].to_f > 0)
-            Log.create(area: '罰單們', info: m[1])
-            "謝謝提升國庫#{m[1]}銀兩，目前累計#{Log.where(area: '罰單們').sum(:info)}"
-          elsif m[1].nil?
-            "目前累計#{Log.where(area: '罰單們').sum(:info)}"
-          end
+        # when /罰單/ then
+        #   m = m.split(%r{罰單\s*})
+        #   if (m[1].to_f > 0)
+        #     Log.create(area: '罰單們', info: m[1])
+        #     "謝謝提升國庫#{m[1]}銀兩，目前累計#{Log.where(area: '罰單們').sum(:info)}"
+        #   elsif m[1].nil?
+        #     "目前累計#{Log.where(area: '罰單們').sum(:info)}"
+        #   end
         when /鴿子在/ then
           m = m.split(%r{鴿子在\s*})
           if m[1]
