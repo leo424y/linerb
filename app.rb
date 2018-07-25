@@ -49,7 +49,7 @@ post '/callback' do
           user_id = event['source']['userId']
           profile = client.get_profile(user_id)
           profile = JSON.parse(profile.read_body)
-          count = m.split.map {|x| x[/\d+/]}[0].to_i
+          count = m.split.map{|x| x[/\d+/]}[0].to_i
           Log.create(ticket_user: user_id, info: m, ticket_count: count, ticket_status: 'on')
           users = Log.where(ticket_status: 'on').pluck(:ticket_user)
           users.each do
