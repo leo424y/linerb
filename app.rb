@@ -60,7 +60,6 @@ post '/callback' do
         when /福賴我不要打了/ then
           Log.where(ticket_user: user_id).update_all(ticket_status: 'off')
           "#{profile['displayName']}不要打了，請求支援！剩下總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}"
-        end
 
         # when /罰單/ then
         #   m = m.split(%r{罰單\s*})
