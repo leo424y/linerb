@@ -57,9 +57,10 @@ post '/callback' do
           # end
           # 目前#{user_name.join(', ')}總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個
           "#{profile['displayName']}要打#{count}個！總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}"
-        when /福賴我不要打了/ then
+        when /福賴我不/ then
           Log.where(ticket_user: user_id).update_all(ticket_status: 'off')
-          "#{profile['displayName']}不要打了，請求支援！剩下總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}"
+          "#{profile['displayName']}不要打了，請求支援！#{Log.where(ticket_status: 'on')}" 
+          # 剩下總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}"
 
         # when /罰單/ then
         #   m = m.split(%r{罰單\s*})
