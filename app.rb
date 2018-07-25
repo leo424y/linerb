@@ -22,17 +22,14 @@ post '/callback' do
   events.each { |event|
     case event
     when Line::Bot::Event::Message
-      if event['source']['type'] == 'user'
-       profile = client.get_profile(event['source']['userId'])
-       profile = JSON.parse(profile.read_body)
-       user_id = event['source']['userId']
-       # reply_text(event, [
-       #   "Display name\n#{profile['displayName']}",
-       #   "Status message\n#{profile['statusMessage']}"
-       # ])
-      else
-       reply_text(event, "Bot can't use profile API without user ID")
-      end
+      profile = client.get_profile(event['source']['userId'])
+      profile = JSON.parse(profile.read_body)
+      user_id = event['source']['userId']
+      # reply_text(event, [
+      #   "Display name\n#{profile['displayName']}",
+      #   "Status message\n#{profile['statusMessage']}"
+      # ])
+
       case event.type
       # when Line::Bot::Event::MessageType::Location
       #   l = event.message['address']
@@ -48,18 +45,16 @@ post '/callback' do
       when Line::Bot::Event::MessageType::Text
         m = event.message['text']
         reply = case m
-        when /福賴/ then
-          case m
-          when /我要打/ then
-            "#{m}#{profile['displayName']}"
-            # count = m.split.map {|x| x[/\d+/]}[0].to_i
-            # Log.create(ticket_user: user_id, info: m, ticket_count: count, ticket_status: 'on')
-            # users = Log.where(ticket_status: 'on').pluck(:ticket_user)
-            # users.each do
-            #   user_name << JSON.parse(client.get_profile(user_id).read_body)['displayName']
-            # end
-            # "#{profile['displayName']}要打#{count}個！目前#{user_name.join(', ')}總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個"
-          end
+        when /福賴我要打/ then
+          "#{m}#{profile['displayName']}"
+          # count = m.split.map {|x| x[/\d+/]}[0].to_i
+          # Log.create(ticket_user: user_id, info: m, ticket_count: count, ticket_status: 'on')
+          # users = Log.where(ticket_status: 'on').pluck(:ticket_user)
+          # users.each do
+          #   user_name << JSON.parse(client.get_profile(user_id).read_body)['displayName']
+          # end
+          # "#{profile['displayName']}要打#{count}個！目前#{user_name.join(', ')}總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個"
+        end
 
         # when /罰單/ then
         #   m = m.split(%r{罰單\s*})
