@@ -57,10 +57,10 @@ post '/callback' do
           #   user_name << JSON.parse(client.get_profile(user_id).read_body)['displayName']
           # end
           # 目前#{user_name.join(', ')}總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個
-          "#{profile['displayName']}要打#{count}個！總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}"
+          "#{profile['displayName']}要打#{count}個！總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個"
         when /福賴我不/ then
           Log.where(ticket_user: user_id).update_all(ticket_status: 'off')
-          "#{profile['displayName']}不要打了，請求支援！總共要打#{Log.where(ticket_status: 'on')}"
+          "#{profile['displayName']}不要打了，請求支援！總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個"
           # 剩下總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}"
 
         # when /罰單/ then
