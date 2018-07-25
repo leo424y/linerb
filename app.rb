@@ -22,9 +22,9 @@ post '/callback' do
   events.each { |event|
     case event
     when Line::Bot::Event::Message
-      profile = client.get_profile(event['source']['userId'])
-      profile = JSON.parse(profile.read_body)
-      user_id = event['source']['userId']
+      # profile = client.get_profile(event['source']['userId'])
+      # profile = JSON.parse(profile.read_body)
+      # user_id = event['source']['userId']
       # reply_text(event, [
       #   "Display name\n#{profile['displayName']}",
       #   "Status message\n#{profile['statusMessage']}"
@@ -46,7 +46,7 @@ post '/callback' do
         m = event.message['text']
         reply = case m
         when /福賴我要打/ then
-          "#{m}#{profile['displayName']}"
+          "#{m}"
           # count = m.split.map {|x| x[/\d+/]}[0].to_i
           # Log.create(ticket_user: user_id, info: m, ticket_count: count, ticket_status: 'on')
           # users = Log.where(ticket_status: 'on').pluck(:ticket_user)
