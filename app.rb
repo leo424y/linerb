@@ -54,7 +54,6 @@ post '/callback' do
           #   user_name << JSON.parse(client.get_profile(user_id).read_body)['displayName']
           # end
           # "#{profile['displayName']}要打#{count}個！目前#{user_name.join(', ')}總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個"
-        end
 
         # when /罰單/ then
         #   m = m.split(%r{罰單\s*})
