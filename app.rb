@@ -51,13 +51,14 @@ post '/callback' do
         when /福賴/ then
           case m
           when /我要打/ then
-            count = m.split.map {|x| x[/\d+/]}[0].to_i
-            Log.create(ticket_user: user_id, info: m, ticket_count: count, ticket_status: 'on')
-            users = Log.where(ticket_status: 'on').pluck(:ticket_user)
-            users.each do
-              user_name << JSON.parse(client.get_profile(user_id).read_body)['displayName']
-            end
-            "#{profile['displayName']}要打#{count}個！目前#{user_name.join(', ')}總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個"
+            "#{m}#{profile['displayName']}"
+            # count = m.split.map {|x| x[/\d+/]}[0].to_i
+            # Log.create(ticket_user: user_id, info: m, ticket_count: count, ticket_status: 'on')
+            # users = Log.where(ticket_status: 'on').pluck(:ticket_user)
+            # users.each do
+            #   user_name << JSON.parse(client.get_profile(user_id).read_body)['displayName']
+            # end
+            # "#{profile['displayName']}要打#{count}個！目前#{user_name.join(', ')}總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個"
           end
 
         # when /罰單/ then
