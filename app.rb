@@ -62,7 +62,7 @@ post '/callback' do
             begin
               doc['candidates'][0]['opening_hours']['open_now'] ? "現在【#{name}】有開" : "現在【#{name}】沒開"
             rescue
-              "#{name}查無資料，你確定有個地方？"
+              "#{name}查無地點或營業時間"
             end
           when /福賴我要打/ then
             Log.create(ticket_user: user_id, info: m, ticket_count: count, ticket_status: 'on')
