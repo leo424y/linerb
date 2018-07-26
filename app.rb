@@ -70,9 +70,9 @@ post '/callback' do
             doc = Nokogiri::HTML(open(url))
 
             doc.css('.w3_agile_logo p').each do |link|
-              tndcsc_count += link.content
+              tndcsc_count += " #{link.content}"
             end
-            tndcsc_count
+            "#{tndcsc_count} 快來北區找福賴減脂增肌！"
           else
             '歹勢偶只懂：福賴我要打10個、福賴我不要打了、福賴好運'
           end
