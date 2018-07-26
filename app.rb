@@ -64,9 +64,9 @@ post '/callback' do
             doc = JSON.parse(open(url).read, :headers => true)
             begin
               result = doc['candidates'][0]['opening_hours']['open_now'] ? "現在【#{name}】有開" : "現在【#{name}】沒開"
-              "#{result}  📍 #{s_link}"
+              "🎰 #{result}  📍 #{s_link}"
             rescue
-              "【#{name}】查無地點或營業時間  📍 #{s_link}"
+              "🎰 【#{name}】查無地點或營業時間  📍 #{s_link}"
             end
           when /福賴我要打/ then
             Log.create(ticket_user: user_id, info: m, ticket_count: count, ticket_status: 'on')
