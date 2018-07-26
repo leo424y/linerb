@@ -54,6 +54,16 @@ post '/callback' do
         count = m.split.map{|x| x[/\d+/]}[0].to_i
         if m.start_with? '福賴'
           reply = case m
+          when /開/ then
+            name = m.split('開')[0]
+            place=URI.escape(name)
+            url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=AIzaSyCM51UZILRPOLidkBTTHC_hpQ4OZOO9i_k"
+            doc = JSON.parse(open(url).read, :headers => true)
+            begin
+              doc['candidates'][0]['opening_hours']['open_now'] ? "現在#{name}有開" : "現在#{name}沒開"
+            rescue
+              "#{name}查無資料，你確定有個地方？"
+            end
           when /福賴我要打/ then
             Log.create(ticket_user: user_id, info: m, ticket_count: count, ticket_status: 'on')
             # users = Log.where(ticket_status: 'on').pluck(:ticket_user)
