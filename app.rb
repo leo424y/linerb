@@ -60,7 +60,7 @@ post '/callback' do
             place=URI.escape(name)
             url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=#{API_KEY}"
             link = "https://www.google.com/maps/search/?api=1&query=#{place}"
-            s_link = %x(ruby bin/bitly.rb #{link}).chomp
+            s_link = %x(ruby bin/bitly.rb #{link}).chomp.split('http://')[1]
             doc = JSON.parse(open(url).read, :headers => true)
             begin
               result = doc['candidates'][0]['opening_hours']['open_now'] ? "現在【#{name}】有開" : "現在【#{name}】沒開"
