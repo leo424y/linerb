@@ -5,3 +5,4 @@ gem "sinatra-activerecord"
 gem "rake"
 gem 'pg'
 gem 'nokogiri'
+gem 'open-uri'
