@@ -60,7 +60,7 @@ post '/callback' do
             url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=AIzaSyCM51UZILRPOLidkBTTHC_hpQ4OZOO9i_k"
             doc = JSON.parse(open(url).read, :headers => true)
             begin
-              doc['candidates'][0]['opening_hours']['open_now'] ? "現在#{name}有開" : "現在#{name}沒開"
+              doc['candidates'][0]['opening_hours']['open_now'] ? "現在【#{name}】有開" : "現在【#{name}】沒開"
             rescue
               "#{name}查無資料，你確定有個地方？"
             end
