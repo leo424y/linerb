@@ -55,14 +55,14 @@ post '/callback' do
         if m.start_with? '福賴'
           reply = case m
           when /開/ then
-            NAME='leo424yy'
-            BIT_API_KEY='R_c545a03a3cbf4034b390fa5c4c153cb2'
-            Bitly.use_api_version_3
-
-            Bitly.configure do |config|
-              config.api_version = 3
-              config.access_token = API_KEY
-            end
+            # NAME='leo424yy'
+            # BIT_API_KEY='R_c545a03a3cbf4034b390fa5c4c153cb2'
+            # Bitly.use_api_version_3
+            #
+            # Bitly.configure do |config|
+            #   config.api_version = 3
+            #   config.access_token = API_KEY
+            # end
 
             API_KEY = 'AIzaSyCM51UZILRPOLidkBTTHC_hpQ4OZOO9i_k'
             name = m[3..-1]
@@ -70,15 +70,15 @@ post '/callback' do
             url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=#{API_KEY}"
             link = "https://www.google.com/maps/search/?api=1&query=#{place}"
 
-            bitly = Bitly.new(NAME, BIT_API_KEY)
-            u=bitly.shorten(link, :history => 1)
+            # bitly = Bitly.new(NAME, BIT_API_KEY)
+            # u=bitly.shorten(link, :history => 1)
 
             doc = JSON.parse(open(url).read, :headers => true)
             begin
               result = doc['candidates'][0]['opening_hours']['open_now'] ? "現在【#{name}】有開" : "現在【#{name}】沒開"
-              "#{result} #{u.jmp_url}"
+              "#{result} #{link}"
             rescue
-              "【#{name}】查無地點或營業時間 #{u.jmp_url}"
+              "【#{name}】查無地點或營業時間 #{link}"
             end
           when /福賴我要打/ then
             Log.create(ticket_user: user_id, info: m, ticket_count: count, ticket_status: 'on')
