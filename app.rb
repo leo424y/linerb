@@ -55,12 +55,15 @@ post '/callback' do
         if m.start_with? '福賴'
           reply = case m
           when /開/ then
+            API_KEY = 'AIzaSyCM51UZILRPOLidkBTTHC_hpQ4OZOO9i_k'
             name = m[3..-1]
             place=URI.escape(name)
-            url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=AIzaSyCM51UZILRPOLidkBTTHC_hpQ4OZOO9i_k"
+            url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=#{API_KEY}"
+            link = "https://www.google.com/maps/search/?api=1&query=#{place}"
             doc = JSON.parse(open(url).read, :headers => true)
             begin
-              doc['candidates'][0]['opening_hours']['open_now'] ? "現在【#{name}】有開" : "現在【#{name}】沒開"
+              result = doc['candidates'][0]['opening_hours']['open_now'] ? "現在【#{name}】有開" : "現在【#{name}】沒開"
+              "#{result} #{link}"
             rescue
               "【#{name}】查無地點或營業時間"
             end
