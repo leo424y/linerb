@@ -64,10 +64,12 @@ post '/callback' do
             "#{profile['displayName']}要打#{count}個！大家總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個"
           when /福賴我不要不要打了/ then
             Log.update_all(ticket_status: 'off')
-            "#{profile['displayName']}不要打了。剩下的人總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個，請求支援！"
+            total = Log.where(ticket_status: 'on').sum(:ticket_count)
+            "沒有半個人要打了"
           when /福賴我不/ then
             Log.where(ticket_user: user_id).update_all(ticket_status: 'off')
-            "#{profile['displayName']}不要打了。剩下的人總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個，請求支援！"
+            result = total == 0 ? '居沒有半個人要打，我要說在座的都是XX！' : "剩下的人總共要打#{total}個，請求支援！"
+            "#{profile['displayName']}不要打了。#{result}"
           when /好運/ then
             tndcsc_count = ''
             tndcsc_url = 'http://tndcsc.com.tw/'
