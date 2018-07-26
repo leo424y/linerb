@@ -78,7 +78,7 @@ post '/callback' do
             cmcsc_url = 'https://cmcsc.cyc.org.tw/api'
             cmcsc_doc = JSON.parse(open(cmcsc_url).read, :headers => true)
 
-            "北區#{tndcsc_count} 朝馬 💪 健身房#{cmcsc_doc['gym'][0]}/#{cmcsc_doc['gym'][1]} 🏊 游泳池#{cmcsc_doc['swim'][0]}/#{cmcsc_doc['swim'][1]} 快來減脂增肌！"
+            "【北區】#{tndcsc_count} 【朝馬】💪 健身房#{cmcsc_doc['gym'][0]}/#{cmcsc_doc['gym'][1]} 🏊 游泳池#{cmcsc_doc['swim'][0]}/#{cmcsc_doc['swim'][1]} 快來減脂增肌！"
           else
             '歹勢偶只懂：福賴我要打10個、福賴我不要打了、福賴好運'
           end
