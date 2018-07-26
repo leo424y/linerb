@@ -55,7 +55,7 @@ post '/callback' do
         if m.start_with? '福賴'
           reply = case m
           when /開/ then
-            name = m.split('開')[1]
+            name = m[3..-1]
             place=URI.escape(name)
             url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=AIzaSyCM51UZILRPOLidkBTTHC_hpQ4OZOO9i_k"
             doc = JSON.parse(open(url).read, :headers => true)
