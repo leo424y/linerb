@@ -63,8 +63,9 @@ post '/callback' do
             s_link = %x(ruby bin/bitly.rb '#{link}').chomp.split('http://')[1]
             doc = JSON.parse(open(url).read, :headers => true)
             begin
-              result = doc['candidates'][0]['opening_hours']['open_now'] ? "現在【#{name}】有開" : "現在【#{name}】沒開"
-              "🎲 #{result}  📍 #{s_link}"
+              rating = doc['candidates'][0]['rating'].to_i * 2
+              opening_hours = doc['candidates'][0]['opening_hours']['open_now'] ? "現在【#{name}】有開" : "現在【#{name}】沒開"
+              "🎲 #{opening_hours} #{⭐*rating} 📍 #{s_link}"
             rescue
               "🎲 【#{name}】查無地點或營業時間  📍 #{s_link}"
             end
