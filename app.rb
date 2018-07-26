@@ -62,13 +62,12 @@ post '/callback' do
             # end
             # 目前#{user_name.join(', ')}總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個
             "#{profile['displayName']}要打#{count}個！大家總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個"
-          when /福賴我不/ then
-            Log.where(ticket_user: user_id).update_all(ticket_status: 'off')
-            "#{profile['displayName']}不要打了。剩下的人總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個，請求支援！"
           when /福賴我不要不要打了/ then
             Log.update_all(ticket_status: 'off')
             "#{profile['displayName']}不要打了。剩下的人總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個，請求支援！"
-            # 剩下總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}"
+          when /福賴我不/ then
+            Log.where(ticket_user: user_id).update_all(ticket_status: 'off')
+            "#{profile['displayName']}不要打了。剩下的人總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個，請求支援！"
           when /好運/ then
             tndcsc_count = ''
             tndcsc_url = 'http://tndcsc.com.tw/'
