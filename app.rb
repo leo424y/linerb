@@ -50,37 +50,40 @@ post '/callback' do
         profile = client.get_profile(user_id)
         profile = JSON.parse(profile.read_body)
         count = m.split.map{|x| x[/\d+/]}[0].to_i
+        if m.start_with? '福賴'
+          reply = case m
+          when /福賴我要打/ then
+            Log.create(ticket_user: user_id, info: m, ticket_count: count, ticket_status: 'on')
+            # users = Log.where(ticket_status: 'on').pluck(:ticket_user)
+            # users.each do
+            #   user_name << JSON.parse(client.get_profile(user_id).read_body)['displayName']
+            # end
+            # 目前#{user_name.join(', ')}總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個
+            "#{profile['displayName']}要打#{count}個！大家總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個"
+          when /福賴我不/ then
+            Log.where(ticket_user: user_id).update_all(ticket_status: 'off')
+            "#{profile['displayName']}不要打了。剩下的人總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個，請求支援！"
+            # 剩下總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}"
+          when /好運/ then
+            tndcsc_count = ''
+            url = 'http://tndcsc.com.tw/'
+            doc = Nokogiri::HTML(open(url))
 
-        reply = case m
-        when /福賴我要打/ then
-          Log.create(ticket_user: user_id, info: m, ticket_count: count, ticket_status: 'on')
-          # users = Log.where(ticket_status: 'on').pluck(:ticket_user)
-          # users.each do
-          #   user_name << JSON.parse(client.get_profile(user_id).read_body)['displayName']
-          # end
-          # 目前#{user_name.join(', ')}總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個
-          "#{profile['displayName']}要打#{count}個！大家總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個"
-        when /福賴我不/ then
-          Log.where(ticket_user: user_id).update_all(ticket_status: 'off')
-          "#{profile['displayName']}不要打了。剩下的人總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個，請求支援！"
-          # 剩下總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}"
-        when /北運/ then
-          tndcsc_count = ''
-          url = 'http://tndcsc.com.tw/'
-          doc = Nokogiri::HTML(open(url))
-
-          doc.css('.w3_agile_logo p').each do |link|
-            tndcsc_count += link.content
+            doc.css('.w3_agile_logo p').each do |link|
+              tndcsc_count += link.content
+            end
+            tndcsc_count
+          else
+            '歹勢偶只懂：福賴我要打10個、福賴我不要打了、福賴好運'
           end
-          tndcsc_count
+
+          message = {
+            type: 'text',
+            text: reply
+          }
+
+          client.reply_message(event['replyToken'], message)
         end
-
-        message = {
-          type: 'text',
-          text: reply
-        }
-
-        client.reply_message(event['replyToken'], message)
       end
     end
   }
