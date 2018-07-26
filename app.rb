@@ -4,6 +4,8 @@ require "sinatra/activerecord"
 require './config/environments'
 require 'nokogiri'
 require 'open-uri'
+require 'json'
+
 
 def client
   @client ||= Line::Bot::Client.new { |config|
@@ -66,13 +68,17 @@ post '/callback' do
             # 剩下總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}"
           when /好運/ then
             tndcsc_count = ''
-            url = 'http://tndcsc.com.tw/'
-            doc = Nokogiri::HTML(open(url))
+            tndcsc_url = 'http://tndcsc.com.tw/'
+            tndcsc_doc = Nokogiri::HTML(open(tndcsc_url))
 
-            doc.css('.w3_agile_logo p').each do |link|
+            tndcsc_doc.css('.w3_agile_logo p').each do |link|
               tndcsc_count += " #{link.content}"
             end
-            "#{tndcsc_count} 快來北區找福賴減脂增肌！"
+
+            cmcsc_url = 'https://cmcsc.cyc.org.tw/api'
+            cmcsc_doc = JSON.parse(open(cmcsc_url).read, :headers => true)
+            
+            "北區#{tndcsc_count} 快來找福賴減脂增肌！朝馬 💪 健身房#{cmcsc_doc['gym'][0]}/#{cmcsc_doc['gym'][1]} 🏊 游泳池#{cmcsc_doc['swim'][0]}/#{cmcsc_doc['swim'][1]}"
           else
             '歹勢偶只懂：福賴我要打10個、福賴我不要打了、福賴好運'
           end
