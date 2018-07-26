@@ -63,8 +63,8 @@ post '/callback' do
             s_link = %x(ruby bin/bitly.rb '#{link}').chomp.split('http://')[1]
             doc = JSON.parse(open(url).read, :headers => true)
             begin
-              rating = doc['candidates'][0]['rating'].to_i * 2
-              star = '⭐' * rating
+              rating = (doc['candidates'][0]['rating'].to_f * 2).to_i
+              star = '🤩'* (rating/2)+'⭐' * (rating%2)
               opening_hours = doc['candidates'][0]['opening_hours']['open_now'] ? "現在【#{name}】有開" : "現在【#{name}】沒開"
               "🎲 #{opening_hours} 📍 #{s_link} #{star} "
             rescue
