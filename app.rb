@@ -14,11 +14,10 @@ def client
   }
 end
 
-def is_opening_hours(m)
-
+class Log < ActiveRecord::Base
 end
 
-class Log < ActiveRecord::Base
+class Store < ActiveRecord::Base
 end
 
 class Place < ActiveRecord::Base
@@ -62,13 +61,11 @@ post '/callback' do
           else
             Store.create(name: name)
           end
-
-
+          
           message = {
             type: 'text',
             text: reply
           }
-
           client.reply_message(event['replyToken'], message)
         end
 
@@ -89,35 +86,22 @@ post '/callback' do
             tndcsc_count = ''
             tndcsc_url = 'http://tndcsc.com.tw/'
             tndcsc_doc = Nokogiri::HTML(open(tndcsc_url))
-
             tndcsc_doc.css('.w3_agile_logo p').each do |l|
               tndcsc_count += " #{l.content}"
             end
-
             cmcsc_url = 'https://cmcsc.cyc.org.tw/api'
             cmcsc_doc = JSON.parse(open(cmcsc_url).read, :headers => true)
-
             "【北區】#{tndcsc_count}   【朝馬】🏊 #{cmcsc_doc['swim'][0]}/#{cmcsc_doc['swim'][1]} 💪 #{cmcsc_doc['gym'][0]}/#{cmcsc_doc['gym'][1]} 快來減脂增肌！"
           else
             '歹勢偶只懂：福賴我要打10個、福賴我不要打了、福賴好運、福賴開(你要查的店名)'
           end
-
           message = {
             type: 'text',
             text: reply
           }
-
           client.reply_message(event['replyToken'], message)
         end
       end
     end
   }
-
-  "OK"
-end
-
-class String
-  def string_between_markers marker1, marker2
-    self[/#{Regexp.escape(marker1)}(.*?)#{Regexp.escape(marker2)}/m, 1]
-  end
 end
