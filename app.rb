@@ -41,7 +41,7 @@ post '/callback' do
         suffixes = %w(有開嗎？ 有開？ 有開嗎 有開)
         if m.end_with?(*suffixes)
           API_KEY = 'AIzaSyCM51UZILRPOLidkBTTHC_hpQ4OZOO9i_k'
-          name = m[3..-1]
+          name = m.chomp('？').chomp('有開嗎').chomp('有開')
           place = URI.escape(name)
           url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=#{API_KEY}"
           link = "https://www.google.com/maps/search/?api=1&query=#{place}"
