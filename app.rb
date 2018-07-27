@@ -56,6 +56,13 @@ post '/callback' do
             reply = "🎲 【#{name}】查無地點或營業時間  📍 #{s_link}"
           end
 
+          store = Store.find_by(name: name)
+          if store
+            store.update(name: name, view: store.view+1)
+          else
+            Store.create(name: name)
+          end
+
 
           message = {
             type: 'text',

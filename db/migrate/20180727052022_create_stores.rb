@@ -3,7 +3,7 @@ class CreateStores < ActiveRecord::Migration[5.2]
     create_table :stores do |t|
       t.string :name
       t.string :info
-      t.intger :view
+      t.integer :view, default: 0
 
       t.timestamps
     end
