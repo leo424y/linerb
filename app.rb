@@ -15,21 +15,7 @@ def client
 end
 
 def is_opening_hours(m)
-  API_KEY = 'AIzaSyCM51UZILRPOLidkBTTHC_hpQ4OZOO9i_k'
-  name = m[3..-1]
-  place = URI.escape(name)
-  url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=#{API_KEY}"
-  link = "https://www.google.com/maps/search/?api=1&query=#{place}"
-  s_link = %x(ruby bin/bitly.rb '#{link}').chomp.split('http://')[1]
-  doc = JSON.parse(open(url).read, :headers => true)
-  begin
-    rating = (doc['candidates'][0]['rating'].to_f * 2).to_i
-    star = '⭐'* (rating/2)+'✨' * (rating%2)
-    opening_hours = doc['candidates'][0]['opening_hours']['open_now'] ? "現在【#{name}】有開" : "現在【#{name}】沒開"
-    "🎲 #{opening_hours} 📍 #{s_link} #{star} "
-  rescue
-    "🎲 【#{name}】查無地點或營業時間  📍 #{s_link}"
-  end
+
 end
 
 class Log < ActiveRecord::Base
@@ -54,6 +40,22 @@ post '/callback' do
 
         suffixes = %w(有開嗎？ 有開？ 有開嗎 有開)
         if m.end_with?(*suffixes)
+          API_KEY = 'AIzaSyCM51UZILRPOLidkBTTHC_hpQ4OZOO9i_k'
+          name = m[3..-1]
+          place = URI.escape(name)
+          url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=#{API_KEY}"
+          link = "https://www.google.com/maps/search/?api=1&query=#{place}"
+          s_link = %x(ruby bin/bitly.rb '#{link}').chomp.split('http://')[1]
+          doc = JSON.parse(open(url).read, :headers => true)
+          begin
+            rating = (doc['candidates'][0]['rating'].to_f * 2).to_i
+            star = '⭐'* (rating/2)+'✨' * (rating%2)
+            opening_hours = doc['candidates'][0]['opening_hours']['open_now'] ? "現在【#{name}】有開" : "現在【#{name}】沒開"
+            "🎲 #{opening_hours} 📍 #{s_link} #{star} "
+          rescue
+            "🎲 【#{name}】查無地點或營業時間  📍 #{s_link}"
+          end
+
           reply = is_opening_hours(m)
           message = {
             type: 'text',
@@ -65,16 +67,8 @@ post '/callback' do
 
         if m.start_with? '福賴'
           reply = case m
-          when /開/ then
-            is_opening_hours m
-
           when /福賴我要打/ then
             Log.create(ticket_user: user_id, info: m, ticket_count: count, ticket_status: 'on')
-            # users = Log.where(ticket_status: 'on').pluck(:ticket_user)
-            # users.each do
-            #   user_name << JSON.parse(client.get_profile(user_id).read_body)['displayName']
-            # end
-            # 目前#{user_name.join(', ')}總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個
             "#{profile['displayName']}要打#{count}個！大家總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個"
           when /福賴我不要不要打了/ then
             Log.update_all(ticket_status: 'off')
