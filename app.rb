@@ -31,7 +31,7 @@ post '/callback' do
     when Line::Bot::Event::Message
       case event.type
       when Line::Bot::Event::MessageType::Text
-        m = event.message['text'].chomp('？').chomp('?')
+        m = event.message['text'].rstrip.chomp('？').chomp('?')
         user_id = event['source']['userId']
         profile = client.get_profile(user_id)
         profile = JSON.parse(profile.read_body)
