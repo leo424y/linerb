@@ -31,16 +31,16 @@ post '/callback' do
     when Line::Bot::Event::Message
       case event.type
       when Line::Bot::Event::MessageType::Text
-        m = event.message['text']
+        m = event.message['text'].chomp('？').chomp('?')
         user_id = event['source']['userId']
         profile = client.get_profile(user_id)
         profile = JSON.parse(profile.read_body)
         count = m.split.map{|x| x[/\d+/]}[0].to_i
 
-        suffixes = %w(有開嗎？ 有開？ 有開嗎 有開)
+        suffixes = %w(有開嗎 有開)
         if m.end_with?(*suffixes)
           API_KEY = 'AIzaSyCM51UZILRPOLidkBTTHC_hpQ4OZOO9i_k'
-          name = m.chomp('？').chomp('有開嗎').chomp('有開')
+          name = m.chomp('有開嗎').chomp('有開')
           place = URI.escape(name)
           url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=#{API_KEY}"
           link = "https://www.google.com/maps/search/?api=1&query=#{place}"
@@ -61,7 +61,7 @@ post '/callback' do
           else
             Store.create(name: name)
           end
-          
+
           message = {
             type: 'text',
             text: reply
