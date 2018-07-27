@@ -17,7 +17,7 @@ end
 def is_opening_hours(m)
   API_KEY = 'AIzaSyCM51UZILRPOLidkBTTHC_hpQ4OZOO9i_k'
   name = m[3..-1]
-  place=URI.escape(name)
+  place = URI.escape(name)
   url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=#{API_KEY}"
   link = "https://www.google.com/maps/search/?api=1&query=#{place}"
   s_link = %x(ruby bin/bitly.rb '#{link}').chomp.split('http://')[1]
@@ -44,26 +44,7 @@ post '/callback' do
   events.each { |event|
     case event
     when Line::Bot::Event::Message
-      # profile = client.get_profile(event['source']['userId'])
-      # profile = JSON.parse(profile.read_body)
-      # user_id = event['source']['userId']
-      # reply_text(event, [
-      #   "Display name\n#{profile['displayName']}",
-      #   "Status message\n#{profile['statusMessage']}"
-      # ])
-
       case event.type
-      # when Line::Bot::Event::MessageType::Location
-      #   l = event.message['address']
-      #   area = l.string_between_markers("台中市", "區")
-      #   Place.create(address: l)
-      #   message = {
-      #     type: 'text',
-      #     text: "#{area}區 #{Log.where(area: area).where('created_at >= ?', (Time.now - 60*60*24*7) ).order(id: :desc).pluck(:info).join(' 🚴 ')}"
-      #   }
-      #
-      #   client.reply_message(event['replyToken'], message)
-
       when Line::Bot::Event::MessageType::Text
         m = event.message['text']
         user_id = event['source']['userId']
@@ -73,7 +54,13 @@ post '/callback' do
 
         suffixes = %w(有開嗎？ 有開？ 有開嗎 有開)
         if m.end_with?(*suffixes)
-          reply = is_opening_hours m
+          reply = is_opening_hours(m)
+          message = {
+            type: 'text',
+            text: reply
+          }
+
+          client.reply_message(event['replyToken'], message)
         end
 
         if m.start_with? '福賴'
