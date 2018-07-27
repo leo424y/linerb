@@ -51,12 +51,12 @@ post '/callback' do
             rating = (doc['candidates'][0]['rating'].to_f * 2).to_i
             star = '⭐'* (rating/2)+'✨' * (rating%2)
             opening_hours = doc['candidates'][0]['opening_hours']['open_now'] ? "現在【#{name}】有開" : "現在【#{name}】沒開"
-            "🎲 #{opening_hours} 📍 #{s_link} #{star} "
+            reply = "🎲 #{opening_hours} 📍 #{s_link} #{star} "
           rescue
-            "🎲 【#{name}】查無地點或營業時間  📍 #{s_link}"
+            reply = "🎲 【#{name}】查無地點或營業時間  📍 #{s_link}"
           end
 
-          reply = is_opening_hours(m)
+
           message = {
             type: 'text',
             text: reply
