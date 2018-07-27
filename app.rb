@@ -52,7 +52,7 @@ post '/callback' do
             opening_hours = doc['candidates'][0]['opening_hours']['open_now'] ? "現在【#{name}】有開" : "現在【#{name}】沒開"
             reply = "🎲 #{opening_hours} 📍 #{s_link} #{star} "
           rescue
-            reply = "🎲 【#{name}】查無地點或營業時間  📍 #{s_link}"
+            reply = "🎲 【#{name}】查無地點或營業時間，來瞧瞧 Google 地圖說不定有驚喜！ 📍 #{s_link}"
           end
 
           store = Store.find_by(name: name)
