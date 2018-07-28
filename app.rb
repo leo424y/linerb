@@ -6,6 +6,7 @@ require 'nokogiri'
 require 'open-uri'
 require 'json'
 require 'bitly'
+require 'date'
 
 def client
   @client ||= Line::Bot::Client.new { |config|
@@ -42,6 +43,7 @@ post '/callback' do
           gmap_key = ENV["GMAP_API_KEY"]
           name = m.chomp('有沒有開').chomp('開了沒').chomp('有開').chomp('開了')
           place = URI.escape(name)
+          # weekday = Date.today.strftime('%A')
           url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=place_id,photos,formatted_address,name,rating,opening_hours,geometry&key=#{gmap_key}"
           link = "https://www.google.com/maps/search/?api=1&query=#{place}"
           s_link = %x(ruby bin/bitly.rb '#{link}')
