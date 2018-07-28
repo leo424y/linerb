@@ -46,7 +46,7 @@ post '/callback' do
           # weekday = Date.today.strftime('%A')
           url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=place_id,photos,formatted_address,name,rating,opening_hours,geometry&key=#{gmap_key}"
           link = "https://www.google.com/maps/search/?api=1&query=#{place}"
-          s_link = %x(ruby bin/bitly.rb '#{link}')
+          s_link = %x(ruby bin/bitly.rb '#{link}').chomp
           doc = JSON.parse(open(url).read, :headers => true)
           begin
             formatted_phone_number = ''
@@ -65,7 +65,7 @@ post '/callback' do
             end
             rating = (doc['candidates'][0]['rating'].to_f * 2).to_i
             star = '⭐'* (rating/2)+'✨' * (rating%2)
-            reply = "【#{name}】\n#{opening_hours} #{star}\n📍 地圖 #{s_link}#{formatted_phone_number}\n#{promote}"
+            reply = "【#{name}】\n#{opening_hours} #{star}\n📍 地圖 #{s_link}\n#{formatted_phone_number}\n#{promote}"
 
             # message = {
             #   type: 'template',
