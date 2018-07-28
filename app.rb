@@ -23,6 +23,12 @@ end
 class Place < ActiveRecord::Base
 end
 
+get '/storeyy' do
+  Store.each do |s|
+    p s
+  end
+end
+
 post '/callback' do
   body = request.body.read
   events = client.parse_events_from(body)
