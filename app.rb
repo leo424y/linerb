@@ -60,8 +60,8 @@ post '/callback' do
             unless place_id.nil?
               place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&fields=name,rating,formatted_phone_number,opening_hours&key=#{gmap_key}"
               place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
-              formatted_phone_number = "  📞 #{place_id_doc['result']['formatted_phone_number'].gsub(" ","")}" unless place_id_doc['result']['formatted_phone_number'].nil?
-              opening_hours = place_id_doc['result']['opening_hours']['open_now'] ? "  😃  現在【#{name}】有開" : "  🔴  現在【#{name}】沒開"
+              formatted_phone_number = "📞  #{place_id_doc['result']['formatted_phone_number'].gsub(" ","")}" unless place_id_doc['result']['formatted_phone_number'].nil?
+              opening_hours = place_id_doc['result']['opening_hours']['open_now'] ? "😃  現在【#{name}】有開" : "🔴  現在【#{name}】沒開"
             end
             rating = (doc['candidates'][0]['rating'].to_f * 2).to_i
             star = '⭐'* (rating/2)+'✨' * (rating%2)
