@@ -65,9 +65,9 @@ post '/callback' do
             end
             rating = (doc['candidates'][0]['rating'].to_f * 2).to_i
             star = '⭐'* (rating/2)+'✨' * (rating%2)
-            # reply = "【#{name}】\n#{opening_hours} #{star}\n📍 地圖 #{s_link}\n📞 電話 #{formatted_phone_number}\n#{promote}"
+            reply = "【#{name}】\n#{opening_hours}📍 地圖 #{s_link}\n#{promote}"
 
-            message = {
+            message_buttons = {
               type: 'template',
               altText: '...',
               template: {
@@ -78,7 +78,7 @@ post '/callback' do
                 actions: [
                   {
                     type: 'message',
-                    label: '評價',
+                    label: '星級',
                     text: star
                   },
                   {
@@ -94,17 +94,14 @@ post '/callback' do
                 ]
               }
             }
-            # message = {
-            #   type: 'text',
-            #   text: reply
-            # }
           rescue
             reply = "【#{name}】有點神秘，查一下地圖如何？ \n📍 #{s_link}"
-            message = {
-              type: 'text',
-              text: reply
-            }
           end
+          
+          message = {
+            type: 'text',
+            text: reply
+          }
 
           store = Store.find_by(name: name)
           if store
@@ -113,6 +110,7 @@ post '/callback' do
             Store.create(name: name)
           end
 
+          client.reply_message(event['replyToken'], message_buttons) if message_buttons
           client.reply_message(event['replyToken'], message)
         end
 
