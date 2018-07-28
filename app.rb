@@ -42,15 +42,22 @@ post '/callback' do
           gmap_key = ENV["GMAP_API_KEY"]
           name = m.chomp('有沒有開').chomp('開了沒').chomp('有開').chomp('開了')
           place = URI.escape(name)
-          url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=#{gmap_key}"
+          url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=place_id,photos,formatted_address,name,rating,opening_hours,geometry&key=#{gmap_key}"
           link = "https://www.google.com/maps/search/?api=1&query=#{place}"
           s_link = %x(ruby bin/bitly.rb '#{link}')
           doc = JSON.parse(open(url).read, :headers => true)
           begin
+            formatted_phone_number = ''
+            place_id = doc['candidates'][0]['place_id']
+            if place_id
+              place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&fields=name,rating,formatted_phone_number&key=#{gmap_key}"
+              place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
+              formatted_phone_number = "電話：#{place_id_doc['result']['formatted_phone_number'].strip}"
+            end
             rating = (doc['candidates'][0]['rating'].to_f * 2).to_i
             star = '⭐'* (rating/2)+'✨' * (rating%2)
             opening_hours = doc['candidates'][0]['opening_hours']['open_now'] ? "現在【#{name}】有開" : "現在【#{name}】沒開"
-            reply = "#{opening_hours} 📍 #{s_link} #{star} "
+            reply = "#{opening_hours} 📍 #{s_link} #{star} #{formatted_phone_number}"
           rescue
             reply = "【#{name}】有點神秘，查一下地圖如何？ 📍 #{s_link}"
           end
