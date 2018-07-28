@@ -24,7 +24,7 @@ class Place < ActiveRecord::Base
 end
 
 get "/storeyy" do
-  "Testing the info page"
+  "Testing the info page #{Store.order(view: :desc)}"
 end
 
 post '/callback' do
