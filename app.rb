@@ -61,13 +61,45 @@ post '/callback' do
               place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&fields=name,rating,formatted_phone_number,opening_hours&key=#{gmap_key}"
               place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
               formatted_phone_number = "📞 電話 #{place_id_doc['result']['formatted_phone_number'].gsub(" ","")}" unless place_id_doc['result']['formatted_phone_number'].nil?
-              opening_hours = place_id_doc['result']['opening_hours']['open_now'] ? "【#{name}】\n😃 現在有開" : "【#{name}】\n🔴 現在沒開"
+              opening_hours = place_id_doc['result']['opening_hours']['open_now'] ? "😃 現在有開" : "🔴 現在沒開"
             end
             rating = (doc['candidates'][0]['rating'].to_f * 2).to_i
             star = '⭐'* (rating/2)+'✨' * (rating%2)
-            reply = "#{opening_hours} #{star}\n📍 地圖 #{s_link}#{formatted_phone_number}\n#{promote}"
+            # reply = "【#{name}】\n#{opening_hours} #{star}\n📍 地圖 #{s_link}#{formatted_phone_number}\n#{promote}"
+
+            message = {
+              type: 'template',
+              altText: '...',
+              template: {
+                type: 'buttons',
+                thumbnailImageUrl: 'https://example.com/image.jpg',
+                title: name,
+                text: opening_hours,
+                actions: [
+                  {
+                    type: 'message',
+                    label: '評價',
+                    text: star
+                  },
+                  {
+                    type: 'uri',
+                    label: '通話',
+                    uri: "tel:#{formatted_phone_number}"
+                  },
+                  {
+                    type: 'uri',
+                    label: '地圖',
+                    text: "#{s_link}"
+                  },
+                ]
+              }
+            }
           rescue
             reply = "【#{name}】有點神秘，查一下地圖如何？ \n📍 #{s_link}"
+            message = {
+              type: 'text',
+              text: reply
+            }
           end
 
           store = Store.find_by(name: name)
@@ -77,10 +109,6 @@ post '/callback' do
             Store.create(name: name)
           end
 
-          message = {
-            type: 'text',
-            text: reply
-          }
           client.reply_message(event['replyToken'], message)
         end
 
