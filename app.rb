@@ -52,7 +52,7 @@ post '/callback' do
             formatted_phone_number = ''
             opening_hours = ''
             place_id = doc['candidates'][0]['place_id']
-            thumbnailImageUrl = 'https://cdn.pixabay.com/photo/2018/05/21/12/43/sign-3418163_960_720.png'
+            # thumbnailImageUrl = 'https://cdn.pixabay.com/photo/2018/05/21/12/43/sign-3418163_960_720.png'
             unless place_id.nil?
               place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&fields=name,rating,formatted_phone_number,opening_hours&key=#{gmap_key}"
               place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
@@ -70,7 +70,6 @@ post '/callback' do
               altText: '...',
               template: {
                 type: 'buttons',
-                thumbnailImageUrl: thumbnailImageUrl,
                 title: name,
                 text: opening_hours,
                 actions: [
