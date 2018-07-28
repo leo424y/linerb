@@ -65,39 +65,39 @@ post '/callback' do
             end
             rating = (doc['candidates'][0]['rating'].to_f * 2).to_i
             star = '⭐'* (rating/2)+'✨' * (rating%2)
-            reply = "【#{name}】\n#{opening_hours} #{star}\n📍 地圖 #{s_link}\n#{formatted_phone_number}\n#{promote}"
+            # reply = "【#{name}】\n#{opening_hours} #{star}\n📍 地圖 #{s_link}\n#{formatted_phone_number}\n#{promote}"
 
-            # message = {
-            #   type: 'template',
-            #   altText: '...',
-            #   template: {
-            #     type: 'buttons',
-            #     thumbnailImageUrl: 'https://cdn.pixabay.com/photo/2018/05/21/12/43/sign-3418163_960_720.png',
-            #     title: name,
-            #     text: opening_hours,
-            #     actions: [
-            #       {
-            #         type: 'message',
-            #         label: '評價',
-            #         text: star
-            #       },
-            #       {
-            #         type: 'uri',
-            #         label: '通話',
-            #         uri: "tel:#{formatted_phone_number}"
-            #       },
-            #       {
-            #         type: 'uri',
-            #         label: '地圖',
-            #         text: "#{s_link}"
-            #       },
-            #     ]
-            #   }
-            # }
             message = {
-              type: 'text',
-              text: reply
+              type: 'template',
+              altText: '...',
+              template: {
+                type: 'buttons',
+                thumbnailImageUrl: 'https://cdn.pixabay.com/photo/2018/05/21/12/43/sign-3418163_960_720.png',
+                title: name,
+                text: opening_hours,
+                actions: [
+                  {
+                    type: 'message',
+                    label: '評價',
+                    text: star
+                  },
+                  {
+                    type: 'uri',
+                    label: '通話',
+                    uri: "tel:#{formatted_phone_number}"
+                  },
+                  {
+                    type: 'uri',
+                    label: '地圖',
+                    text: "#{s_link}"
+                  },
+                ]
+              }
             }
+            # message = {
+            #   type: 'text',
+            #   text: reply
+            # }
           rescue
             reply = "【#{name}】有點神秘，查一下地圖如何？ \n📍 #{s_link}"
             message = {
