@@ -24,7 +24,7 @@ class Place < ActiveRecord::Base
 end
 
 get "/storeyy" do
-  Store.all
+  Store.order(view: :desc).inspect
 end
 
 post '/callback' do
