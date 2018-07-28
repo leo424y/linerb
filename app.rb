@@ -23,10 +23,6 @@ end
 class Place < ActiveRecord::Base
 end
 
-get "/storeyy" do
-  Store.order(view: :desc).inspect
-end
-
 post '/callback' do
   body = request.body.read
   events = client.parse_events_from(body)
