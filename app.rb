@@ -36,7 +36,7 @@ post '/callback' do
         user_id = event['source']['userId']
         profile = client.get_profile(user_id)
         profile = JSON.parse(profile.read_body)
-        count = m.split.map{|x| x[/\d+/]}[0].to_i
+        # count = m.split.map{|x| x[/\d+/]}[0].to_i
 
         suffixes = %w(有開 開了 有沒有開 開了沒)
         if m.end_with?(*suffixes)
@@ -52,34 +52,31 @@ post '/callback' do
             formatted_phone_number = ''
             opening_hours = ''
             place_id = doc['candidates'][0]['place_id']
-            promote = ''
-            random = Random.new
-            if random.rand(3) > -1
-              promote = "👍 推薦 line://nv/recommendOA/@gxs2296l"
-            end
+            thumbnailImageUrl = 'https://cdn.pixabay.com/photo/2018/05/21/12/43/sign-3418163_960_720.png'
             unless place_id.nil?
               place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&fields=name,rating,formatted_phone_number,opening_hours&key=#{gmap_key}"
               place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
               formatted_phone_number = "#{place_id_doc['result']['formatted_phone_number'].gsub(" ","")}" unless place_id_doc['result']['formatted_phone_number'].nil?
               opening_hours = place_id_doc['result']['opening_hours']['open_now'] ? "😃 現在有開" : "🔴 現在沒開"
+              thumbnailImageUrl = "https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=#{place_id_doc['result']['photos'][0]['photo_reference']}&key=#{gmap_key}"
             end
-            rating = (doc['candidates'][0]['rating'].to_f * 2).to_i
-            star = '⭐'* (rating/2)+'✨' * (rating%2)
-            reply = "【#{name}】\n#{opening_hours}📍 地圖 #{s_link}\n#{promote}"
+            # rating = (doc['candidates'][0]['rating'].to_f * 2).to_i
+            # star = '⭐'* (rating/2)+'✨' * (rating%2)
+            # reply = "【#{name}】\n#{opening_hours}📍 地圖 #{s_link}\n#{promote}"
 
             message_buttons = {
               type: 'template',
               altText: '...',
               template: {
                 type: 'buttons',
-                thumbnailImageUrl: 'https://cdn.pixabay.com/photo/2018/05/21/12/43/sign-3418163_960_720.png',
+                thumbnailImageUrl: thumbnailImageUrl,
                 title: name,
                 text: opening_hours,
                 actions: [
                   {
-                    type: 'message',
-                    label: '星級',
-                    text: star
+                    type: 'uri',
+                    label: '推薦',
+                    uri: "line://nv/recommendOA/@gxs2296l"
                   },
                   {
                     type: 'uri',
@@ -96,37 +93,29 @@ post '/callback' do
             }
           rescue
             reply = "【#{name}】有點神秘，查一下地圖如何？ \n📍 #{s_link}"
-          end
-          
-          message = {
-            type: 'text',
-            text: reply
-          }
-
-          store = Store.find_by(name: name)
-          if store
-            store.update(name: name, view: store.view+1)
-          else
-            Store.create(name: name)
+            message = {
+              type: 'text',
+              text: reply
+            }
           end
 
-          client.reply_message(event['replyToken'], message_buttons) if message_buttons
-          client.reply_message(event['replyToken'], message)
+          Store.create(name: name, info: user_id)
+          client.reply_message(event['replyToken'], (message_buttons.nil? ? message :  message_buttons) )
         end
 
         if m.start_with? '福賴'
           reply = case m
-          when /福賴我要打/ then
-            Log.create(ticket_user: user_id, info: m, ticket_count: count, ticket_status: 'on')
-            "#{profile['displayName']}要打#{count}個！大家總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個"
-          when /福賴我不要不要打了/ then
-            Log.update_all(ticket_status: 'off')
-            "沒有半個人要打了"
-          when /福賴我不/ then
-            Log.where(ticket_user: user_id).update_all(ticket_status: 'off')
-            total = Log.where(ticket_status: 'on').sum(:ticket_count)
-            result = total == 0 ? '居沒有半個人能打，我要說在座的都是XX！' : "剩下的人總共要打#{total}個，請求支援！"
-            "#{profile['displayName']}不要打了。#{result}"
+          # when /福賴我要打/ then
+          #   Log.create(ticket_user: user_id, info: m, ticket_count: count, ticket_status: 'on')
+          #   "#{profile['displayName']}要打#{count}個！大家總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個"
+          # when /福賴我不要不要打了/ then
+          #   Log.update_all(ticket_status: 'off')
+          #   "沒有半個人要打了"
+          # when /福賴我不/ then
+          #   Log.where(ticket_user: user_id).update_all(ticket_status: 'off')
+          #   total = Log.where(ticket_status: 'on').sum(:ticket_count)
+          #   result = total == 0 ? '居沒有半個人能打，我要說在座的都是XX！' : "剩下的人總共要打#{total}個，請求支援！"
+          #   "#{profile['displayName']}不要打了。#{result}"
           when /好運/ then
             tndcsc_count = ''
             tndcsc_url = 'http://tndcsc.com.tw/'
@@ -137,8 +126,8 @@ post '/callback' do
             cmcsc_url = 'https://cmcsc.cyc.org.tw/api'
             cmcsc_doc = JSON.parse(open(cmcsc_url).read, :headers => true)
             "【北區】#{tndcsc_count}     【朝馬】#{cmcsc_doc['swim'][0]}/#{cmcsc_doc['swim'][1]} 🏊 #{cmcsc_doc['gym'][0]}/#{cmcsc_doc['gym'][1]} 💪 快來減脂增肌！"
-          else
-            '歹勢偶只懂：福賴我要打10個、福賴我不要打了、福賴好運、福賴開(你要查的店名)'
+          # else
+            # '歹勢偶只懂：福賴我要打10個、福賴我不要打了、福賴好運、福賴開(你要查的店名)'
           end
           message = {
             type: 'text',
