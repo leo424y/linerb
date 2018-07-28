@@ -44,7 +44,7 @@ post '/callback' do
           place = URI.escape(name)
           url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=photos,formatted_address,name,rating,opening_hours,geometry&key=#{API_KEY}"
           link = "https://www.google.com/maps/search/?api=1&query=#{place}"
-          s_link = %x(ruby bin/bitly.rb '#{link}').chomp.split('http://')[1]
+          s_link = %x(ruby bin/bitly.rb '#{link}')
           doc = JSON.parse(open(url).read, :headers => true)
           begin
             rating = (doc['candidates'][0]['rating'].to_f * 2).to_i
