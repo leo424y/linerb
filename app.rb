@@ -69,16 +69,6 @@ post '/callback' do
           client.reply_message(event['replyToken'], message)
         end
 
-        if m.start_with? 'storeyy'
-          count = m.split.map{|x| x[/\d+/]}[0].to_i
-          reply = Store.order(view: :desc).limit(count).pluck(:name, :view)
-          message = {
-            type: 'text',
-            text: reply
-          }
-          client.reply_message(event['replyToken'], message)
-        end
-
         if m.start_with? '福賴'
           reply = case m
           when /福賴我要打/ then
