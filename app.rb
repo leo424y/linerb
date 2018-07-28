@@ -72,7 +72,7 @@ post '/callback' do
               altText: '...',
               template: {
                 type: 'buttons',
-                thumbnailImageUrl: 'https://example.com/image.jpg',
+                thumbnailImageUrl: 'https://cdn.pixabay.com/photo/2018/05/21/12/43/sign-3418163_960_720.png',
                 title: name,
                 text: opening_hours,
                 actions: [
