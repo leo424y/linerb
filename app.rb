@@ -55,17 +55,17 @@ post '/callback' do
             promote = ''
             random = Random.new
             if random.rand(3) > -1
-              promote = "👍 推薦親友 line://nv/recommendOA/@gxs2296l"
+              promote = "👍 推薦 line://nv/recommendOA/@gxs2296l"
             end
             unless place_id.nil?
               place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&fields=name,rating,formatted_phone_number,opening_hours&key=#{gmap_key}"
               place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
-              formatted_phone_number = "📞  #{place_id_doc['result']['formatted_phone_number'].gsub(" ","")}" unless place_id_doc['result']['formatted_phone_number'].nil?
+              formatted_phone_number = "📞 電話 #{place_id_doc['result']['formatted_phone_number'].gsub(" ","")}" unless place_id_doc['result']['formatted_phone_number'].nil?
               opening_hours = place_id_doc['result']['opening_hours']['open_now'] ? "【#{name}】\n😃 現在有開" : "【#{name}】\n🔴 現在沒開"
             end
             rating = (doc['candidates'][0]['rating'].to_f * 2).to_i
             star = '⭐'* (rating/2)+'✨' * (rating%2)
-            reply = "#{opening_hours}#{star}\n📍 #{s_link} #{formatted_phone_number}\n#{promote}"
+            reply = "#{opening_hours} #{star}\n📍 地圖 #{s_link}#{formatted_phone_number}\n#{promote}"
           rescue
             reply = "【#{name}】有點神秘，查一下地圖如何？ \n📍 #{s_link}"
           end
