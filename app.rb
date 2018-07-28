@@ -53,8 +53,9 @@ post '/callback' do
             opening_hours = ''
             place_id = doc['candidates'][0]['place_id']
             promote = ''
-            if Random.new.rand(3) > 1
-              promote = '推薦開了嗎給親友，大家不再落空 line://nv/recommendOA/@gxs2296l'
+            random = Random.new
+            if random.rand(3) > 1
+              promote = '推薦有開嗎給親友，大家不再落空 line://nv/recommendOA/@gxs2296l'
             end
             unless place_id.nil?
               place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&fields=name,rating,formatted_phone_number,opening_hours&key=#{gmap_key}"
