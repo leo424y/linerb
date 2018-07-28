@@ -69,6 +69,15 @@ post '/callback' do
           client.reply_message(event['replyToken'], message)
         end
 
+        if m.start_with? 'storeyy'
+          reply = Store.order(view: :desc)
+          message = {
+            type: 'text',
+            text: reply
+          }
+          client.reply_message(event['replyToken'], message)
+        end
+
         if m.start_with? '福賴'
           reply = case m
           when /福賴我要打/ then
