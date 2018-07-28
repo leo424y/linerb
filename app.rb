@@ -65,7 +65,7 @@ post '/callback' do
             end
             rating = (doc['candidates'][0]['rating'].to_f * 2).to_i
             star = '⭐'* (rating/2)+'✨' * (rating%2)
-            reply = "#{opening_hours} 📍 #{s_link} #{star} #{formatted_phone_number} #{promote}"
+            reply = "#{opening_hours}\n📍 #{s_link} \n#{star} \n#{formatted_phone_number} \n#{promote}"
           rescue
             reply = "【#{name}】有點神秘，查一下地圖如何？ 📍 #{s_link}"
           end
