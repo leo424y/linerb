@@ -71,7 +71,7 @@ post '/callback' do
 
         if m.start_with? 'storeyy'
           count = m.split.map{|x| x[/\d+/]}[0].to_i
-          reply = Store.order(view: :desc).pluck(:name, :view).limit(count)
+          reply = Store.order(view: :desc).limit(count).pluck(:name, :view)
           message = {
             type: 'text',
             text: reply
