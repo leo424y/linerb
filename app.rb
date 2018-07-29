@@ -41,7 +41,7 @@ post '/callback' do
         suffixes = %w(有沒有開 有開沒開 開了沒 沒開 有開 開了)
         name = m.chomp('有沒有開').chomp('開了沒').chomp('沒開').chomp('有開').chomp('開了')
 
-        if m.end_with?(*suffixes) && (name != '') && (m.bytesize < 40)
+        if m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40)
           gmap_key = ENV["GMAP_API_KEY"]
           place = URI.escape(name)
           # weekday = Date.today.strftime('%A')
