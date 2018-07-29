@@ -90,6 +90,11 @@ post '/callback' do
                     label: '📍 地圖',
                     uri: s_link
                   },
+                  {
+                    type: 'uri',
+                    label: '💡 回報',
+                    uri: 'line://home/public/post?id=gxs2296l&postId=1153267270308077285'
+                  },
                 ]
               }
             }
