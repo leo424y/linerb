@@ -59,25 +59,38 @@ post '/callback' do
               place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&fields=name,formatted_phone_number,rating,opening_hours&key=#{gmap_key}"
               place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
               formatted_phone_number = "#{place_id_doc['result']['formatted_phone_number'].gsub(" ","")}" unless place_id_doc['result']['formatted_phone_number'].nil?
-              opening_hours = place_id_doc['result']['opening_hours']['open_now'] ? "😃 現在有開#{funny}" : "🔴 現在沒開"
+              is_open_now = place_id_doc['result']['opening_hours']['open_now']
+
+              opening_hours = is_open_now ? "😃 現在有開#{funny}" : "🔴 現在沒開"
               # image_url = URI.parse("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=#{place_id_doc['result']['photos'][0]['photo_reference']}&key=#{gmap_key}")
               # thumbnailImageUrl = "https://#{Net::HTTP.get(image_url).string_between_markers('https://','=s1600-w400')}=s1600-w400"
             end
             # rating = (doc['candidates'][0]['rating'].to_f * 2).to_i
             # star = '⭐'* (rating/2)+'✨' * (rating%2)
             # reply = "【#{name}】\n#{opening_hours}📍 地圖 #{s_link}\n#{promote}"
-
-            # message_buttons_phone = {
-            #   template: {
-            #     actions: [
-            #       {
-            #         type: 'uri',
-            #         label: '📞 通話',
-            #         uri: "tel:#{formatted_phone_number}"
-            #       },
-            #     ]
-            #   }
-            # }
+            actions_phone_h = {
+                                type: 'uri',
+                                label: '📞 通話',
+                                uri: "tel:#{formatted_phone_number}"
+                              }
+            actions_a = [
+              {
+                type: 'uri',
+                label: '📍 地圖',
+                uri: s_link
+              },
+              (actions_phone_h if is_open_now),
+              {
+                type: 'uri',
+                label: '👍 推薦',
+                uri: "line://nv/recommendOA/@gxs2296l"
+              },
+              {
+                type: 'uri',
+                label: '💡 回報',
+                uri: 'line://home/public/post?id=gxs2296l&postId=1153267270308077285'
+              },
+            ].compact
             message_buttons = {
               type: 'template',
               altText: '...',
@@ -85,31 +98,9 @@ post '/callback' do
                 type: 'buttons',
                 title: name,
                 text: opening_hours,
-                actions: [
-                  {
-                    type: 'uri',
-                    label: '📍 地圖',
-                    uri: s_link
-                  },
-                  {
-                    type: 'uri',
-                    label: '📞 通話',
-                    uri: "tel:#{formatted_phone_number}"
-                  },
-                  {
-                    type: 'uri',
-                    label: '👍 推薦',
-                    uri: "line://nv/recommendOA/@gxs2296l"
-                  },
-                  {
-                    type: 'uri',
-                    label: '💡 回報',
-                    uri: 'line://home/public/post?id=gxs2296l&postId=1153267270308077285'
-                  },
-                ]
+                actions: actions_a,
               }
             }
-            # message_buttons.merge!(message_buttons_phone) unless formatted_phone_number.nil?
           rescue
             reply = "藏在你心底的【#{name}】有點神秘，直接看地圖結果如何？ \n📍 #{s_link}"
             message = {
