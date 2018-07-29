@@ -75,18 +75,23 @@ post '/callback' do
                 actions: [
                   {
                     type: 'uri',
-                    label: '推薦',
+                    label: '👍 推薦',
                     uri: "line://nv/recommendOA/@gxs2296l"
                   },
                   {
                     type: 'uri',
-                    label: '通話',
+                    label: '📞 通話',
                     uri: "tel:#{formatted_phone_number}"
                   },
                   {
                     type: 'uri',
-                    label: '地圖',
+                    label: '📍 地圖',
                     uri: s_link
+                  },
+                  {
+                    type: 'uri',
+                    label: '💡 回報',
+                    uri: 'line://home/public/post?id=gxs2296l&postId=1153267270308077285'
                   },
                 ]
               }
