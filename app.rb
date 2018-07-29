@@ -50,7 +50,6 @@ post '/callback' do
           s_link = %x(ruby bin/bitly.rb '#{link}').chomp
           doc = JSON.parse(open(url).read, :headers => true)
           begin
-            formatted_phone_number = ''
             opening_hours = ''
             funny = (m.include? "沒開") ? '啦!~~~~' : ""
             place_id = doc['candidates'][0]['place_id']
@@ -67,6 +66,17 @@ post '/callback' do
             # star = '⭐'* (rating/2)+'✨' * (rating%2)
             # reply = "【#{name}】\n#{opening_hours}📍 地圖 #{s_link}\n#{promote}"
 
+            message_buttons_phone = {
+              template: {
+                actions: [
+                  {
+                    type: 'uri',
+                    label: '📞 通話',
+                    uri: "tel:#{formatted_phone_number}"
+                  },
+                ]
+              }
+            }
             message_buttons = {
               type: 'template',
               altText: '...',
@@ -77,18 +87,13 @@ post '/callback' do
                 actions: [
                   {
                     type: 'uri',
-                    label: '👍 推薦',
-                    uri: "line://nv/recommendOA/@gxs2296l"
-                  },
-                  {
-                    type: 'uri',
-                    label: '📞 通話',
-                    uri: "tel:#{formatted_phone_number}"
-                  },
-                  {
-                    type: 'uri',
                     label: '📍 地圖',
                     uri: s_link
+                  },
+                  {
+                    type: 'uri',
+                    label: '👍 推薦',
+                    uri: "line://nv/recommendOA/@gxs2296l"
                   },
                   {
                     type: 'uri',
@@ -98,6 +103,7 @@ post '/callback' do
                 ]
               }
             }
+            message_buttons.merge!(message_buttons_phone) unless formatted_phone_number.nil?
           rescue
             reply = "藏在你心底的【#{name}】有點神秘，直接看地圖結果如何？ \n📍 #{s_link}"
             message = {
