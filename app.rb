@@ -99,7 +99,7 @@ post '/callback' do
               }
             }
           rescue
-            reply = "【#{name}】有點神秘，查一下地圖如何？ \n📍 #{s_link}"
+            reply = "藏在你心底的【#{name}】有點神秘，直接看地圖結果如何？ \n📍 #{s_link}"
             message = {
               type: 'text',
               text: reply
