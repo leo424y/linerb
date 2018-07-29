@@ -47,7 +47,7 @@ post '/callback' do
           # weekday = Date.today.strftime('%A')
           url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=place_id,photos,formatted_address,name,rating,opening_hours,geometry&key=#{gmap_key}"
           link = "https://www.google.com/maps/search/?api=1&query=#{place}"
-          s_link = %x(ruby bin/bitly.rb '#{link}').chomp
+          # s_link = %x(ruby bin/bitly.rb '#{link}').chomp
           doc = JSON.parse(open(url).read, :headers => true)
           begin
             formatted_phone_number = ''
@@ -87,7 +87,7 @@ post '/callback' do
                   {
                     type: 'uri',
                     label: '📍 地圖',
-                    uri: s_link
+                    uri: link
                   },
                   {
                     type: 'uri',
