@@ -38,10 +38,10 @@ post '/callback' do
         profile = JSON.parse(profile.read_body)
         # count = m.split.map{|x| x[/\d+/]}[0].to_i
 
-        suffixes = %w(有開 開了 有沒有開 開了沒)
+        suffixes = %w(有沒有開 有開沒開 開了沒 沒開 有開 開了)
         if m.end_with?(*suffixes)
           gmap_key = ENV["GMAP_API_KEY"]
-          name = m.chomp('有沒有開').chomp('開了沒').chomp('有開').chomp('開了')
+          name = m.chomp('有沒有開').chomp('開了沒').chomp('沒開').chomp('有開').chomp('開了')
           place = URI.escape(name)
           # weekday = Date.today.strftime('%A')
           url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=place_id,photos,formatted_address,name,rating,opening_hours,geometry&key=#{gmap_key}"
