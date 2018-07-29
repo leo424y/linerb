@@ -52,13 +52,14 @@ post '/callback' do
           begin
             formatted_phone_number = ''
             opening_hours = ''
+            funny = (m.include? "沒開") ? '啦!~~~~' : ""
             place_id = doc['candidates'][0]['place_id']
             # thumbnailImageUrl = 'https://cdn.pixabay.com/photo/2018/05/21/12/43/sign-3418163_960_720.png'
             unless place_id.nil?
               place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&fields=name,rating,formatted_phone_number,opening_hours&key=#{gmap_key}"
               place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
               formatted_phone_number = "#{place_id_doc['result']['formatted_phone_number'].gsub(" ","")}" unless place_id_doc['result']['formatted_phone_number'].nil?
-              opening_hours = place_id_doc['result']['opening_hours']['open_now'] ? "😃 現在有開" : "🔴 現在沒開"
+              opening_hours = place_id_doc['result']['opening_hours']['open_now'] ? "😃 現在有開#{funny}" : "🔴 現在沒開"
               # image_url = URI.parse("https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=#{place_id_doc['result']['photos'][0]['photo_reference']}&key=#{gmap_key}")
               # thumbnailImageUrl = "https://#{Net::HTTP.get(image_url).string_between_markers('https://','=s1600-w400')}=s1600-w400"
             end
