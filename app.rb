@@ -26,7 +26,8 @@ class Place < ActiveRecord::Base
 end
 
 get '/storeyy' do
-  @stores = Store.last(100)
+  @stores = Store.last(10)
+  @top_users =
   erb <<-EOF
   <!DOCTYPE html>
   <html>
@@ -45,9 +46,10 @@ get '/storeyy' do
 
         <tbody>
           <% @stores.each do |store| %>
+            <% profile = JSON.parse(client.get_profile(store.info).read_body)['displayName'] %>
             <tr>
               <td><%= store.name %></td>
-              <td><%= store.info %></td>
+              <td><%= profile %></td>
               <td><%= store.view %></td>
             </tr>
           <% end %>
