@@ -37,7 +37,7 @@ get '/storecsv' do
 end
 
 get '/storeyy' do
-  @stores = Store.last(100)
+  @stores = Store.last(50)
 
   erb <<-EOF
   <!DOCTYPE html>
