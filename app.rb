@@ -8,6 +8,7 @@ require 'json'
 require 'bitly'
 require 'date'
 require 'erb'
+require 'csv'
 
 def client
   @client ||= Line::Bot::Client.new { |config|
@@ -27,7 +28,14 @@ end
 
 get '/storeyy' do
   @stores = Store.last(10)
-  @top_users =
+  csv_string = CSV.generate do |csv|
+    csv << Store.attribute_names
+    Store.all.each do |user|
+      csv << user.attributes.values
+    end
+  end
+  send_data csv_string, :filename => "#{Time.now.strftime("%Y%m%d%H%M%S")}.csv"
+
   erb <<-EOF
   <!DOCTYPE html>
   <html>
