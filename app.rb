@@ -85,6 +85,7 @@ post '/callback' do
         suffixes = %w(有沒有開 有開沒開 開了沒 沒開 有開 開了)
         name = m.chomp('有沒有開').chomp('開了沒').chomp('沒開').chomp('有開').chomp('開了')
 
+        place = URI.escape(name)
         link = "https://www.google.com/maps/search/?api=1&query=#{place}"
         s_link = %x(ruby bin/bitly.rb '#{link}').chomp
 
@@ -92,7 +93,6 @@ post '/callback' do
 
         if m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40) && profile && not_ddos
           gmap_key = ENV["GMAP_API_KEY"]
-          place = URI.escape(name)
           # weekday = Date.today.strftime('%A')
           url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=place_id,name&key=#{gmap_key}"
           doc = JSON.parse(open(url).read, :headers => true)
