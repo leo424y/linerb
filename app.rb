@@ -28,25 +28,33 @@ end
 get '/storeyy' do
   @stores = Store.last(100)
   template = ERB.new <<-EOF
-  <table>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Info</th>
-        <th>View</th>
-      </tr>
-    </thead>
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>LinerbSite</title>
+    </head>
+    <body>
+      <table>
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Info</th>
+            <th>View</th>
+          </tr>
+        </thead>
 
-    <tbody>
-      <% @stores.each do |store| %>
-        <tr>
-          <td><%= store.name %></td>
-          <td><%= store.info %></td>
-          <td><%= store.view %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+        <tbody>
+          <% @stores.each do |store| %>
+            <tr>
+              <td><%= store.name %></td>
+              <td><%= store.info %></td>
+              <td><%= store.view %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </body>
+  </html>
   EOF
   puts template.result(binding)
 end
