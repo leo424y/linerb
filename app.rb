@@ -26,7 +26,7 @@ class Place < ActiveRecord::Base
 end
 
 get '/storeyy' do
-  @stores = Store.all
+  @stores = Store.last(100)
   template = ERB.new <<-EOF
   <table>
     <thead>
