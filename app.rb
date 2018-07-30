@@ -136,6 +136,11 @@ post '/callback' do
                 label: '💡 回報',
                 uri: 'line://home/public/post?id=gxs2296l&postId=1153267270308077285'
               },
+              {
+                type: 'message',
+                label: '👏 鼓勵',
+                text: '有開嗎？那藏在你心底深處的秘密基地！這是一個獨立開發的服務，所有軟硬體支出皆由一人負責，若你支持這個想法，歡迎「推薦」親友，或由「回報」留下寶貴意見，而您的「贊助」則是讓這個服務持續運作的重要因素，您可以點此：http://j.mp/is_open 自由贊助任意金額，「有開嗎」邀請你一起讓大家的心，不再落空。'
+              },
             ].compact
             message_buttons = {
               type: 'template',
