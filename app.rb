@@ -106,25 +106,25 @@ post '/callback' do
               is_open_now = place_id_doc['result']['opening_hours']['open_now']
               if is_open_now
                 opening_hours = "😃 現在有開#{funny}"
-                place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&fields=formatted_phone_number&key=#{gmap_key}"
-                place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
-                formatted_phone_number = "#{place_id_doc['result']['formatted_phone_number'].gsub(" ","")}" unless place_id_doc['result']['formatted_phone_number'].nil?
+                # place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&fields=formatted_phone_number&key=#{gmap_key}"
+                # place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
+                # formatted_phone_number = "#{place_id_doc['result']['formatted_phone_number'].gsub(" ","")}" unless place_id_doc['result']['formatted_phone_number'].nil?
               else
                 opening_hours = "🔴 現在沒開"
               end
             end
-            actions_phone_h = {
-              type: 'uri',
-              label: '📞 通話',
-              uri: "tel:#{formatted_phone_number}"
-            }
+            # actions_phone_h = {
+            #   type: 'uri',
+            #   label: '📞 通話',
+            #   uri: "tel:#{formatted_phone_number}"
+            # }
+            # (actions_phone_h if formatted_phone_number),
             actions_a = [
               {
                 type: 'uri',
                 label: '📍 地圖',
                 uri: s_link
               },
-              (actions_phone_h if formatted_phone_number),
               {
                 type: 'uri',
                 label: '👍 推薦',
