@@ -26,15 +26,19 @@ end
 class Place < ActiveRecord::Base
 end
 
-get '/storeyy' do
-  @stores = Store.last(10)
+get '/storecsv' do
   csv_string = CSV.generate do |csv|
-    csv << Store.attribute_names
-    Store.all.each do |user|
+    csv << @stores.attribute_names
+    @stores.all.each do |user|
       csv << user.attributes.values
     end
   end
-  send_data csv_string, :filename => "#{Time.now.strftime("%Y%m%d%H%M%S")}.csv"
+  content_type 'application/octet-stream'
+  csv_string
+end
+
+get '/storeyy' do
+  @stores = Store.last(100)
 
   erb <<-EOF
   <!DOCTYPE html>
