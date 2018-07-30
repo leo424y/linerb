@@ -27,7 +27,7 @@ end
 
 get '/storeyy' do
   @stores = Store.last(100)
-  template = ERB.new <<-EOF
+  erb <<-EOF
   <!DOCTYPE html>
   <html>
     <head>
@@ -56,7 +56,6 @@ get '/storeyy' do
     </body>
   </html>
   EOF
-  puts template.result(binding)
 end
 
 
