@@ -40,7 +40,6 @@ get '/storeyy' do
           <tr>
             <th>Name</th>
             <th>Info</th>
-            <th>View</th>
           </tr>
         </thead>
 
@@ -50,7 +49,6 @@ get '/storeyy' do
             <tr>
               <td><%= store.name %></td>
               <td><%= profile %></td>
-              <td><%= store.view %></td>
             </tr>
           <% end %>
         </tbody>
