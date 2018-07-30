@@ -27,14 +27,13 @@ class Place < ActiveRecord::Base
 end
 
 get '/storecsv' do
-  csv_string = CSV.generate do |csv|
-    csv << @stores.attribute_names
-    @stores.all.each do |user|
+  content_type 'application/octet-stream'
+  CSV.generate do |csv|
+    csv << Store.attribute_names
+    Store.all.each do |user|
       csv << user.attributes.values
     end
   end
-  content_type 'application/octet-stream'
-  csv_string
 end
 
 get '/storeyy' do
