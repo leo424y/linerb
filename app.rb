@@ -7,6 +7,7 @@ require 'open-uri'
 require 'json'
 require 'bitly'
 require 'date'
+require 'erb'
 
 def client
   @client ||= Line::Bot::Client.new { |config|
@@ -23,6 +24,33 @@ end
 
 class Place < ActiveRecord::Base
 end
+
+get '/storeyy' do
+  @stores = Store.all
+  template = ERB.new <<-EOF
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Info</th>
+        <th>View</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @stores.each do |store| %>
+        <tr>
+          <td><%= store.name %></td>
+          <td><%= store.info %></td>
+          <td><%= store.view %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  EOF
+  puts template.result(binding)
+end
+
 
 post '/callback' do
   body = request.body.read
