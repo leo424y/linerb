@@ -80,26 +80,26 @@ post '/callback' do
       when Line::Bot::Event::MessageType::Text
         m = event.message['text'].rstrip.chomp('？').chomp('?').chomp('!').chomp('！').chomp('嗎')
         user_id = event['source']['userId']
-        profile = client.get_profile(user_id)
-        profile = JSON.parse(profile.read_body)
-        # count = m.split.map{|x| x[/\d+/]}[0].to_i
+        profile = JSON.parse(client.get_profile(user_id).read_body)['displayName']
 
         suffixes = %w(有沒有開 有開沒開 開了沒 沒開 有開 開了)
         name = m.chomp('有沒有開').chomp('開了沒').chomp('沒開').chomp('有開').chomp('開了')
 
-        if m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40)
+        link = "https://www.google.com/maps/search/?api=1&query=#{place}"
+        s_link = %x(ruby bin/bitly.rb '#{link}').chomp
+
+        not_ddos = (Store.last.info != user_id)
+
+        if m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40) && profile && not_ddos
           gmap_key = ENV["GMAP_API_KEY"]
           place = URI.escape(name)
           # weekday = Date.today.strftime('%A')
           url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=place_id,name&key=#{gmap_key}"
-          link = "https://www.google.com/maps/search/?api=1&query=#{place}"
-          s_link = %x(ruby bin/bitly.rb '#{link}').chomp
           doc = JSON.parse(open(url).read, :headers => true)
           begin
             opening_hours = ''
             funny = (m.include? "沒開") ? '啦!~~~~' : ""
             place_id = doc['candidates'][0]['place_id']
-            # thumbnailImageUrl = 'https://cdn.pixabay.com/photo/2018/05/21/12/43/sign-3418163_960_720.png'
             unless place_id.nil?
               place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&fields=name,opening_hours&key=#{gmap_key}"
               place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
@@ -155,8 +155,15 @@ post '/callback' do
           end
 
           Store.create(name: name, info: user_id)
-          client.reply_message(event['replyToken'], (message_buttons.nil? ? message :  message_buttons) )
+        else
+          reply = "藏在你心底的【#{name}】有點神秘，直接看地圖結果如何？ \n📍 #{s_link}"
+          message = {
+            type: 'text',
+            text: reply
+          }
         end
+        client.reply_message(event['replyToken'], (message_buttons.nil? ? message :  message_buttons) )
+
 
         if m.start_with? '福賴'
           reply = case m
