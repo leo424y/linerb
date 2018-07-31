@@ -80,6 +80,7 @@ post '/callback' do
       when Line::Bot::Event::MessageType::Text
         m = event.message['text'].rstrip.chomp('？').chomp('?').chomp('!').chomp('！').chomp('嗎')
         user_id = event['source']['userId']
+        group_id = event['source']['groupId']
         profile = JSON.parse(client.get_profile(user_id).read_body)['displayName']
         suffixes = %w(有沒有開 有開沒開 開了沒 沒開 有開 開了)
         skip_name = IO.readlines("data/top200_731a")
@@ -165,7 +166,7 @@ post '/callback' do
               # }
             end
 
-            Store.create(name: name, info: user_id)
+            Store.create(name: name, info: user_id, group_id: group_id)
           else
             message_buttons = {
               type: 'template',
