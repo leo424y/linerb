@@ -122,7 +122,7 @@ post '/callback' do
               actions_a = [
                 {
                   type: 'uri',
-                  label: '📍 地圖',
+                  label: '📍 詳情',
                   uri: s_link
                 },
                 {
@@ -157,7 +157,7 @@ post '/callback' do
                   actions: [
                     {
                       type: 'uri',
-                      label: '📍 地圖',
+                      label: '📍 詳情',
                       uri: s_link
                     },
                   ]
@@ -182,7 +182,7 @@ post '/callback' do
                 actions: [
                   {
                     type: 'uri',
-                    label: '📍 地圖',
+                    label: '📍 詳情',
                     uri: s_link
                   },
                 ]
