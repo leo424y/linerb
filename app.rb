@@ -51,6 +51,7 @@ get '/storeyy' do
           <tr>
             <th>Name</th>
             <th>Info</th>
+            <th>Group</th>
           </tr>
         </thead>
 
@@ -60,6 +61,7 @@ get '/storeyy' do
             <tr>
               <td><%= store.name %></td>
               <td><%= profile %></td>
+              <td><%= store.group_id %></td>
             </tr>
           <% end %>
         </tbody>
