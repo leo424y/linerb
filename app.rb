@@ -88,8 +88,8 @@ post '/callback' do
         place = URI.escape(name)
         link = "https://www.google.com/maps/search/?api=1&query=#{place}"
         s_link = %x(ruby bin/bitly.rb '#{link}').chomp
-
-        not_ddos = (Store.last.info != user_id)
+# .order(id: :desc).limit(3).where(sub_category_id: 1).last[:created_at]
+        not_ddos = (Time.now - Store.order(id: :desc).limit(10).find_by(info: user_id)[:created_at] < 10)
         if m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40) && (!skip_name.map(&:chomp).include? name)
           if profile && not_ddos
             gmap_key = ENV["GMAP_API_KEY"]
@@ -131,6 +131,11 @@ post '/callback' do
                   uri: "line://nv/recommendOA/@gxs2296l"
                 },
                 {
+                  type: 'uri',
+                  label: '💡 回報',
+                  uri: 'line://home/public/post?id=gxs2296l&postId=1153267270308077285'
+                },
+                {
                   type: 'message',
                   label: '👏 鼓勵',
                   text: '有開嗎？那藏在你心底深處的秘密基地！這是一個獨立開發的服務，所有軟硬體支出皆由一人負責，若你支持這個想法，歡迎「推薦」親友，或由至首頁留下寶貴意見，而您的「贊助」則是讓這個服務持續運作的重要因素，您可以點此：http://j.mp/is_open 自由贊助任意金額，「有開嗎」邀請你一起讓大家的心，不再落空。'
@@ -153,7 +158,7 @@ post '/callback' do
                 template: {
                   type: 'buttons',
                   title: name,
-                  text: '🤫 有點神秘',
+                  text: '🤷 有點神秘，請見詳情',
                   actions: [
                     {
                       type: 'uri',
@@ -178,7 +183,7 @@ post '/callback' do
               template: {
                 type: 'buttons',
                 title: name,
-                text: '🤫 有點神秘',
+                text: '🤷 有點神秘，請見詳情',
                 actions: [
                   {
                     type: 'uri',
@@ -192,21 +197,8 @@ post '/callback' do
           client.reply_message(event['replyToken'], message_buttons )
         end
 
-
-
         if m.start_with? '福賴'
           reply = case m
-          # when /福賴我要打/ then
-          #   Log.create(ticket_user: user_id, info: m, ticket_count: count, ticket_status: 'on')
-          #   "#{profile['displayName']}要打#{count}個！大家總共要打#{Log.where(ticket_status: 'on').sum(:ticket_count)}個"
-          # when /福賴我不要不要打了/ then
-          #   Log.update_all(ticket_status: 'off')
-          #   "沒有半個人要打了"
-          # when /福賴我不/ then
-          #   Log.where(ticket_user: user_id).update_all(ticket_status: 'off')
-          #   total = Log.where(ticket_status: 'on').sum(:ticket_count)
-          #   result = total == 0 ? '居沒有半個人能打，我要說在座的都是XX！' : "剩下的人總共要打#{total}個，請求支援！"
-          #   "#{profile['displayName']}不要打了。#{result}"
           when /好運/ then
             tndcsc_count = ''
             tndcsc_url = 'http://tndcsc.com.tw/'
@@ -217,8 +209,6 @@ post '/callback' do
             cmcsc_url = 'https://cmcsc.cyc.org.tw/api'
             cmcsc_doc = JSON.parse(open(cmcsc_url).read, :headers => true)
             "【北區】#{tndcsc_count}     【朝馬】#{cmcsc_doc['swim'][0]}/#{cmcsc_doc['swim'][1]} 🏊 #{cmcsc_doc['gym'][0]}/#{cmcsc_doc['gym'][1]} 💪 快來減脂增肌！"
-          # else
-            # '歹勢偶只懂：福賴我要打10個、福賴我不要打了、福賴好運、福賴開(你要查的店名)'
           end
           message = {
             type: 'text',
