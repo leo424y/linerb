@@ -62,7 +62,7 @@ get '/storeyy' do
             <tr>
               <td><%= store.name %></td>
               <td><%= profile %></td>
-              <td><%= member_ids.map { |x| JSON.parse(client.get_profile(x).read_body)['displayName'] } %></td>
+              <td><%= member_ids %></td>
             </tr>
           <% end %>
         </tbody>
