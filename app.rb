@@ -189,7 +189,7 @@ post '/callback' do
             }
           }
         end
-        client.reply_message(event['replyToken'], message_buttons )
+        client.reply_message(event['replyToken'], message_buttons ) if message_buttons
 
 
         if m.start_with? '福賴'
