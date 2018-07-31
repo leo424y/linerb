@@ -147,22 +147,49 @@ post '/callback' do
               }
             }
           rescue
-            reply = "藏在你心底的【#{name}】有點神秘，直接看地圖結果如何？ \n📍 #{s_link}"
-            message = {
-              type: 'text',
-              text: reply
+            message_buttons = {
+              type: 'template',
+              altText: '...',
+              template: {
+                type: 'buttons',
+                title: name,
+                text: '🤫 有點神秘',
+                actions: [
+                  {
+                    type: 'uri',
+                    label: '📍 地圖',
+                    uri: s_link
+                  },
+                ]
+              }
             }
+            # reply = "藏在你心底的【#{name}】有點神秘，直接看地圖結果如何？ \n📍 #{s_link}"
+            # message = {
+            #   type: 'text',
+            #   text: reply
+            # }
           end
 
           Store.create(name: name, info: user_id)
         else
-          reply = "藏在你心底的【#{name}】有點神秘，直接看地圖結果如何？ \n📍 #{s_link}"
-          message = {
-            type: 'text',
-            text: reply
+          message_buttons = {
+            type: 'template',
+            altText: '...',
+            template: {
+              type: 'buttons',
+              title: name,
+              text: '🤫 有點神秘',
+              actions: [
+                {
+                  type: 'uri',
+                  label: '📍 地圖',
+                  uri: s_link
+                },
+              ]
+            }
           }
         end
-        client.reply_message(event['replyToken'], (message_buttons.nil? ? message :  message_buttons) )
+        client.reply_message(event['replyToken'], message_buttons )
 
 
         if m.start_with? '福賴'
