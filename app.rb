@@ -90,8 +90,8 @@ post '/callback' do
         s_link = %x(ruby bin/bitly.rb '#{link}').chomp
 # .order(id: :desc).limit(3).where(sub_category_id: 1).last[:created_at]
         not_ddos = (Time.now - Store.order(id: :desc).limit(10).find_by(info: user_id)[:created_at] < 10)
-        if m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40) && (!skip_name.map(&:chomp).include? name)
-          if profile && not_ddos
+        if m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40)
+          if profile && not_ddos && (!skip_name.map(&:chomp).include? name)
             gmap_key = ENV["GMAP_API_KEY"]
             # weekday = Date.today.strftime('%A')
             url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=place_id,name&key=#{gmap_key}"
