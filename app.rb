@@ -90,63 +90,88 @@ post '/callback' do
         s_link = %x(ruby bin/bitly.rb '#{link}').chomp
 
         not_ddos = (Store.last.info != user_id)
-
-        if m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40) && profile && not_ddos
-          gmap_key = ENV["GMAP_API_KEY"]
-          # weekday = Date.today.strftime('%A')
-          url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=place_id,name&key=#{gmap_key}"
-          doc = JSON.parse(open(url).read, :headers => true)
-          begin
-            opening_hours = ''
-            funny = (m.include? "沒開") ? '啦!~~~~' : ""
-            place_id = doc['candidates'][0]['place_id']
-            unless place_id.nil?
-              place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&fields=name,opening_hours&key=#{gmap_key}"
-              place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
-              is_open_now = place_id_doc['result']['opening_hours']['open_now']
-              if is_open_now
-                opening_hours = "😃 現在有開#{funny}"
-                # place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&fields=formatted_phone_number&key=#{gmap_key}"
-                # place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
-                # formatted_phone_number = "#{place_id_doc['result']['formatted_phone_number'].gsub(" ","")}" unless place_id_doc['result']['formatted_phone_number'].nil?
-              else
-                opening_hours = "🔴 現在沒開"
+        if m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40)
+          if profile && not_ddos
+            gmap_key = ENV["GMAP_API_KEY"]
+            # weekday = Date.today.strftime('%A')
+            url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=place_id,name&key=#{gmap_key}"
+            doc = JSON.parse(open(url).read, :headers => true)
+            begin
+              opening_hours = ''
+              funny = (m.include? "沒開") ? '啦!~~~~' : ""
+              place_id = doc['candidates'][0]['place_id']
+              unless place_id.nil?
+                place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&fields=name,opening_hours&key=#{gmap_key}"
+                place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
+                is_open_now = place_id_doc['result']['opening_hours']['open_now']
+                if is_open_now
+                  opening_hours = "😃 現在有開#{funny}"
+                  # place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&fields=formatted_phone_number&key=#{gmap_key}"
+                  # place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
+                  # formatted_phone_number = "#{place_id_doc['result']['formatted_phone_number'].gsub(" ","")}" unless place_id_doc['result']['formatted_phone_number'].nil?
+                else
+                  opening_hours = "🔴 現在沒開"
+                end
               end
-            end
-            # actions_phone_h = {
-            #   type: 'uri',
-            #   label: '📞 通話',
-            #   uri: "tel:#{formatted_phone_number}"
-            # }
-            # (actions_phone_h if formatted_phone_number),
-            actions_a = [
-              {
-                type: 'uri',
-                label: '📍 地圖',
-                uri: s_link
-              },
-              {
-                type: 'uri',
-                label: '👍 推薦',
-                uri: "line://nv/recommendOA/@gxs2296l"
-              },
-              {
-                type: 'message',
-                label: '👏 鼓勵',
-                text: '有開嗎？那藏在你心底深處的秘密基地！這是一個獨立開發的服務，所有軟硬體支出皆由一人負責，若你支持這個想法，歡迎「推薦」親友，或由至首頁留下寶貴意見，而您的「贊助」則是讓這個服務持續運作的重要因素，您可以點此：http://j.mp/is_open 自由贊助任意金額，「有開嗎」邀請你一起讓大家的心，不再落空。'
-              },
-            ].compact
-            message_buttons = {
-              type: 'template',
-              altText: '...',
-              template: {
-                type: 'buttons',
-                title: name,
-                text: opening_hours,
-                actions: actions_a,
+              # actions_phone_h = {
+              #   type: 'uri',
+              #   label: '📞 通話',
+              #   uri: "tel:#{formatted_phone_number}"
+              # }
+              # (actions_phone_h if formatted_phone_number),
+              actions_a = [
+                {
+                  type: 'uri',
+                  label: '📍 地圖',
+                  uri: s_link
+                },
+                {
+                  type: 'uri',
+                  label: '👍 推薦',
+                  uri: "line://nv/recommendOA/@gxs2296l"
+                },
+                {
+                  type: 'message',
+                  label: '👏 鼓勵',
+                  text: '有開嗎？那藏在你心底深處的秘密基地！這是一個獨立開發的服務，所有軟硬體支出皆由一人負責，若你支持這個想法，歡迎「推薦」親友，或由至首頁留下寶貴意見，而您的「贊助」則是讓這個服務持續運作的重要因素，您可以點此：http://j.mp/is_open 自由贊助任意金額，「有開嗎」邀請你一起讓大家的心，不再落空。'
+                },
+              ].compact
+              message_buttons = {
+                type: 'template',
+                altText: '...',
+                template: {
+                  type: 'buttons',
+                  title: name,
+                  text: opening_hours,
+                  actions: actions_a,
+                }
               }
-            }
-          rescue
+            rescue
+              message_buttons = {
+                type: 'template',
+                altText: '...',
+                template: {
+                  type: 'buttons',
+                  title: name,
+                  text: '🤫 有點神秘',
+                  actions: [
+                    {
+                      type: 'uri',
+                      label: '📍 地圖',
+                      uri: s_link
+                    },
+                  ]
+                }
+              }
+              # reply = "藏在你心底的【#{name}】有點神秘，直接看地圖結果如何？ \n📍 #{s_link}"
+              # message = {
+              #   type: 'text',
+              #   text: reply
+              # }
+            end
+
+            Store.create(name: name, info: user_id)
+          else
             message_buttons = {
               type: 'template',
               altText: '...',
@@ -163,33 +188,10 @@ post '/callback' do
                 ]
               }
             }
-            # reply = "藏在你心底的【#{name}】有點神秘，直接看地圖結果如何？ \n📍 #{s_link}"
-            # message = {
-            #   type: 'text',
-            #   text: reply
-            # }
           end
-
-          Store.create(name: name, info: user_id)
-        else
-          message_buttons = {
-            type: 'template',
-            altText: '...',
-            template: {
-              type: 'buttons',
-              title: name,
-              text: '🤫 有點神秘',
-              actions: [
-                {
-                  type: 'uri',
-                  label: '📍 地圖',
-                  uri: s_link
-                },
-              ]
-            }
-          }
+          client.reply_message(event['replyToken'], message_buttons )
         end
-        client.reply_message(event['replyToken'], message_buttons ) if message_buttons
+
 
 
         if m.start_with? '福賴'
