@@ -58,11 +58,10 @@ get '/storeyy' do
         <tbody>
           <% @stores.each do |store| %>
             <% profile = JSON.parse(client.get_profile(store.info).read_body)['displayName'] %>
-            <% group_profile = JSON.parse(client.get_profile(store.group_id).read_body)['displayName'] %>
             <tr>
               <td><%= store.name %></td>
               <td><%= profile %></td>
-              <td><%= group_profile %></td>
+              <td><%= store.group_id %></td>
             </tr>
           <% end %>
         </tbody>
