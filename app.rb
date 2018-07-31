@@ -81,16 +81,16 @@ post '/callback' do
         m = event.message['text'].rstrip.chomp('？').chomp('?').chomp('!').chomp('！').chomp('嗎')
         user_id = event['source']['userId']
         profile = JSON.parse(client.get_profile(user_id).read_body)['displayName']
-
         suffixes = %w(有沒有開 有開沒開 開了沒 沒開 有開 開了)
-        name = m.chomp('有沒有開').chomp('開了沒').chomp('沒開').chomp('有開').chomp('開了')
+        skip_name = IO.readlines("data/top200_731a")
 
+        name = m.chomp('有沒有開').chomp('開了沒').chomp('沒開').chomp('有開').chomp('開了')
         place = URI.escape(name)
         link = "https://www.google.com/maps/search/?api=1&query=#{place}"
         s_link = %x(ruby bin/bitly.rb '#{link}').chomp
 
         not_ddos = (Store.last.info != user_id)
-        if m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40)
+        if m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40) && (!skip_name.map(&:chomp).include? name)
           if profile && not_ddos
             gmap_key = ENV["GMAP_API_KEY"]
             # weekday = Date.today.strftime('%A')
