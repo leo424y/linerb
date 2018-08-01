@@ -83,7 +83,8 @@ post '/callback' do
         m = event.message['text'].rstrip.chomp('？').chomp('?').chomp('!').chomp('！').chomp('嗎')
         user_id = event['source']['userId']
         group_id = event['source']['groupId']
-        profile = JSON.parse(client.get_profile(user_id).read_body)['displayName']
+        user_name = JSON.parse(client.get_profile(user_id).read_body)['displayName']
+
         suffixes = %w(有沒有開 有開沒開 開了沒 沒開 有開 開了)
         skip_name = IO.readlines("data/top200_731a")
 
@@ -115,7 +116,7 @@ post '/callback' do
 
           if m == '麥當勞中港四店有開'
             message_buttons_text = '😃 現在有開'
-          else profile && not_ddos && (!skip_name.map(&:chomp).include? name)
+          else user_id && not_ddos && (!skip_name.map(&:chomp).include? name)
             gmap_key = ENV["GMAP_API_KEY"]
             # weekday = Date.today.strftime('%A')
             url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=place_id,name&key=#{gmap_key}"
@@ -156,6 +157,14 @@ post '/callback' do
             }
           }
           client.reply_message(event['replyToken'], message_buttons )
+        end
+        if m == '不再落空' && user_id && group_id
+          Vip.create(user_id: user_id, group_id: group_id)
+          message = {
+            type: 'text',
+            text: "感謝您讓群組成員不再落空，系統確認後將優先為大家查詢「有開嗎」。歡迎拉我進其他群組，也可提升優先權哦！"
+          }
+          client.reply_message(event['replyToken'], message)
         end
 
         if m.start_with? '福賴'
