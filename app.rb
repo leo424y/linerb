@@ -88,10 +88,11 @@ post '/callback' do
         place = URI.escape(name)
         link = "https://www.google.com/maps/search/?api=1&query=#{place}"
         s_link = %x(ruby bin/bitly.rb '#{link}').chomp
-        # input_duration = Time.now - Store.order(id: :desc).find_by(info: user_id).created_at
-        # not_ddos = (input_duration > 10)
+
         if m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40)
-          not_ddos = (Store.last.info != user_id)
+          input_duration = Time.now - Store.last.created_at
+          not_ddos = (input_duration > 10)
+          # not_ddos = (Store.last.info != user_id)
 
           actions_a = [
             {
