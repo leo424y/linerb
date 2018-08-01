@@ -17,14 +17,10 @@ def client
   }
 end
 
-class Log < ActiveRecord::Base
-end
-
-class Store < ActiveRecord::Base
-end
-
-class Place < ActiveRecord::Base
-end
+class Log < ActiveRecord::Base; end
+class Store < ActiveRecord::Base; end
+class Place < ActiveRecord::Base; end
+class Vip < ActiveRecord::Base; end
 
 get '/storecsv' do
   content_type 'application/octet-stream'
