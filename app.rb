@@ -158,7 +158,7 @@ post '/callback' do
           Vip.create(user_id: user_id, group_id: group_id)
           message = {
             type: 'text',
-            text: "感謝您讓群組成員不再落空，系統確認後將優先為大家查詢「有開嗎」。歡迎拉我進其他群組，也可提升優先權哦！"
+            text: IO.readlines("data/promote_check").join
           }
           client.reply_message(event['replyToken'], message)
         end
