@@ -95,39 +95,40 @@ post '/callback' do
         # not_ddos = (input_duration > 10)
         not_ddos = Store.last.info != user_id
         if m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40)
-          if profile && not_ddos && (!skip_name.map(&:chomp).include? name)
-            gmap_key = ENV["GMAP_API_KEY"]
-            # weekday = Date.today.strftime('%A')
-            url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=place_id,name&key=#{gmap_key}"
-            doc = JSON.parse(open(url).read, :headers => true)
+          actions_a = [
+            {
+              type: 'uri',
+              label: '📍 詳情',
+              uri: s_link
+            },
+            {
+              type: 'uri',
+              label: '👍 推薦',
+              uri: "line://nv/recommendOA/@gxs2296l"
+            },
+            {
+              type: 'message',
+              label: '🥇 優先',
+              text: "有開嗎？那藏在你心底深處的秘密基地！\n現在起，只要拉【有開嗎】進親友的【群組】，示範使用一次如：\n\n麥當勞中港四店有開嗎？\n\n留言「不再落空」後，即能取得永久優先使用權利！\n【有開嗎】邀請你一起讓大家的心，不再落空，名額有限，敬請把握。"
+            },
+          ]
 
-            actions_a = [
-              {
-                type: 'uri',
-                label: '📍 詳情',
-                uri: s_link
-              },
-              {
-                type: 'uri',
-                label: '👍 推薦',
-                uri: "line://nv/recommendOA/@gxs2296l"
-              },
-              {
-                type: 'message',
-                label: '👏 優先',
-                text: "有開嗎？那藏在你心底深處的秘密基地！\n推廣期間，只要拉【有開嗎】進親友的【群組】，且示範使用一次如：\n\n台中市北區國民運動中心有開嗎？\n\n，即能取得永久使用權利！\n【有開嗎】邀請你一起讓大家的心，不再落空，名額有限，敬請把握。"
-              },
-            ]
+          if m=='麥當勞中港四店'
             message_buttons = {
               type: 'template',
               altText: '...',
               template: {
                 type: 'buttons',
                 title: name,
-                text: '💡 請見詳情',
+                text: '😃 現在有開',
                 actions: actions_a,
               }
             }
+          else profile && not_ddos && (!skip_name.map(&:chomp).include? name)
+            gmap_key = ENV["GMAP_API_KEY"]
+            # weekday = Date.today.strftime('%A')
+            url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=place_id,name&key=#{gmap_key}"
+            doc = JSON.parse(open(url).read, :headers => true)
 
             begin
               opening_hours = ''
