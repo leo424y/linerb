@@ -79,7 +79,7 @@ post '/callback' do
         m = event.message['text'].rstrip.chomp('？').chomp('?').chomp('!').chomp('！').chomp('嗎')
         user_id = event['source']['userId']
         group_id = event['source']['groupId']
-        user_name = JSON.parse(client.get_profile(user_id).read_body)['displayName']
+        # user_name = JSON.parse(client.get_profile(user_id).read_body)['displayName']
 
         suffixes = %w(有沒有開 有開沒開 開了沒 沒開 有開 開了)
         skip_name = IO.readlines("data/top200_731a")
@@ -90,7 +90,7 @@ post '/callback' do
         s_link = %x(ruby bin/bitly.rb '#{link}').chomp
         # input_duration = Time.now - Store.order(id: :desc).find_by(info: user_id).created_at
         # not_ddos = (input_duration > 10)
-        not_ddos = Store.last.info != user_id
+        not_ddos = (Store.last.info != user_id)
         if m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40)
           actions_a = [
             {
