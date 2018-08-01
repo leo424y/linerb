@@ -100,6 +100,25 @@ post '/callback' do
             # weekday = Date.today.strftime('%A')
             url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=place_id,name&key=#{gmap_key}"
             doc = JSON.parse(open(url).read, :headers => true)
+
+            actions_a = [
+              {
+                type: 'uri',
+                label: '📍 詳情',
+                uri: s_link
+              },
+              {
+                type: 'uri',
+                label: '👍 推薦',
+                uri: "line://nv/recommendOA/@gxs2296l"
+              },
+              {
+                type: 'message',
+                label: '👏 永久使用',
+                text: "有開嗎？那藏在你心底深處的秘密基地！\n推廣期間，只要拉「有開嗎」進你的親友「群組」，且示範使用一次，即能取得永久使用權利！\n「有開嗎」邀請你一起讓大家的心，不再落空，名額有限，敬請把握。"
+              },
+            ]
+
             begin
               opening_hours = ''
               funny = (m.include? "沒開") ? '啦!~~~~' : ""
@@ -117,23 +136,6 @@ post '/callback' do
                   opening_hours = "🔴 現在沒開"
                 end
               end
-              actions_a = [
-                {
-                  type: 'uri',
-                  label: '📍 詳情',
-                  uri: s_link
-                },
-                {
-                  type: 'uri',
-                  label: '👍 推薦',
-                  uri: "line://nv/recommendOA/@gxs2296l"
-                },
-                {
-                  type: 'message',
-                  label: '👏 鼓勵',
-                  text: '有開嗎？那藏在你心底深處的秘密基地！這是一個獨立開發的服務，所有軟硬體支出皆由一人負責，若你支持這個想法，歡迎「推薦」親友，或由至首頁留下寶貴意見，而您的「贊助」則是讓這個服務持續運作的重要因素，您可以點此：http://j.mp/is_open 自由贊助任意金額，「有開嗎」邀請你一起讓大家的心，不再落空。'
-                },
-              ].compact
               message_buttons = {
                 type: 'template',
                 altText: '...',
@@ -152,20 +154,9 @@ post '/callback' do
                   type: 'buttons',
                   title: name,
                   text: '🤷 有點神秘，請見詳情',
-                  actions: [
-                    {
-                      type: 'uri',
-                      label: '📍 詳情',
-                      uri: s_link
-                    },
-                  ]
+                  actions: actions_a,
                 }
               }
-              # reply = "藏在你心底的【#{name}】有點神秘，直接看地圖結果如何？ \n📍 #{s_link}"
-              # message = {
-              #   type: 'text',
-              #   text: reply
-              # }
             end
 
             Store.create(name: name, info: user_id, group_id: group_id)
@@ -177,13 +168,7 @@ post '/callback' do
                 type: 'buttons',
                 title: name,
                 text: '🤷 有點神秘，請見詳情',
-                actions: [
-                  {
-                    type: 'uri',
-                    label: '📍 詳情',
-                    uri: s_link
-                  },
-                ]
+                actions: actions_a,
               }
             }
           end
