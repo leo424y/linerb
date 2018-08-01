@@ -158,7 +158,7 @@ post '/callback' do
           }
           client.reply_message(event['replyToken'], message_buttons )
         end
-        if m == '不再落空' && user_id && group_id
+        if (m == '不再落空') && user_id && group_id
           Vip.create(user_id: user_id, group_id: group_id)
           message = {
             type: 'text',
