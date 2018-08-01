@@ -81,7 +81,7 @@ post '/callback' do
         group_id = event['source']['groupId']
         # user_name = JSON.parse(client.get_profile(user_id).read_body)['displayName']
 
-        suffixes = %w(有沒有開 有開沒開 開了沒 沒開 有開 開了)
+        suffixes = %w(有沒有開 有開沒開 開了沒 沒開 有開 開了 は開いていますか)
         skip_name = IO.readlines("data/top200_731a")
 
         name = m.chomp('有沒有開').chomp('開了沒').chomp('沒開').chomp('有開').chomp('開了')
