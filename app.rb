@@ -118,6 +118,16 @@ post '/callback' do
                 text: "有開嗎？那藏在你心底深處的秘密基地！\n推廣期間，只要拉「有開嗎」進你的親友「群組」，且示範使用一次，即能取得永久使用權利！\n「有開嗎」邀請你一起讓大家的心，不再落空，名額有限，敬請把握。"
               },
             ]
+            message_buttons = {
+              type: 'template',
+              altText: '...',
+              template: {
+                type: 'buttons',
+                title: name,
+                text: '💡 請見詳情',
+                actions: actions_a,
+              }
+            }
 
             begin
               opening_hours = ''
@@ -147,30 +157,8 @@ post '/callback' do
                 }
               }
             rescue
-              message_buttons = {
-                type: 'template',
-                altText: '...',
-                template: {
-                  type: 'buttons',
-                  title: name,
-                  text: '🤷 有點神秘，請見詳情',
-                  actions: actions_a,
-                }
-              }
             end
-
             Store.create(name: name, info: user_id, group_id: group_id)
-          else
-            message_buttons = {
-              type: 'template',
-              altText: '...',
-              template: {
-                type: 'buttons',
-                title: name,
-                text: '🤷 有點神秘，請見詳情',
-                actions: actions_a,
-              }
-            }
           end
           client.reply_message(event['replyToken'], message_buttons )
         end
