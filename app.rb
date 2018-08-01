@@ -90,8 +90,9 @@ post '/callback' do
         s_link = %x(ruby bin/bitly.rb '#{link}').chomp
         # input_duration = Time.now - Store.order(id: :desc).find_by(info: user_id).created_at
         # not_ddos = (input_duration > 10)
-        not_ddos = (Store.last.info != user_id)
         if m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40)
+          not_ddos = (Store.last.info != user_id)
+
           actions_a = [
             {
               type: 'uri',
@@ -112,7 +113,7 @@ post '/callback' do
 
           if m == '麥當勞中港四店有開'
             message_buttons_text = '😃 現在有開'
-          else user_id && not_ddos && (!skip_name.map(&:chomp).include? name)
+          else user_id && (not_ddos == true ) && (!skip_name.map(&:chomp).include? name)
             gmap_key = ENV["GMAP_API_KEY"]
             # weekday = Date.today.strftime('%A')
             url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=place_id,name&key=#{gmap_key}"
