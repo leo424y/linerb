@@ -140,10 +140,10 @@ post '/callback' do
                 end
               end
               message_buttons_text = opening_hours
+              Store.create(name: name, info: user_id, group_id: group_id)
             rescue
               message_buttons_text = '⏰ 請見詳情'
             end
-            Store.create(name: name, info: user_id, group_id: group_id)
           end
 
           message_buttons = {
