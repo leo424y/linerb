@@ -109,22 +109,12 @@ post '/callback' do
             {
               type: 'message',
               label: '🥇 優先',
-              text: "有開嗎？那藏在你心底深處的秘密基地！\n現在起，只要拉【有開嗎】進親友的【群組】，示範使用一次如：\n\n麥當勞中港四店有開嗎？\n\n留言「不再落空」後，即能取得永久優先使用權利！\n【有開嗎】邀請你一起讓大家的心，不再落空，名額有限，敬請把握。"
+              text: IO.readlines("data/promote_text").join
             },
           ]
-          m_is_deomo = (m == '麥當勞中港四店有開')
 
-          if m_is_deomo
-            message_buttons = {
-              type: 'template',
-              altText: '...',
-              template: {
-                type: 'buttons',
-                title: name,
-                text: '😃 現在有開',
-                actions: actions_a,
-              }
-            }
+          if m == '麥當勞中港四店有開'
+            message_buttons_text = '😃 現在有開'
           else profile && not_ddos && (!skip_name.map(&:chomp).include? name)
             gmap_key = ENV["GMAP_API_KEY"]
             # weekday = Date.today.strftime('%A')
@@ -148,20 +138,23 @@ post '/callback' do
                   opening_hours = "🔴 現在沒開"
                 end
               end
-              message_buttons = {
-                type: 'template',
-                altText: '...',
-                template: {
-                  type: 'buttons',
-                  title: name,
-                  text: opening_hours,
-                  actions: actions_a,
-                }
-              }
+              message_buttons_text = opening_hours
             rescue
+              message_buttons_text = '⏰ 請見詳情'
             end
             Store.create(name: name, info: user_id, group_id: group_id)
           end
+
+          message_buttons = {
+            type: 'template',
+            altText: '...',
+            template: {
+              type: 'buttons',
+              title: name,
+              text: message_buttons_text,
+              actions: actions_a,
+            }
+          }
           client.reply_message(event['replyToken'], message_buttons )
         end
 
