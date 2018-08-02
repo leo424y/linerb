@@ -116,7 +116,7 @@ post '/callback' do
                 if place_id_doc['result']['opening_hours']
                   is_open_now = place_id_doc['result']['opening_hours']['open_now']
                   opening_hours = is_open_now ? "😃 現在有開#{funny}" : "🔴 現在沒開"
-                  Store.create(name: name, info: user_id, group_id: group_id, place_id: place_id, opening_hours: is_open_now ? is_open_now.to_s : 'no')
+                  Store.create(name: name, info: user_id, group_id: group_id, place_id: place_id, opening_hours: is_open_now.to_s.empty? ? is_open_now.to_s : 'no')
                   message_buttons_text = opening_hours
                 else
                   message_buttons_text = '⏰ 無營業時間，幫忙加上如何？'
