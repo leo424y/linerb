@@ -68,13 +68,13 @@ end
 
 post '/callback' do
   events = client.parse_events_from(request.body.read)
-  user_id = event['source']['userId']
-  group_id = event['source']['groupId']
   events.each { |event|
     case event
     when Line::Bot::Event::Message
       case event.type
       when Line::Bot::Event::MessageType::Text
+        user_id = event['source']['userId']
+        group_id = event['source']['groupId']
         suffixes = IO.readlines("data/keywords").map(&:chomp)
         skip_name = IO.readlines("data/top200_731a").map(&:chomp)
 
