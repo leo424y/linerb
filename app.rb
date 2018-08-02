@@ -34,7 +34,6 @@ end
 
 get '/storeyy' do
   @stores = Store.last(20)
-
   erb <<-EOF
   <!DOCTYPE html>
   <html>
@@ -67,33 +66,24 @@ get '/storeyy' do
   EOF
 end
 
-
 post '/callback' do
-  body = request.body.read
-  events = client.parse_events_from(body)
+  events = client.parse_events_from(request.body.read)
+  user_id = event['source']['userId']
+  group_id = event['source']['groupId']
   events.each { |event|
     case event
     when Line::Bot::Event::Message
       case event.type
       when Line::Bot::Event::MessageType::Text
+        suffixes = IO.readlines("data/keywords").map(&:chomp)
+        skip_name = IO.readlines("data/top200_731a").map(&:chomp)
+
         m = event.message['text'].rstrip.chomp('？').chomp('?').chomp('!').chomp('！').chomp('嗎')
-        user_id = event['source']['userId']
-        group_id = event['source']['groupId']
-        # user_name = JSON.parse(client.get_profile(user_id).read_body)['displayName']
-
-        suffixes = %w(有沒有開 有開沒開 開了沒 沒開 有開 開了 は開いていますか)
-        skip_name = IO.readlines("data/top200_731a")
-
         name = m.chomp('有沒有開').chomp('開了沒').chomp('沒開').chomp('有開').chomp('開了').chomp('は開いていますか')
         place = URI.escape(name)
         link = "https://www.google.com/maps/search/?api=1&query=#{place}"
         s_link = %x(ruby bin/bitly.rb '#{link}').chomp
-
         if m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40)
-          input_duration = Time.now - Store.last.created_at
-          not_ddos = (input_duration > 10)
-          # not_ddos = (Store.last.info != user_id)
-
           actions_a = [
             {
               type: 'uri',
@@ -111,39 +101,34 @@ post '/callback' do
               text: IO.readlines("data/promote_text").join
             },
           ]
-
-          if m == '麥當勞中港四店有開'
+          if name == '麥當勞中港四店'
             message_buttons_text = '😃 現在有開'
-          else user_id && (not_ddos == true ) && (!skip_name.map(&:chomp).include? name)
+          else user_id && (!skip_name.include? name)
             gmap_key = ENV["GMAP_API_KEY"]
-            # weekday = Date.today.strftime('%A')
             url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=place_id,name&key=#{gmap_key}"
             doc = JSON.parse(open(url).read, :headers => true)
-
+            place_id = doc['candidates'][0]['place_id'] if doc['candidates'][0]
             begin
-              opening_hours = ''
               funny = (m.include? "沒開") ? '啦!~~~~' : ""
-              place_id = doc['candidates'][0]['place_id']
               unless place_id.nil?
                 place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&fields=name,opening_hours&key=#{gmap_key}"
                 place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
-                is_open_now = place_id_doc['result']['opening_hours']['open_now']
-                if is_open_now
-                  opening_hours = "😃 現在有開#{funny}"
-                  # place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&fields=formatted_phone_number&key=#{gmap_key}"
-                  # place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
-                  # formatted_phone_number = "#{place_id_doc['result']['formatted_phone_number'].gsub(" ","")}" unless place_id_doc['result']['formatted_phone_number'].nil?
+                if place_id_doc['result']['opening_hours']
+                  is_open_now = place_id_doc['result']['opening_hours']['open_now']
+                  opening_hours = is_open_now ? "😃 現在有開#{funny}" : "🔴 現在沒開"
+                  Store.create(name: name, info: user_id, group_id: group_id, place_id: place_id, opening_hours: is_open_now ? is_open_now.to_s : 'no')
+                  message_buttons_text = opening_hours
                 else
-                  opening_hours = "🔴 現在沒開"
+                  message_buttons_text = '⏰ 無營業時間，幫忙加上如何？'
                 end
+              else
+                Store.create(name: name, info: user_id, group_id: group_id)
+                message_buttons_text = '⏰ 請見詳情'
               end
-              message_buttons_text = opening_hours
-              Store.create(name: name, info: user_id, group_id: group_id)
             rescue
-              message_buttons_text = '⏰ 請見詳情'
+              message_buttons_text = '⏰ 見詳情'
             end
           end
-
           message_buttons = {
             type: 'template',
             altText: '...',
@@ -188,7 +173,6 @@ post '/callback' do
     end
   }
 end
-
 
 class String
   def string_between_markers marker1, marker2
