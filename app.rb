@@ -111,7 +111,7 @@ post '/callback' do
             begin
               funny = (m.include? "沒開") ? '啦!~~~~' : ""
               unless place_id.nil?
-                place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&fields=name,opening_hours,formatted_address&key=#{gmap_key}"
+                place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&fields=name,type,opening_hours,formatted_address&key=#{gmap_key}"
                 place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
                 formatted_address = place_id_doc['result']['formatted_address']
                 name_sys = place_id_doc['result']['name']
