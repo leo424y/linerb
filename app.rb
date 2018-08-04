@@ -25,7 +25,7 @@ class Vip < ActiveRecord::Base; end
 get '/x/:model' do
   content_type 'application/octet-stream'
   CSV.generate do |csv|
-    model = params[:model].constantize
+    model = params['model'].constantize
     csv << model.attribute_names
     model.all.each do |user|
       csv << user.attributes.values
