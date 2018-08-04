@@ -22,7 +22,7 @@ class Store < ActiveRecord::Base; end
 class Place < ActiveRecord::Base; end
 class Vip < ActiveRecord::Base; end
 
-get '/:yy' do
+get 'x/:yy' do
   content_type 'application/octet-stream'
   CSV.generate do |csv|
     yy=[Vip, Store].find { |c| c.to_s == params['yy'] }
