@@ -22,12 +22,12 @@ class Store < ActiveRecord::Base; end
 class Place < ActiveRecord::Base; end
 class Vip < ActiveRecord::Base; end
 
-get '/x/:model' do
+get '/:yy' do
   content_type 'application/octet-stream'
   CSV.generate do |csv|
-    model = params['model'].constantize
-    csv << model.attribute_names
-    model.all.each do |user|
+    yy=[Vip, Store].find { |c| c.to_s == params['yy'] }
+    csv << yy.attribute_names
+    yy.all.each do |user|
       csv << user.attributes.values
     end
   end
