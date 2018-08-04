@@ -21,7 +21,7 @@ class Log < ActiveRecord::Base; end
 class Store < ActiveRecord::Base; end
 class Vip < ActiveRecord::Base; end
 
-get 'x/:yy' do
+get '/x/:yy' do
   content_type 'application/octet-stream'
   CSV.generate do |csv|
     yy=[Vip, Store].find { |c| c.to_s == params['yy'] }
