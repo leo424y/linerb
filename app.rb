@@ -116,6 +116,7 @@ post '/callback' do
                 formatted_address = place_id_doc['result']['formatted_address']
                 name_sys = place_id_doc['result']['name']
                 if place_id_doc['result']['opening_hours']
+                  place_types = place_id_doc['result']['types']
                   is_open_now = place_id_doc['result']['opening_hours']['open_now']
                   weekday_text = place_id_doc['result']['opening_hours']['weekday_text']
                   opening_hours = is_open_now ? "😃 現在有開#{funny}" : "🔴 現在沒開"
@@ -127,6 +128,7 @@ post '/callback' do
                   name: name,
                   name_sys: name_sys,
                   formatted_address: formatted_address,
+                  place_types: place_types,
                   info: user_id,
                   group_id: group_id,
                   place_id: place_id,
