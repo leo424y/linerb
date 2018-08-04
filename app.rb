@@ -32,6 +32,16 @@ get '/storecsv' do
   end
 end
 
+get '/storevip' do
+  content_type 'application/octet-stream'
+  CSV.generate do |csv|
+    csv << Vip.attribute_names
+    Vip.all.each do |v|
+      csv << v.attributes.values
+    end
+  end
+end
+
 get '/storeyy' do
   @stores = Store.last(20)
   erb <<-EOF
