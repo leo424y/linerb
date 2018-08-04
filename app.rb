@@ -135,6 +135,7 @@ post '/callback' do
                 if place_id_doc['result']['opening_hours']
                   place_types = place_id_doc['result']['types']
                   is_open_now = place_id_doc['result']['opening_hours']['open_now']
+                  periods = place_id_doc['result']['opening_hours']['periods']
                   weekday_text = place_id_doc['result']['opening_hours']['weekday_text']
                   opening_hours = is_open_now ? "😃 現在有開#{funny}" : "🔴 現在沒開"
                   message_buttons_text = opening_hours
@@ -150,7 +151,9 @@ post '/callback' do
                   group_id: group_id,
                   place_id: place_id,
                   opening_hours: place_id_doc['result']['opening_hours'] ? is_open_now.to_s : 'no',
-                  weekday_text: weekday_text)
+                  weekday_text: weekday_text,
+                  periods: periods
+                )
               else
                 message_buttons_text = '⏰ 請見詳情'
               end
