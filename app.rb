@@ -106,13 +106,13 @@ post '/callback' do
             message_buttons_text = '😃 現在有開'
           elsif user_id && (!skip_name.include? name)
             gmap_key = ENV["GMAP_API_KEY"]
-            url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=place_id,name&key=#{gmap_key}"
+            url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&language=zh-TW&fields=place_id,name&key=#{gmap_key}"
             doc = JSON.parse(open(url).read, :headers => true)
             place_id = doc['candidates'][0]['place_id'] if doc['candidates'][0]
             begin
               funny = (m.include? "沒開") ? '啦!~~~~' : ""
               unless place_id.nil?
-                place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&fields=name,type,opening_hours,formatted_address&key=#{gmap_key}"
+                place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&language=zh-TW&fields=name,type,opening_hours,formatted_address&key=#{gmap_key}"
                 place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
                 formatted_address = place_id_doc['result']['formatted_address']
                 name_sys = place_id_doc['result']['name']
