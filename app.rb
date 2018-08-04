@@ -111,18 +111,20 @@ post '/callback' do
             begin
               funny = (m.include? "沒開") ? '啦!~~~~' : ""
               unless place_id.nil?
-                place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&fields=name,opening_hours&key=#{gmap_key}"
+                place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&fields=name,opening_hours,formatted_address&key=#{gmap_key}"
                 place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
+                formatted_address = place_id_doc['result']['formatted_address']
+                name_sys = place_id_doc['result']['name']
                 if place_id_doc['result']['opening_hours']
                   is_open_now = place_id_doc['result']['opening_hours']['open_now']
                   opening_hours = is_open_now ? "😃 現在有開#{funny}" : "🔴 現在沒開"
-                  Store.create(name: name, info: user_id, group_id: group_id, place_id: place_id, opening_hours: is_open_now.to_s.empty? ? is_open_now.to_s : 'no')
                   message_buttons_text = opening_hours
                 else
                   message_buttons_text = '⏰ 無營業時間，幫忙加上如何？'
                 end
+                Store.create(name: name, name_sys: name_sys, formatted_address: formatted_address, info: user_id, group_id: group_id, place_id: place_id, opening_hours: place_id_doc['result']['opening_hours'] ? is_open_now.to_s : 'no')
               else
-                Store.create(name: name, info: user_id, group_id: group_id)
+                # Store.create(name: name, name_sys: name_sys, formatted_address: formatted_address, info: user_id, group_id: group_id)
                 message_buttons_text = '⏰ 請見詳情'
               end
             rescue
