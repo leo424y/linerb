@@ -22,7 +22,7 @@ class Store < ActiveRecord::Base; end
 class Place < ActiveRecord::Base; end
 class Vip < ActiveRecord::Base; end
 
-get '/x/:model.csv' do
+get '/x/:model' do
   content_type 'application/octet-stream'
   CSV.generate do |csv|
     model = params[:model].constantize
