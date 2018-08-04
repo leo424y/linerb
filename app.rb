@@ -104,6 +104,11 @@ post '/callback' do
             },
             {
               type: 'uri',
+              label: '💡 建議',
+              uri: 'line://home/public/post?id=gxs2296l&postId=1153267270308077285'
+            },
+            {
+              type: 'uri',
               label: '👍 推薦',
               uri: "line://nv/recommendOA/@gxs2296l"
             },
