@@ -83,6 +83,7 @@ post '/callback' do
         place = URI.escape(name)
         link = "https://www.google.com/maps/search/?api=1&query=#{place}"
         s_link = %x(ruby bin/bitly.rb '#{link}').chomp
+
         if m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40)
           actions_a = [
             {
@@ -103,7 +104,7 @@ post '/callback' do
           ]
           if name == '麥當勞中港四店'
             message_buttons_text = '😃 現在有開'
-          else user_id && (!skip_name.include? name)
+          elsif user_id && (!skip_name.include? name)
             gmap_key = ENV["GMAP_API_KEY"]
             url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&fields=place_id,name&key=#{gmap_key}"
             doc = JSON.parse(open(url).read, :headers => true)
@@ -141,6 +142,8 @@ post '/callback' do
             rescue
               message_buttons_text = '⏰ 見詳情'
             end
+          else
+            message_buttons_text = '⏰⏰ 見詳情'
           end
           message_buttons = {
             type: 'template',
