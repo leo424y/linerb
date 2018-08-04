@@ -129,13 +129,14 @@ post '/callback' do
               unless place_id.nil?
                 place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&language=zh-TW&fields=name,type,opening_hours,formatted_address&key=#{gmap_key}"
                 place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
-                formatted_address = place_id_doc['result']['formatted_address']
-                name_sys = place_id_doc['result']['name']
-                if place_id_doc['result']['opening_hours']
-                  place_types = place_id_doc['result']['types']
-                  is_open_now = place_id_doc['result']['opening_hours']['open_now']
-                  periods = place_id_doc['result']['opening_hours']['periods']
-                  weekday_text = place_id_doc['result']['opening_hours']['weekday_text']
+                res = place_id_doc['result']
+                formatted_address = res['formatted_address']
+                name_sys = res['name']
+                if res['opening_hours']
+                  place_types = res['types']
+                  is_open_now = res['opening_hours']['open_now']
+                  periods = res['opening_hours']['periods']
+                  weekday_text = res['opening_hours']['weekday_text']
                   opening_hours = is_open_now ? "😃 現在有開" : "🔴 現在沒開"
                   message_buttons_text = opening_hours
                 else
@@ -149,7 +150,7 @@ post '/callback' do
                   info: user_id,
                   group_id: group_id,
                   place_id: place_id,
-                  opening_hours: place_id_doc['result']['opening_hours'] ? is_open_now.to_s : 'no',
+                  opening_hours: res['opening_hours'] ? is_open_now.to_s : 'no',
                   weekday_text: weekday_text,
                   periods: periods
                 )
