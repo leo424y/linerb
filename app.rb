@@ -89,7 +89,7 @@ post '/callback' do
         suffixes = IO.readlines("data/keywords").map(&:chomp)
         skip_name = IO.readlines("data/top200_731a").map(&:chomp)
 
-        m = event.message['text'].rstrip.chomp('？').chomp('?').chomp('!').chomp('！').chomp('嗎')
+        m = event.message['text'].delete(" .。，,\t\r\n").chomp('？').chomp('?').chomp('!').chomp('！').chomp('嗎')
         name = m.chomp('有沒有開').chomp('開了沒').chomp('沒開').chomp('有開').chomp('開了').chomp('は開いていますか').chomp('現在')
         place = URI.escape(name)
         link = "https://www.google.com/maps/search/?api=1&query=#{place}"
