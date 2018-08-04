@@ -22,22 +22,13 @@ class Store < ActiveRecord::Base; end
 class Place < ActiveRecord::Base; end
 class Vip < ActiveRecord::Base; end
 
-get '/storecsv' do
+get '/x/:model.csv' do
   content_type 'application/octet-stream'
   CSV.generate do |csv|
-    csv << Store.attribute_names
-    Store.all.each do |user|
+    model = params[:model].constantize
+    csv << model.attribute_names
+    model.all.each do |user|
       csv << user.attributes.values
-    end
-  end
-end
-
-get '/storevip' do
-  content_type 'application/octet-stream'
-  CSV.generate do |csv|
-    csv << Vip.attribute_names
-    Vip.all.each do |v|
-      csv << v.attributes.values
     end
   end
 end
