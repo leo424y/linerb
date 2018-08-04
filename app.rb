@@ -85,6 +85,7 @@ post '/callback' do
       when Line::Bot::Event::MessageType::Text
         user_id = event['source']['userId']
         group_id = event['source']['groupId']
+        is_vip = Vip.find_by(user_id: user_id) ? "👑 等級：不再落空開兒 👑" : "☘ 等級：暫不落空開兒 ☘"
         suffixes = IO.readlines("data/keywords").map(&:chomp)
         skip_name = IO.readlines("data/top200_731a").map(&:chomp)
 
@@ -161,7 +162,7 @@ post '/callback' do
             template: {
               type: 'buttons',
               title: name,
-              text: message_buttons_text,
+              text: "#{message_buttons_text}\n#{is_vip}",
               actions: actions_a,
             }
           }
