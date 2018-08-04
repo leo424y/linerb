@@ -117,12 +117,21 @@ post '/callback' do
                 name_sys = place_id_doc['result']['name']
                 if place_id_doc['result']['opening_hours']
                   is_open_now = place_id_doc['result']['opening_hours']['open_now']
+                  weekday_text = place_id_doc['result']['opening_hours']['weekday_text']
                   opening_hours = is_open_now ? "😃 現在有開#{funny}" : "🔴 現在沒開"
                   message_buttons_text = opening_hours
                 else
-                  message_buttons_text = '⏰ 無營業時間，幫忙加上如何？'
+                  message_buttons_text = '⏰ 無營業時間，請老闆幫忙加上如何？'
                 end
-                Store.create(name: name, name_sys: name_sys, formatted_address: formatted_address, info: user_id, group_id: group_id, place_id: place_id, opening_hours: place_id_doc['result']['opening_hours'] ? is_open_now.to_s : 'no')
+                Store.create(
+                  name: name,
+                  name_sys: name_sys,
+                  formatted_address: formatted_address,
+                  info: user_id,
+                  group_id: group_id,
+                  place_id: place_id,
+                  opening_hours: place_id_doc['result']['opening_hours'] ? is_open_now.to_s : 'no',
+                  weekday_text: weekday_text)
               else
                 # Store.create(name: name, name_sys: name_sys, formatted_address: formatted_address, info: user_id, group_id: group_id)
                 message_buttons_text = '⏰ 請見詳情'
