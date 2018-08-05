@@ -121,12 +121,16 @@ post '/callback' do
                 place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
                 res = place_id_doc['result']
                 formatted_address = res['formatted_address']
+                address_component = res['address_component']
                 name_sys = res['name']
+                if res['geometry']
+                  if res['geometry']['location']
+                    lat = res['geometry']['location']['lat']
+                    lng = res['geometry']['location']['lng']
+                  end
+                end
                 if res['opening_hours']
                   place_types = res['types']
-                  lat = res['geometry']['location']['lat']
-                  lng = res['geometry']['location']['lng']
-                  address_component = res['address_component']
                   is_open_now = res['opening_hours']['open_now']
                   periods = res['opening_hours']['periods']
                   weekday_text = res['opening_hours']['weekday_text']
