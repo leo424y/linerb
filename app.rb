@@ -117,13 +117,16 @@ post '/callback' do
             place_id = doc['candidates'][0]['place_id'] if doc['candidates'][0]
             begin
               unless place_id.nil?
-                place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&language=zh-TW&fields=name,type,opening_hours,formatted_address&key=#{gmap_key}"
+                place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&language=zh-TW&fields=name,type,address_component,geometry,opening_hours,formatted_address&key=#{gmap_key}"
                 place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
                 res = place_id_doc['result']
                 formatted_address = res['formatted_address']
                 name_sys = res['name']
                 if res['opening_hours']
                   place_types = res['types']
+                  lat = res['geometry']['location']['lat']
+                  lng = res['geometry']['location']['lng']
+                  address_component = res['address_component']
                   is_open_now = res['opening_hours']['open_now']
                   periods = res['opening_hours']['periods']
                   weekday_text = res['opening_hours']['weekday_text']
@@ -135,7 +138,10 @@ post '/callback' do
                 Store.create(
                   name: name,
                   name_sys: name_sys,
+                  address_component: address_component,
                   formatted_address: formatted_address,
+                  lat: lat,
+                  lng: lng,
                   place_types: place_types,
                   info: user_id,
                   group_id: group_id,
