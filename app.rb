@@ -121,7 +121,7 @@ post '/callback' do
                 place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
                 res = place_id_doc['result']
                 formatted_address = res['formatted_address']
-                address_component = res['address_component']
+                address_components = res['address_component']
                 name_sys = res['name']
                 if res['geometry']
                   if res['geometry']['location']
@@ -142,7 +142,7 @@ post '/callback' do
                 Store.create(
                   name: name,
                   name_sys: name_sys,
-                  address_component: address_component,
+                  address_components: address_components,
                   formatted_address: formatted_address,
                   lat: lat,
                   lng: lng,
