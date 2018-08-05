@@ -75,7 +75,8 @@ post '/callback' do
       when Line::Bot::Event::MessageType::Text
         user_id = event['source']['userId']
         group_id = event['source']['groupId']
-        is_vip = Vip.find_by(user_id: user_id) ? "👑 目前等級：不再落空開兒" : "☘ 目前等級：暫不落空開兒"
+        in_vip = Vip.find_by(user_id: user_id)
+        is_vip = in_vip ? "👑 LVX：不再落空開兒" : "☘ LV0：暫不落空開兒"
         suffixes = IO.readlines("data/keywords").map(&:chomp)
         skip_name = IO.readlines("data/top200_731a").map(&:chomp)
 
@@ -86,6 +87,11 @@ post '/callback' do
         s_link = %x(ruby bin/bitly.rb '#{link}').chomp
 
         if m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40)
+          level_up_button = {
+            type: 'message',
+            label: '🥇 升級',
+            text: IO.readlines("data/promote_text").join
+          } unless in_vip
           actions_a = [
             {
               type: 'uri',
@@ -102,12 +108,8 @@ post '/callback' do
               label: '👍 推薦',
               uri: "line://nv/recommendOA/@gxs2296l"
             },
-            {
-              type: 'message',
-              label: '🥇 升級',
-              text: IO.readlines("data/promote_text").join
-            },
-          ]
+            level_up_button,
+          ].compact
           if name == '麥當勞中港四店'
             message_buttons_text = '😃 現在有開'
           elsif user_id && (!skip_name.include? name)
