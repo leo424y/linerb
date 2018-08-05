@@ -121,7 +121,7 @@ post '/callback' do
                 place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
                 res = place_id_doc['result']
                 formatted_address = res['formatted_address']
-                address_components = res['address_component']
+                address_components = res['address_components']
                 name_sys = res['name']
                 lat = res['geometry']['location']['lat']
                 lng = res['geometry']['location']['lng']
