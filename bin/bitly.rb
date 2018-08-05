@@ -1,7 +1,8 @@
 require 'bitly'
-NAME='leo424yy'
-API_KEY='R_c545a03a3cbf4034b390fa5c4c153cb2'
-# API_KEY='R_9def63bcade34721826109d5dcd98fb1'
+# NAME='leo424yy'
+# API_KEY='R_c545a03a3cbf4034b390fa5c4c153cb2'
+API_KEY='R_9def63bcade34721826109d5dcd98fb1'
+NAME='o_4c2nbk4m7q'
 Bitly.use_api_version_3
 
 Bitly.configure do |config|
