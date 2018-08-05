@@ -172,7 +172,7 @@ post '/callback' do
           }
           client.reply_message(event['replyToken'], message_buttons )
         end
-        if (m.include? '不再落空') && user_id && (group_id || (m.include? '讚'))
+        if (m.include? '不再落空') && user_id && group_id
           Vip.create(user_id: user_id, group_id: (group_id || 'sponsor'))
           message = {
             type: 'text',
