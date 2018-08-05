@@ -82,10 +82,11 @@ post '/callback' do
         m = event.message['text'].downcase.delete(" .。，,!！?？\t\r\n").chomp('嗎')
         name = m.chomp('有沒有開').chomp('開了沒').chomp('沒開').chomp('有開').chomp('開了').chomp('は開いていますか').chomp('現在')
         place = URI.escape(name)
-        link = "https://www.google.com/maps/search/?api=1&query=#{place}"
-        s_link = %x(ruby bin/bitly.rb '#{link}').chomp
 
         if m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40)
+          link = "https://www.google.com/maps/search/?api=1&query=#{place}"
+          s_link = %x(ruby bin/bitly.rb '#{link}').chomp
+
           actions_a = [
             {
               type: 'uri',
@@ -179,7 +180,6 @@ post '/callback' do
           }
           client.reply_message(event['replyToken'], message)
         end
-
         if m.start_with? '福賴'
           reply = case m
           when /好運/ then
