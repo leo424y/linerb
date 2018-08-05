@@ -123,12 +123,8 @@ post '/callback' do
                 formatted_address = res['formatted_address']
                 address_components = res['address_component']
                 name_sys = res['name']
-                if res['geometry']
-                  if res['geometry']['location']
-                    lat = res['geometry']['location']['lat']
-                    lng = res['geometry']['location']['lng']
-                  end
-                end
+                lat = res['geometry']['location']['lat']
+                lng = res['geometry']['location']['lng']
                 if res['opening_hours']
                   place_types = res['types']
                   is_open_now = res['opening_hours']['open_now']
