@@ -83,7 +83,7 @@ post '/callback' do
       }
       message << {
         type: 'text',
-        text: '嘿！熱情邀請我進來的朋友，或許你可以示範一下？ 😘'
+        text: '嘿！熱情邀請我進來的朋友，或許可以請你示範一下？ 😘'
       }
       Group.create(group_id: group_id, status: 'join')
       client.reply_message(event['replyToken'], message)
