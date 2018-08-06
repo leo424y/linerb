@@ -71,9 +71,14 @@ post '/callback' do
   events.each { |event|
     case event
     when Line::Bot::Event::Join
-      message = {
+      message = []
+      message << {
         type: 'text',
-        text: '大家好，歡迎使用【XXX有開嗎】來查詢你想去的店家喔！'
+        text: '大家好，歡迎使用【XXX有開嗎】'
+      }
+      message << {
+        type: 'text',
+        text: '【有開嗎】會自動幫你查詢想去的店家喔！'
       }
       client.reply_message(event['replyToken'], message)
     when Line::Bot::Event::Message
