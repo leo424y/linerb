@@ -83,32 +83,10 @@ post '/callback' do
         type: 'text',
         text: '【有開嗎】會自動幫你查詢想去的店家喔！'
       }
-      message << {
-        type: 'text',
-        text: '請試看看！'
-      }
-      message << {
-        type: 'text',
-        text: '或許會有新發現！'
-      }
-      message << {
-        type: 'text',
-        text: '拜託'
-      }
       Group.create(user_id: user_id, group_id: group_id, status: 'join')
       client.reply_message(event['replyToken'], message)
     when Line::Bot::Event::Leave
-      message = []
-      message << {
-        type: 'text',
-        text: '大家好，歡迎使用【XXX有開嗎】'
-      }
-      message << {
-        type: 'text',
-        text: '【有開嗎】會自動幫你查詢想去的店家喔！'
-      }
       Group.create(user_id: user_id, group_id: group_id, status: 'leave')
-      client.reply_message(event['replyToken'], message)
     when Line::Bot::Event::Message
       case event.type
       when Line::Bot::Event::MessageType::Text
