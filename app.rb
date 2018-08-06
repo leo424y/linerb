@@ -126,9 +126,7 @@ post '/callback' do
             message = '🥇 請先升級就能放口袋囉'
           end
           client.reply_message(event['replyToken'], message)
-        end
-
-        if m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40)
+        elsif m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40)
           actions_a = [
             {
               type: 'uri',
