@@ -119,7 +119,7 @@ post '/callback' do
           level_up_button = {
             type: 'message',
             label: "👜 放口袋",
-            text: "#{name}放口袋"
+            text: "#{name}放口袋！"
           }
         else
           level_up_button = {
@@ -129,10 +129,10 @@ post '/callback' do
           }
         end
 
-        if name.end_with?('放口袋')
+        if name.end_with?('放口袋！')
           if in_vip
-            Pocket.create(user_id: user_id, place_name: name.chomp('放口袋'))
-            message_text = "👜 已將#{name}"
+            Pocket.create(user_id: user_id, place_name: name.chomp('放口袋！'))
+            message_text = "👜 已將#{name}囉"
           else
             message_text = '🥇 請先升級就能放口袋囉'
           end
