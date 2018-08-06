@@ -118,6 +118,16 @@ post '/callback' do
           }
         end
 
+        if m.end_with?('放口袋')
+          if in_vip
+            Pocket.create(user_id: user_id, place_name: name.chomp('放口袋'))
+            message = "👜 已將#{name}放口袋"
+          else
+            message = '🥇 請先升級就能放口袋囉'
+          end
+          client.reply_message(event['replyToken'], message)
+        end
+
         if m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40)
           actions_a = [
             {
@@ -141,14 +151,6 @@ post '/callback' do
             message_buttons_text = '😃 現在有開'
           elsif name == '鬼門'
             message_buttons_text = (Date.today < Date.new(2018,8,10)) ? '👻 現在沒開' : '👻👻👻 現在正開'
-          elsif m.end_with?('放口袋')
-            if in_vip
-              Pocket.create(user_id: user_id, place_name: name.chomp('放口袋'))
-              message_buttons_text = '👜 已放口袋'
-            else
-              message_buttons_text = '🥇 請先升級就能放口袋囉'
-            end
-            actions_a =[]
           elsif user_id && (!skip_name.include? name)
             is_group.update(use_count: is_group.use_count+1) unless group_id.nil?
             gmap_key = ENV["GMAP_API_KEY"]
