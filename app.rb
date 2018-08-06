@@ -72,8 +72,8 @@ post '/callback' do
   events.each { |event|
     user_id = event['source']['userId']
     group_id = event['source']['groupId'] || event['source']['roomId']
-    is_group = Group.where(group_id: group_id).first
-    is_group.update(talk_count: is_group.talk_count+1) unless is_group.nil?
+    is_group = ( Group.where(group_id: group_id).first || Group.create(group_id: group_id, status: 'join') ) unless group_id.nil?
+    is_group.update(talk_count: is_group.talk_count+1) unless group_id.nil?
     case event
     when Line::Bot::Event::Join
       message = []
@@ -85,10 +85,10 @@ post '/callback' do
         type: 'text',
         text: '嘿！熱情邀請我進來的朋友，或許你可以示範一下？ 😘'
       }
-      Group.create(user_id: user_id, group_id: group_id, status: 'join')
+      Group.create(group_id: group_id, status: 'join')
       client.reply_message(event['replyToken'], message)
     when Line::Bot::Event::Leave
-      Group.create(user_id: user_id, group_id: group_id, status: 'leave')
+      Group.create(group_id: group_id, status: 'leave')
     when Line::Bot::Event::Message
       case event.type
       when Line::Bot::Event::MessageType::Text
@@ -132,7 +132,7 @@ post '/callback' do
           elsif name == '鬼門'
              message_buttons_text = (Date.today < Date.new(2018,8,10)) ? '👻 現在沒開' : '👻👻👻 現在正開'
           elsif user_id && (!skip_name.include? name)
-            is_group.update(use_count: is_group.use_count+1) unless is_group.nil?
+            is_group.update(use_count: is_group.use_count+1) unless group_id.nil?
             gmap_key = ENV["GMAP_API_KEY"]
             url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&language=zh-TW&fields=place_id,name&key=#{gmap_key}"
             doc = JSON.parse(open(url).read, :headers => true)
@@ -157,7 +157,7 @@ post '/callback' do
                 else
                   message_buttons_text = '😬 無營業時間，請老闆幫忙加上如何？'
                 end
-                is_group.update(result_count: is_group.result_count+1) unless is_group.nil?
+                is_group.update(result_count: is_group.result_count+1) unless group_id.nil?
                 Store.create(
                   name: name,
                   name_sys: name_sys,
