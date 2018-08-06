@@ -118,7 +118,7 @@ post '/callback' do
           }
         end
 
-        if m.end_with?('放口袋')
+        if name.end_with?('放口袋')
           if in_vip
             Pocket.create(user_id: user_id, place_name: name.chomp('放口袋'))
             message = "👜 已將#{name}放口袋"
