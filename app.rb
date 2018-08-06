@@ -18,6 +18,7 @@ def client
 end
 
 class Log < ActiveRecord::Base; end
+class Group < ActiveRecord::Base; end
 class Store < ActiveRecord::Base; end
 class Vip < ActiveRecord::Base; end
 
@@ -69,6 +70,8 @@ end
 post '/callback' do
   events = client.parse_events_from(request.body.read)
   events.each { |event|
+    user_id = event['source']['userId']
+    group_id = event['source']['groupId']
     case event
     when Line::Bot::Event::Join
       message = []
@@ -80,12 +83,35 @@ post '/callback' do
         type: 'text',
         text: '【有開嗎】會自動幫你查詢想去的店家喔！'
       }
+      message << {
+        type: 'text',
+        text: '請試看看！'
+      }
+      message << {
+        type: 'text',
+        text: '或許會有新發現！'
+      }
+      message << {
+        type: 'text',
+        text: '拜託'
+      }
+      Group.create(user_id: user_id, group_id: group_id, status: 'join')
+      client.reply_message(event['replyToken'], message)
+    when Line::Bot::Event::Leave
+      message = []
+      message << {
+        type: 'text',
+        text: '大家好，歡迎使用【XXX有開嗎】'
+      }
+      message << {
+        type: 'text',
+        text: '【有開嗎】會自動幫你查詢想去的店家喔！'
+      }
+      Group.create(user_id: user_id, group_id: group_id, status: 'leave')
       client.reply_message(event['replyToken'], message)
     when Line::Bot::Event::Message
       case event.type
       when Line::Bot::Event::MessageType::Text
-        user_id = event['source']['userId']
-        group_id = event['source']['groupId']
         in_vip = Vip.find_by(user_id: user_id)
         is_vip = in_vip ? "👑 LVX：不再落空開兒" : "☘ LV0：暫不落空開兒"
         suffixes = IO.readlines("data/keywords").map(&:chomp)
