@@ -71,7 +71,7 @@ post '/callback' do
   events = client.parse_events_from(request.body.read)
   events.each { |event|
     user_id = event['source']['userId']
-    group_id = event['source']['groupId']
+    group_id = event['source']['groupId'] || event['source']['roomId']
     case event
     when Line::Bot::Event::Join
       message = []
