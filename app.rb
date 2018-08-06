@@ -91,7 +91,7 @@ post '/callback' do
       case event.type
       when Line::Bot::Event::MessageType::Text
         in_vip = Vip.find_by(user_id: user_id)
-        is_vip = in_vip ? "👑 LVX：不再落空開兒" : "☘ LV0：暫不落空開兒"
+        is_vip = in_vip ? "👑 LVX：不再落空" : "☘ LV0：暫不落空"
         suffixes = IO.readlines("data/keywords").map(&:chomp)
         skip_name = IO.readlines("data/top200_731a").map(&:chomp)
 
