@@ -103,6 +103,8 @@ post '/callback' do
       Group.update(group_id: group_id, status: 'leave')
     when Line::Bot::Event::Message
       case event.type
+      when Line::Bot::Event::MessageType::Location
+        handle_location(event)
       when Line::Bot::Event::MessageType::Text
         in_vip = Vip.find_by(user_id: user_id)
         is_vip = in_vip ? "👑 LVX：不再落空" : "☘ LV0：暫不落空"
@@ -265,4 +267,15 @@ class String
   def string_between_markers marker1, marker2
     self[/#{Regexp.escape(marker1)}(.*?)#{Regexp.escape(marker2)}/m, 1]
   end
+end
+
+def handle_location(event)
+  message = event.message
+  reply_content(event, {
+    type: 'location',
+    title: message['title'] || message['address'],
+    address: message['address'],
+    latitude: message['latitude'],
+    longitude: message['longitude']
+  })
 end
