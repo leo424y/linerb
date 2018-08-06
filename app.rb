@@ -77,7 +77,7 @@ post '/callback' do
       message = []
       message << {
         type: 'text',
-        text: '大家好，歡迎使用【XXX有開嗎】'
+        text: '大家好，歡迎輸入【XXX有開嗎】(XXX是你想去的店)'
       }
       message << {
         type: 'text',
