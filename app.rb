@@ -77,11 +77,7 @@ post '/callback' do
       message = []
       message << {
         type: 'text',
-        text: '大家好，歡迎輸入【XXX有開嗎】，我會自動幫你查詢想去的店家喔！舉例：'
-      }
-      message << {
-        type: 'text',
-        text: '麥當勞中港四店有開嗎'
+        text: '大家好，歡迎輸入【XXX有開嗎】(XXX是你想去的店)，【有開嗎】會自動幫你查詢想去的店家喔！'
       }
       Group.create(user_id: user_id, group_id: group_id, status: 'join')
       client.reply_message(event['replyToken'], message)
