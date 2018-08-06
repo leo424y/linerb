@@ -88,7 +88,7 @@ post '/callback' do
       Group.create(group_id: group_id, status: 'join')
       client.reply_message(event['replyToken'], message)
     when Line::Bot::Event::Leave
-      Group.create(group_id: group_id, status: 'leave')
+      Group.update(group_id: group_id, status: 'leave')
     when Line::Bot::Event::Message
       case event.type
       when Line::Bot::Event::MessageType::Text
