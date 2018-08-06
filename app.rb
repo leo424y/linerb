@@ -79,6 +79,10 @@ post '/callback' do
         type: 'text',
         text: '大家好，歡迎輸入【XXX有開嗎】(XXX是你想去的店)，【有開嗎】會自動幫你查詢想去的店家喔！'
       }
+      message << {
+        type: 'text',
+        text: '嘿！熱情邀請我進來的朋友，或許你可以示範一下？ 😘'
+      }
       Group.create(user_id: user_id, group_id: group_id, status: 'join')
       client.reply_message(event['replyToken'], message)
     when Line::Bot::Event::Leave
