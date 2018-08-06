@@ -72,6 +72,8 @@ post '/callback' do
   events.each { |event|
     user_id = event['source']['userId']
     group_id = event['source']['groupId'] || event['source']['roomId']
+    is_group = Group.find_by(group_id: group_id)
+    is_group.update(talk_count: is_group.talk_count+1) if is_group
     case event
     when Line::Bot::Event::Join
       message = []
@@ -130,6 +132,7 @@ post '/callback' do
           elsif name == '鬼門'
              message_buttons_text = (Date.today < Date.new(2018,8,10)) ? '👻 現在沒開' : '👻👻👻 現在正開'
           elsif user_id && (!skip_name.include? name)
+            is_group.update(use_count: is_group.use_count+1) if is_group
             gmap_key = ENV["GMAP_API_KEY"]
             url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&language=zh-TW&fields=place_id,name&key=#{gmap_key}"
             doc = JSON.parse(open(url).read, :headers => true)
@@ -154,6 +157,7 @@ post '/callback' do
                 else
                   message_buttons_text = '😬 無營業時間，請老闆幫忙加上如何？'
                 end
+                is_group.update(result_count: is_group.result_count+1) if is_group 
                 Store.create(
                   name: name,
                   name_sys: name_sys,
