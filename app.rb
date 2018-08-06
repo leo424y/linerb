@@ -17,6 +17,22 @@ def client
   }
 end
 
+def reply_text(event, texts)
+  texts = [texts] if texts.is_a?(String)
+  client.reply_message(
+    event['replyToken'],
+    texts.map { |text| {type: 'text', text: text} }
+  )
+end
+
+def reply_content(event, messages)
+  res = client.reply_message(
+    event['replyToken'],
+    messages
+  )
+  puts res.read_body if res.code != 200
+end
+
 class Log < ActiveRecord::Base; end
 class Group < ActiveRecord::Base; end
 class Pocket < ActiveRecord::Base; end
@@ -263,12 +279,6 @@ post '/callback' do
   }
 end
 
-class String
-  def string_between_markers marker1, marker2
-    self[/#{Regexp.escape(marker1)}(.*?)#{Regexp.escape(marker2)}/m, 1]
-  end
-end
-
 def handle_location(event)
   message = event.message
   reply_content(event, {
@@ -278,4 +288,10 @@ def handle_location(event)
     latitude: message['latitude'],
     longitude: message['longitude']
   })
+end
+
+class String
+  def string_between_markers marker1, marker2
+    self[/#{Regexp.escape(marker1)}(.*?)#{Regexp.escape(marker2)}/m, 1]
+  end
 end
