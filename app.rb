@@ -39,7 +39,7 @@ get '/n/:yy' do
   <!DOCTYPE html>
   <html>
     <body>
-      JSON.parse(client.get_profile(params['yy']).read_body)['displayName']
+      <%= JSON.parse(client.get_profile(params['yy']).read_body)['displayName'] %>
     </body>
   </html>
   EOF
