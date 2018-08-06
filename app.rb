@@ -19,13 +19,14 @@ end
 
 class Log < ActiveRecord::Base; end
 class Group < ActiveRecord::Base; end
+class Pocket < ActiveRecord::Base; end
 class Store < ActiveRecord::Base; end
 class Vip < ActiveRecord::Base; end
 
 get '/x/:yy' do
   content_type 'application/octet-stream'
   CSV.generate do |csv|
-    yy=[Vip, Store, Group].find { |c| c.to_s == params['yy'] }
+    yy=[Vip, Store, Group, Pocket].find { |c| c.to_s == params['yy'] }
     csv << yy.attribute_names
     yy.all.each do |user|
       csv << user.attributes.values
@@ -103,12 +104,21 @@ post '/callback' do
         link = "https://www.google.com/maps/search/?api=1&query=#{place}"
         s_link = %x(ruby bin/bitly.rb '#{link}').chomp
 
-        if m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40)
+        if in_vip
+          level_up_button = {
+            type: 'message',
+            label: "👜 放口袋",
+            text: "#{name}放口袋"
+          }
+        else
           level_up_button = {
             type: 'message',
             label: '🥇 升級',
             text: IO.readlines("data/promote_text").join
-          } unless in_vip
+          }
+        end
+
+        if m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40)
           actions_a = [
             {
               type: 'uri',
@@ -130,7 +140,15 @@ post '/callback' do
           if name == '麥當勞中港四店'
             message_buttons_text = '😃 現在有開'
           elsif name == '鬼門'
-             message_buttons_text = (Date.today < Date.new(2018,8,10)) ? '👻 現在沒開' : '👻👻👻 現在正開'
+            message_buttons_text = (Date.today < Date.new(2018,8,10)) ? '👻 現在沒開' : '👻👻👻 現在正開'
+          elsif m.end_with?('放口袋')
+            if in_vip
+              Pocket.create(user_id: user_id, place_name: name.chomp('放口袋'))
+              message_buttons_text = '👜 已放口袋'
+            else
+              message_buttons_text = '🥇 請先升級就能放口袋囉'
+            end
+            actions_a =[]
           elsif user_id && (!skip_name.include? name)
             is_group.update(use_count: is_group.use_count+1) unless group_id.nil?
             gmap_key = ENV["GMAP_API_KEY"]
