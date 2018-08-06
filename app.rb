@@ -34,6 +34,17 @@ get '/x/:yy' do
   end
 end
 
+get '/n/:yy' do
+  erb <<-EOF
+  <!DOCTYPE html>
+  <html>
+    <body>
+      JSON.parse(client.get_profile(params['yy']).read_body)['displayName']
+    </body>
+  </html>
+  EOF
+end
+
 get '/storeyy' do
   @stores = Store.last(20)
   erb <<-EOF
