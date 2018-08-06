@@ -127,6 +127,8 @@ post '/callback' do
           ].compact
           if name == '麥當勞中港四店'
             message_buttons_text = '😃 現在有開'
+          elsif name == '鬼門'
+             message_buttons_text = (Date.today > Date.new(2018,8,10)) ? '👻 現在沒開' : '👻👻👻 現在正開'
           elsif user_id && (!skip_name.include? name)
             gmap_key = ENV["GMAP_API_KEY"]
             url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&language=zh-TW&fields=place_id,name&key=#{gmap_key}"
