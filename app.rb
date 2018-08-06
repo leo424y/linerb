@@ -25,7 +25,7 @@ class Vip < ActiveRecord::Base; end
 get '/x/:yy' do
   content_type 'application/octet-stream'
   CSV.generate do |csv|
-    yy=[Vip, Store].find { |c| c.to_s == params['yy'] }
+    yy=[Vip, Store, Group].find { |c| c.to_s == params['yy'] }
     csv << yy.attribute_names
     yy.all.each do |user|
       csv << user.attributes.values
