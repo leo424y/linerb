@@ -131,7 +131,6 @@ post '/callback' do
         my_store = Store.where("lat like ?", "#{my_lat}%").where("lng like ?", "#{my_lng}%")
         results = my_store.pluck(:sys_name).uniq
         result_message = results.empty? ? "附近開民怕落空的店" : "附近尚無開民，趕快來當第一吧！"
-        reply_text(event, result_message)
 
         actions_a = results.map do |result|
           {
@@ -148,7 +147,7 @@ post '/callback' do
             actions: actions_a,
           }
         }
-        client.reply_message(event['replyToken'], message_buttons )
+        reply_content(event, message_buttons )
 
       when Line::Bot::Event::MessageType::Text
         in_vip = Vip.find_by(user_id: user_id)
