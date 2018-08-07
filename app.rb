@@ -132,7 +132,7 @@ post '/callback' do
         results = my_store.pluck(:name_sys).uniq
         result_message = results.empty? ? "附近尚無開民，趕快來當第一吧！" : "附近開民怕落空的店"
 
-        actions_a = results.map do |result|
+        actions_a = results[-4..-1].map do |result|
           {
             type: 'uri', label: "📍 #{result}", uri: "https://www.google.com/maps/search/?api=1&query=#{result}"
           }
