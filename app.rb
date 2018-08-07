@@ -131,7 +131,7 @@ post '/callback' do
         my_lng = message['longitude'].to_s[0..5]
         my_store = Store.where("lat like ?", "#{my_lat}%").where("lng like ?", "#{my_lng}%")
         results = my_store.pluck(:name_sys).uniq[0..3]
-        result_message = results.empty? ? "附近尚無開民，趕快來當第一吧！" : "附近開民怕落空的店"
+        result_message = results.empty? ? "🗽 附近尚無開民蹤影，趕快來當第一吧！" : "🎐 附近開民怕落空的地點有..."
         Position.create(user_id: user_id, lat: message['latitude'], lng: message['longitude'])
         actions_a = results.map do |result|
           {
