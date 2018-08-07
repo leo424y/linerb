@@ -128,7 +128,7 @@ post '/callback' do
         my_lat = message['latitude'].to_s[0..4]
         my_lng = message['longitude'].to_s[0..5]
         my_store = Store.where("lat like ?", "#{my_lat}%").where("lng like ?", "#{my_lng}%")
-        result = my_store.pluck(:name_sys, :s_link).join("\n")
+        result = my_store.pluck(:name_sys, :s_link).uniq.join("\n")
         reply_text(event, "附近開民怕落空的店\n#{result}")
       when Line::Bot::Event::MessageType::Text
         in_vip = Vip.find_by(user_id: user_id)
