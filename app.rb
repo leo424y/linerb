@@ -100,6 +100,7 @@ post '/callback' do
   events = client.parse_events_from(request.body.read)
   events.each { |event|
     user_id = event['source']['userId']
+    in_vip = Vip.find_by(user_id: user_id)
     group_id = event['source']['groupId'] || event['source']['roomId']
     sys_group = Group.where(group_id: group_id, status: 'join').first
     is_group = sys_group ? sys_group : Group.create(group_id: group_id, status: 'join')
@@ -125,33 +126,9 @@ post '/callback' do
     when Line::Bot::Event::Message
       case event.type
       when Line::Bot::Event::MessageType::Location
-        # handle_location(event)
-        message = event.message
-        my_lat = message['latitude'].to_s[0..4]
-        my_lng = message['longitude'].to_s[0..5]
-        my_store = Store.where("lat like ?", "#{my_lat}%").where("lng like ?", "#{my_lng}%")
-        results = my_store.pluck(:name_sys).uniq[0..3]
-        result_message = results.empty? ? "🗽 附近尚無開民蹤影，趕快來當第一吧！" : "🎐 附近開民怕落空的地點有..."
-        Position.create(user_id: user_id, lat: message['latitude'], lng: message['longitude'])
-        actions_a = results.map do |result|
-          {
-            type: 'uri', label: "📍 #{result}", uri: "https://www.google.com/maps/search/?api=1&query=#{result}"
-          }
-        end
-        message_buttons = {
-          type: 'template',
-          altText: '...',
-          template: {
-            type: 'buttons',
-            title: '開民雷達',
-            text: result_message,
-            actions: actions_a,
-          }
-        }
-        reply_content(event, message_buttons )
+        group_id ? handle_location(event) : reply_text(event, '請於群組中使用')
 
       when Line::Bot::Event::MessageType::Text
-        in_vip = Vip.find_by(user_id: user_id)
         is_vip = in_vip ? "👑 LVX：不再落空" : "☘ LV0：暫不落空"
         suffixes = IO.readlines("data/keywords").map(&:chomp)
         skip_name = IO.readlines("data/top200_731a").map(&:chomp)
@@ -311,13 +288,37 @@ end
 
 def handle_location(event)
   message = event.message
-  reply_content(event, {
-    type: 'location',
-    title: message['title'] || message['address'],
-    address: message['address'],
-    latitude: message['latitude'],
-    longitude: message['longitude']
-  })
+  my_lat = message['latitude'].to_s[0..4]
+  my_lng = message['longitude'].to_s[0..5]
+  my_store = Store.where("lat like ?", "#{my_lat}%").where("lng like ?", "#{my_lng}%")
+  results = my_store.pluck(:name_sys).uniq[0..3]
+  result_message = results.empty? ? "🗽 附近尚無開民蹤影，趕快來當第一吧！" : "🎐 附近開民怕落空的地點有..."
+  Position.create(user_id: user_id, lat: message['latitude'], lng: message['longitude'])
+  actions_a = results.map do |result|
+    {
+      type: 'uri', label: "📍 #{result}", uri: "https://www.google.com/maps/search/?api=1&query=#{result}"
+    }
+  end
+  message_buttons = {
+    type: 'template',
+    altText: '...',
+    template: {
+      type: 'buttons',
+      title: '開民雷達',
+      text: result_message,
+      actions: actions_a,
+    }
+  }
+  reply_content(event, message_buttons )
+
+  # message = event.message
+  # reply_content(event, {
+  #   type: 'location',
+  #   title: message['title'] || message['address'],
+  #   address: message['address'],
+  #   latitude: message['latitude'],
+  #   longitude: message['longitude']
+  # })
 end
 
 class String
