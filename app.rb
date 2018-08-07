@@ -142,7 +142,6 @@ post '/callback' do
         name = m.chomp('有沒有開').chomp('開了沒').chomp('沒開').chomp('有開').chomp('開了').chomp('は開いていますか').chomp('現在')
         place = URI.escape(name)
         link = "https://www.google.com/maps/search/?api=1&query=#{place}"
-        s_link = %x(ruby bin/bitly.rb '#{link}').chomp
 
         if in_vip
           level_up_button = {
@@ -171,6 +170,8 @@ post '/callback' do
           }
           client.reply_message(event['replyToken'], message)
         elsif m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40)
+          s_link = %x(ruby bin/bitly.rb '#{link}').chomp
+
           actions_a = [
             {
               type: 'uri',
