@@ -129,10 +129,10 @@ post '/callback' do
         my_lat = message['latitude'].to_s[0..4]
         my_lng = message['longitude'].to_s[0..5]
         my_store = Store.where("lat like ?", "#{my_lat}%").where("lng like ?", "#{my_lng}%")
-        results = my_store.pluck(:name_sys).uniq
+        results = my_store.pluck(:name_sys).uniq[0..3]
         result_message = results.empty? ? "附近尚無開民，趕快來當第一吧！" : "附近開民怕落空的店"
 
-        actions_a = results[-4..-1].map do |result|
+        actions_a = results.map do |result|
           {
             type: 'uri', label: "📍 #{result}", uri: "https://www.google.com/maps/search/?api=1&query=#{result}"
           }
