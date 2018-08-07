@@ -117,10 +117,13 @@ post '/callback' do
       client.reply_message(event['replyToken'], message)
     when Line::Bot::Event::Leave
       Group.update(group_id: group_id, status: 'leave')
+    when Line::Bot::Event::Postback
+      message = "[POSTBACK]\n#{event['postback']['data']} (#{JSON.generate(event['postback']['params'])})"
+      reply_text(event, message)
     when Line::Bot::Event::Message
       case event.type
       when Line::Bot::Event::MessageType::Location
-        handle_location(event)
+        # handle_location(event)
       when Line::Bot::Event::MessageType::Text
         in_vip = Vip.find_by(user_id: user_id)
         is_vip = in_vip ? "👑 LVX：不再落空" : "☘ LV0：暫不落空"
