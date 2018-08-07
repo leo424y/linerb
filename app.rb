@@ -126,7 +126,7 @@ post '/callback' do
     when Line::Bot::Event::Message
       case event.type
       when Line::Bot::Event::MessageType::Location
-        group_id ? handle_location(event) : reply_text(event, '請於群組中使用')
+        group_id ? handle_location(event, user_id) : reply_text(event, '請於群組中使用')
 
       when Line::Bot::Event::MessageType::Text
         is_vip = in_vip ? "👑 LVX：不再落空" : "☘ LV0：暫不落空"
@@ -286,7 +286,7 @@ post '/callback' do
   }
 end
 
-def handle_location(event)
+def handle_location(event, user_id)
   message = event.message
   my_lat = message['latitude'].to_s[0..4]
   my_lng = message['longitude'].to_s[0..5]
@@ -309,7 +309,7 @@ def handle_location(event)
       actions: actions_a,
     }
   }
-  reply_content(event, message_buttons )
+  reply_content(event, message_buttons)
 
   # message = event.message
   # reply_content(event, {
