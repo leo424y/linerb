@@ -125,8 +125,8 @@ post '/callback' do
       when Line::Bot::Event::MessageType::Location
         # handle_location(event)
         message = event.message
-        my_lat = message['latitude'][0..4].to_s
-        my_lat = message['longitude'][0..5].to_s
+        my_lat = message['latitude'].to_s[0..4]
+        my_lat = message['longitude'].to_s[0..5]
         my_store = Store.where("lat like ?", "#{my_lat}%").where("lng like ?", "#{my_lng}%")
         result = my_store.pluck(:name_sys, :s_link).join("\n")
         reply_text(event, "附近開民怕落空的店\n#{result}")
