@@ -100,7 +100,8 @@ post '/callback' do
   events.each { |event|
     user_id = event['source']['userId']
     group_id = event['source']['groupId'] || event['source']['roomId']
-    is_group = Group.where(group_id: group_id).first unless group_id.nil?
+    sys_group = Group.where(group_id: group_id, status: 'join').first
+    is_group = sys_group ? sys_group : Group.create(group_id: group_id, status: 'join')
     is_group.update(talk_count: is_group.talk_count+1) unless group_id.nil?
     case event
     when Line::Bot::Event::Join
@@ -128,7 +129,7 @@ post '/callback' do
         my_lat = message['latitude'].to_s[0..4]
         my_lng = message['longitude'].to_s[0..5]
         my_store = Store.where("lat like ?", "#{my_lat}%").where("lng like ?", "#{my_lng}%")
-        result = my_store.pluck(:name_sys, :s_link).uniq.join("\n")
+        result = my_store.pluck(:name, :s_link).uniq.join("\n")
         result_message = result ? "附近開民怕落空的店\n#{result}" : "附近尚無開民，趕快來當第一吧！"
         reply_text(event, result_message)
       when Line::Bot::Event::MessageType::Text
