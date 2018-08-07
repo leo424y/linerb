@@ -100,7 +100,7 @@ post '/callback' do
   events.each { |event|
     user_id = event['source']['userId']
     group_id = event['source']['groupId'] || event['source']['roomId']
-    is_group = ( Group.where(group_id: group_id).first || Group.create(group_id: group_id, status: 'join') ) unless group_id.nil?
+    is_group = Group.where(group_id: group_id).first unless group_id.nil?
     is_group.update(talk_count: is_group.talk_count+1) unless group_id.nil?
     case event
     when Line::Bot::Event::Join
