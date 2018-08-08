@@ -46,16 +46,7 @@ class Store < ActiveRecord::Base; end
 class Talk < ActiveRecord::Base; end
 class Vip < ActiveRecord::Base; end
 
-get '/x/:yy' do
-  content_type 'application/octet-stream'
-  CSV.generate do |csv|
-    yy=[Vip, Store, Group, Pocket, Position, Talk].find { |c| c.to_s == params['yy'] }
-    csv << yy.attribute_names
-    yy.all.each do |user|
-      csv << user.attributes.values
-    end
-  end
-end
+get '/x/:yy' do download_csv end
 
 get '/n/:yy' do
   erb <<-EOF
@@ -68,7 +59,7 @@ get '/n/:yy' do
   EOF
 end
 
-get '/storeyy/:yy' do
+get '/s/:yy' do
   yy=[Vip, Store, Group, Pocket, Position, Talk].find { |c| c.to_s == params['yy'] }
   datas = yy.last(20)
   render_page datas
@@ -95,167 +86,20 @@ post '/callback' do
       message = "[POSTBACK]\n#{event['postback']['data']} (#{JSON.generate(event['postback']['params'])})"
       reply_text(event, message)
     when Line::Bot::Event::Message
-      Talk.create(user_id: user_id, group_id: group_id, talk: event.message['text'])
-
-      case event.type
-      when Line::Bot::Event::MessageType::Location
-        group_id ? handle_location(event, user_id) : reply_text(event, '請於群組中使用')
-
-      when Line::Bot::Event::MessageType::Text
-        is_vip = in_vip ? "👑 LVX：不再落空" : "☘ LV0：暫不落空"
-        suffixes = IO.readlines("data/keywords").map(&:chomp)
-        skip_name = IO.readlines("data/top200_731a").map(&:chomp)
-
-        m = event.message['text'].downcase.delete(" .。，,!！?？\t\r\n").chomp('嗎')
-        name = m.chomp('有沒有開').chomp('開了沒').chomp('沒開').chomp('有開').chomp('開了').chomp('は開いていますか').chomp('現在')
-        place = URI.escape(name)
-        link = "#{GG_SEARCH_URL}#{place}"
-
-        if in_vip
-          level_up_button = {
-            type: 'message',
-            label: "👜 放口袋",
-            text: "#{name}放口袋~"
-          }
-        else
-          level_up_button = {
-            type: 'message',
-            label: '🥇 升級',
-            text: IO.readlines("data/promote_text").join
-          }
-        end
-
-        if name.end_with?('放口袋~')
-          if in_vip
-            Pocket.create(user_id: user_id, place_name: name.chomp('放口袋~'))
-            message_text = "👜 已將#{name}"
-          else
-            message_text = '🥇 請先升級就能放口袋囉'
-          end
-          message = {
-            type: 'text',
-            text: message_text
-          }
-          client.reply_message(event['replyToken'], message)
-        elsif m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40)
-          s_link = %x(ruby bin/bitly.rb '#{link}').chomp
-
-          actions_a = [
-            {
-              type: 'uri',
-              label: '📍 詳情',
-              uri: s_link
-            },
-            {
-              type: 'uri',
-              label: '💡 建議',
-              uri: 'line://home/public/post?id=gxs2296l&postId=1153267270308077285'
-            },
-            {
-              type: 'uri',
-              label: '👍 推薦',
-              uri: "line://nv/recommendOA/@gxs2296l"
-            },
-            level_up_button,
-          ].compact
-          if name == '麥當勞中港四店'
-            message_buttons_text = '😃 現在有開'
-          elsif name == '鬼門'
-            message_buttons_text = (Date.today < Date.new(2018,8,10)) ? '👻 現在沒開' : '👻👻👻 現在正開'
-          elsif user_id && (!skip_name.include? name)
-            is_group.update(use_count: is_group.use_count+1) unless group_id.nil?
-            url = "#{GG_FIND_URL}?input=#{place}&inputtype=textquery&language=zh-TW&fields=place_id,name&key=#{GMAP_KEY}"
-            doc = JSON.parse(open(url).read, :headers => true)
-            place_id = doc['candidates'][0]['place_id'] if doc['candidates'][0]
-            begin
-              unless place_id.nil?
-                place_id_url = "#{GG_DETAIL_URL}?placeid=#{place_id}&language=zh-TW&fields=name,type,address_component,geometry,opening_hours,formatted_address&key=#{GMAP_KEY}"
-                place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
-                res = place_id_doc['result']
-                formatted_address = res['formatted_address']
-                address_components = res['address_components']
-                name_sys = res['name']
-                lat = res['geometry']['location']['lat']
-                lng = res['geometry']['location']['lng']
-                if res['opening_hours']
-                  place_types = res['types']
-                  is_open_now = res['opening_hours']['open_now']
-                  periods = res['opening_hours']['periods']
-                  weekday_text = res['opening_hours']['weekday_text']
-                  opening_hours = is_open_now ? "😃 現在有開" : "🔴 現在沒開"
-                  message_buttons_text = opening_hours
-                else
-                  message_buttons_text = '😬 無營業時間，請老闆幫忙加上如何？'
-                end
-                is_group.update(result_count: is_group.result_count+1) unless group_id.nil?
-                Store.create(
-                  name: name,
-                  name_sys: name_sys,
-                  address_components: address_components,
-                  formatted_address: formatted_address,
-                  lat: lat,
-                  lng: lng,
-                  place_types: place_types,
-                  info: user_id,
-                  group_id: group_id,
-                  place_id: place_id,
-                  opening_hours: res['opening_hours'] ? is_open_now.to_s : 'no',
-                  weekday_text: weekday_text,
-                  periods: periods,
-                  s_link: s_link
-                )
-              else
-                message_buttons_text = '⏰ 請見詳情'
-              end
-            rescue
-              message_buttons_text = '😂 請見詳情'
-            end
-          else
-            message_buttons_text = '🤔 請見詳情'
-          end
-          message_buttons = {
-            type: 'template',
-            altText: '...',
-            template: {
-              type: 'buttons',
-              title: name,
-              text: "#{message_buttons_text}\n#{is_vip}",
-              actions: actions_a,
-            }
-          }
-          client.reply_message(event['replyToken'], message_buttons )
-        end
-        if (m.start_with? '不再落空') && user_id && (group_id || (m.end_with? '讚'))
-          Vip.create(user_id: user_id, group_id: (group_id || 'sponsor'))
-          message = {
-            type: 'text',
-            text: IO.readlines("data/promote_check").join
-          }
-          client.reply_message(event['replyToken'], message)
-        end
-
-        if m.start_with? '福賴'
-          reply = case m
-          when /好運/ then
-            tndcsc_count = ''
-            tndcsc_url = 'http://tndcsc.com.tw/'
-            tndcsc_doc = Nokogiri::HTML(open(tndcsc_url))
-            tndcsc_doc.css('.w3_agile_logo p').each_with_index do |l, index|
-              tndcsc_count += (" #{l.content}".split.map{|x| x[/\d+/]}[0] + (index==0 ? '/350 🏊 ' : '/130 💪'))
-            end
-            cmcsc_url = 'https://cmcsc.cyc.org.tw/api'
-            cmcsc_doc = JSON.parse(open(cmcsc_url).read, :headers => true)
-            "【北區】#{tndcsc_count}     【朝馬】#{cmcsc_doc['swim'][0]}/#{cmcsc_doc['swim'][1]} 🏊 #{cmcsc_doc['gym'][0]}/#{cmcsc_doc['gym'][1]} 💪 快來減脂增肌！"
-          end
-          message = {
-            type: 'text',
-            text: reply
-          }
-          client.reply_message(event['replyToken'], message)
-        end
-      end
+      handle_message(event, user_id, in_vip, group_id, is_group)
     end
   }
+end
+
+def download_csv
+  content_type 'application/octet-stream'
+  CSV.generate do |csv|
+    yy=[Vip, Store, Group, Pocket, Position, Talk].find { |c| c.to_s == params['yy'] }
+    csv << yy.attribute_names
+    yy.all.each do |user|
+      csv << user.attributes.values
+    end
+  end
 end
 
 def handle_join(event, group_id)
@@ -263,7 +107,6 @@ def handle_join(event, group_id)
   message = IO.readlines("data/join").map(&:chomp)
   reply_text(event, message)
 end
-
 
 def handle_location(event, user_id)
   message = event.message
@@ -322,4 +165,166 @@ def render_page datas
     </body>
   </html>
   EOF
+end
+
+def handle_message(event, user_id, in_vip, group_id, is_group)
+  Talk.create(user_id: user_id, group_id: group_id, talk: event.message['text'])
+
+  case event.type
+  when Line::Bot::Event::MessageType::Location
+    group_id ? handle_location(event, user_id) : reply_text(event, '請於群組中使用')
+
+  when Line::Bot::Event::MessageType::Text
+    is_vip = in_vip ? "👑 LVX：不再落空" : "☘ LV0：暫不落空"
+    suffixes = IO.readlines("data/keywords").map(&:chomp)
+    skip_name = IO.readlines("data/top200_731a").map(&:chomp)
+
+    m = event.message['text'].downcase.delete(" .。，,!！?？\t\r\n").chomp('嗎')
+    name = m.chomp('有沒有開').chomp('開了沒').chomp('沒開').chomp('有開').chomp('開了').chomp('は開いていますか').chomp('現在')
+    place = URI.escape(name)
+    link = "#{GG_SEARCH_URL}#{place}"
+
+    if in_vip
+      level_up_button = {
+        type: 'message',
+        label: "👜 放口袋",
+        text: "#{name}放口袋~"
+      }
+    else
+      level_up_button = {
+        type: 'message',
+        label: '🥇 升級',
+        text: IO.readlines("data/promote_text").join
+      }
+    end
+
+    if name.end_with?('放口袋~')
+      if in_vip
+        Pocket.create(user_id: user_id, place_name: name.chomp('放口袋~'))
+        message_text = "👜 已將#{name}"
+      else
+        message_text = '🥇 請先升級就能放口袋囉'
+      end
+      message = {
+        type: 'text',
+        text: message_text
+      }
+      client.reply_message(event['replyToken'], message)
+    elsif m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40)
+      s_link = %x(ruby bin/bitly.rb '#{link}').chomp
+
+      actions_a = [
+        {
+          type: 'uri',
+          label: '📍 詳情',
+          uri: s_link
+        },
+        {
+          type: 'uri',
+          label: '💡 建議',
+          uri: 'line://home/public/post?id=gxs2296l&postId=1153267270308077285'
+        },
+        {
+          type: 'uri',
+          label: '👍 推薦',
+          uri: "line://nv/recommendOA/@gxs2296l"
+        },
+        level_up_button,
+      ].compact
+      if name == '麥當勞中港四店'
+        message_buttons_text = '😃 現在有開'
+      elsif name == '鬼門'
+        message_buttons_text = (Date.today < Date.new(2018,8,10)) ? '👻 現在沒開' : '👻👻👻 現在正開'
+      elsif user_id && (!skip_name.include? name)
+        is_group.update(use_count: is_group.use_count+1) unless group_id.nil?
+        url = "#{GG_FIND_URL}?input=#{place}&inputtype=textquery&language=zh-TW&fields=place_id,name&key=#{GMAP_KEY}"
+        doc = JSON.parse(open(url).read, :headers => true)
+        place_id = doc['candidates'][0]['place_id'] if doc['candidates'][0]
+        begin
+          unless place_id.nil?
+            place_id_url = "#{GG_DETAIL_URL}?placeid=#{place_id}&language=zh-TW&fields=name,type,address_component,geometry,opening_hours,formatted_address&key=#{GMAP_KEY}"
+            place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
+            res = place_id_doc['result']
+            formatted_address = res['formatted_address']
+            address_components = res['address_components']
+            name_sys = res['name']
+            lat = res['geometry']['location']['lat']
+            lng = res['geometry']['location']['lng']
+            if res['opening_hours']
+              place_types = res['types']
+              is_open_now = res['opening_hours']['open_now']
+              periods = res['opening_hours']['periods']
+              weekday_text = res['opening_hours']['weekday_text']
+              opening_hours = is_open_now ? "😃 現在有開" : "🔴 現在沒開"
+              message_buttons_text = opening_hours
+            else
+              message_buttons_text = '😬 無營業時間，請老闆幫忙加上如何？'
+            end
+            is_group.update(result_count: is_group.result_count+1) unless group_id.nil?
+            Store.create(
+              name: name,
+              name_sys: name_sys,
+              address_components: address_components,
+              formatted_address: formatted_address,
+              lat: lat,
+              lng: lng,
+              place_types: place_types,
+              info: user_id,
+              group_id: group_id,
+              place_id: place_id,
+              opening_hours: res['opening_hours'] ? is_open_now.to_s : 'no',
+              weekday_text: weekday_text,
+              periods: periods,
+              s_link: s_link
+            )
+          else
+            message_buttons_text = '⏰ 請見詳情'
+          end
+        rescue
+          message_buttons_text = '😂 請見詳情'
+        end
+      else
+        message_buttons_text = '🤔 請見詳情'
+      end
+      message_buttons = {
+        type: 'template',
+        altText: '...',
+        template: {
+          type: 'buttons',
+          title: name,
+          text: "#{message_buttons_text}\n#{is_vip}",
+          actions: actions_a,
+        }
+      }
+      client.reply_message(event['replyToken'], message_buttons )
+    end
+    if (m.start_with? '不再落空') && user_id && (group_id || (m.end_with? '讚'))
+      Vip.create(user_id: user_id, group_id: (group_id || 'sponsor'))
+      message = {
+        type: 'text',
+        text: IO.readlines("data/promote_check").join
+      }
+      client.reply_message(event['replyToken'], message)
+    end
+
+    if m.start_with? '福賴'
+      reply = case m
+      when /好運/ then
+        tndcsc_count = ''
+        tndcsc_url = 'http://tndcsc.com.tw/'
+        tndcsc_doc = Nokogiri::HTML(open(tndcsc_url))
+        tndcsc_doc.css('.w3_agile_logo p').each_with_index do |l, index|
+          tndcsc_count += (" #{l.content}".split.map{|x| x[/\d+/]}[0] + (index==0 ? '/350 🏊 ' : '/130 💪'))
+        end
+        cmcsc_url = 'https://cmcsc.cyc.org.tw/api'
+        cmcsc_doc = JSON.parse(open(cmcsc_url).read, :headers => true)
+        "【北區】#{tndcsc_count}     【朝馬】#{cmcsc_doc['swim'][0]}/#{cmcsc_doc['swim'][1]} 🏊 #{cmcsc_doc['gym'][0]}/#{cmcsc_doc['gym'][1]} 💪 快來減脂增肌！"
+      end
+      message = {
+        type: 'text',
+        text: reply
+      }
+      client.reply_message(event['replyToken'], message)
+    end
+  end
 end
