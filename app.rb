@@ -44,7 +44,7 @@ class Vip < ActiveRecord::Base; end
 get '/x/:yy' do
   content_type 'application/octet-stream'
   CSV.generate do |csv|
-    yy=[Vip, Store, Group, Pocket, Position].find { |c| c.to_s == params['yy'] }
+    yy=[Vip, Store, Group, Pocket, Position, Talk].find { |c| c.to_s == params['yy'] }
     csv << yy.attribute_names
     yy.all.each do |user|
       csv << user.attributes.values
@@ -108,7 +108,7 @@ post '/callback' do
     is_group.update(talk_count: is_group.talk_count+1) unless group_id.nil?
 
     Talk.create(user_id: user_id, group_id: group_id, talk: event.message['text'])
-    
+
     case event
     when Line::Bot::Event::Join
       message = []
