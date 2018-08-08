@@ -84,8 +84,6 @@ post '/callback' do
     is_group = sys_group ? sys_group : Group.create(group_id: group_id, status: 'join')
     is_group.update(talk_count: is_group.talk_count+1) unless group_id.nil?
 
-    Talk.create(user_id: user_id, group_id: group_id, talk: event.message['text'])
-
     case event
     when Line::Bot::Event::Join
       handle_join(event, group_id)
@@ -97,6 +95,8 @@ post '/callback' do
       message = "[POSTBACK]\n#{event['postback']['data']} (#{JSON.generate(event['postback']['params'])})"
       reply_text(event, message)
     when Line::Bot::Event::Message
+      Talk.create(user_id: user_id, group_id: group_id, talk: event.message['text'])
+
       case event.type
       when Line::Bot::Event::MessageType::Location
         group_id ? handle_location(event, user_id) : reply_text(event, '請於群組中使用')
@@ -260,8 +260,8 @@ end
 
 def handle_join(event, group_id)
   Group.create(group_id: group_id, status: 'join')
-  # info = "大家好，歡迎輸入【XXX有開嗎】(XXX是你想去的店)，【有開嗎】會自動幫你查詢想去的店家喔！\n嘿！熱情邀請我進來的朋友，或許可以請你示範一下？ 😘"
-  # reply_text(event, info)
+  message = IO.readlines("data/join").map(&:chomp)
+  reply_text(event, message)
 end
 
 
