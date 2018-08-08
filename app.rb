@@ -89,8 +89,7 @@ post '/callback' do
     case event
     when Line::Bot::Event::Join
       Group.create(group_id: group_id, status: 'join')
-      join_msg = IO.readlines("data/join").map(&:chomp)
-      join_msg.map {|h| {type: 'text', text: h} }
+      join_msg = IO.readlines("data/join").map(&:chomp).map {|h| {type: 'text', text: h} }
       client.reply_message(event['replyToken'], join_msg)
 
     when Line::Bot::Event::Leave
