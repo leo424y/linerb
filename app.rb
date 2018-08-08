@@ -250,7 +250,7 @@ def handle_message(event, user_id, in_vip, group_id, is_group)
               opening_hours = is_open_now ? "😃 現在有開" : "🔴 現在沒開"
               message_buttons_text = opening_hours
             else
-              message_buttons_text = '😬 無營業時間，請老闆幫忙加上如何？'
+              message_buttons_text = '😬 請見詳情'
             end
             is_group.update(result_count: is_group.result_count+1) unless group_id.nil?
             Store.create(
