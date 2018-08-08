@@ -38,6 +38,7 @@ class Group < ActiveRecord::Base; end
 class Pocket < ActiveRecord::Base; end
 class Position < ActiveRecord::Base; end
 class Store < ActiveRecord::Base; end
+class Talk < ActiveRecord::Base; end
 class Vip < ActiveRecord::Base; end
 
 get '/x/:yy' do
@@ -105,6 +106,9 @@ post '/callback' do
     sys_group = Group.where(group_id: group_id, status: 'join').first
     is_group = sys_group ? sys_group : Group.create(group_id: group_id, status: 'join')
     is_group.update(talk_count: is_group.talk_count+1) unless group_id.nil?
+
+    Talk.create(user_id: user_id, group_id: group_id, talk: event.message['text'])
+    
     case event
     when Line::Bot::Event::Join
       message = []
