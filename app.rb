@@ -249,7 +249,7 @@ def handle_message(event, user_id, in_vip, group_id, is_group)
               opening_hours = is_open_now ? "😃 現在有開" : "🔴 現在沒開"
               message_buttons_text = opening_hours
 
-              add_vip(event, user_id, group_id) if user_id && group_id              
+              # add_vip(event, user_id, group_id) if user_id && group_id        
             else
               message_buttons_text = '😬 請見詳情'
             end
