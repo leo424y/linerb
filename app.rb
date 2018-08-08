@@ -263,7 +263,7 @@ def handle_join(event, group_id)
     type: 'text',
     text: "大家好，歡迎輸入【XXX有開嗎】(XXX是你想去的店)，【有開嗎】會自動幫你查詢想去的店家喔！\n嘿！熱情邀請我進來的朋友，或許可以請你示範一下？ 😘"
   }
-  client.reply_message(event['replyToken'], message)
+  reply_text(event, message)
 end
 
 
