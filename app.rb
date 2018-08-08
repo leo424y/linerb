@@ -88,9 +88,7 @@ post '/callback' do
 
     case event
     when Line::Bot::Event::Join
-      Group.create(group_id: group_id, status: 'join')
-      join_msg = IO.readlines("data/join").map(&:chomp).map {|h| {type: 'text', text: h} }
-      client.reply_message(event['replyToken'], join_msg)
+      handle_join(event, group_id)
 
     when Line::Bot::Event::Leave
       Group.update(group_id: group_id, status: 'leave')
@@ -258,6 +256,21 @@ post '/callback' do
     end
   }
 end
+
+def handle_join(event, group_id)
+  message = []
+  message << {
+    type: 'text',
+    text: '大家好，歡迎輸入【XXX有開嗎】(XXX是你想去的店)，【有開嗎】會自動幫你查詢想去的店家喔！'
+  }
+  message << {
+    type: 'text',
+    text: '嘿！熱情邀請我進來的朋友，或許可以請你示範一下？ 😘'
+  }
+  Group.create(group_id: group_id, status: 'join')
+  client.reply_message(event['replyToken'], message)
+end
+
 
 def handle_location(event, user_id)
   message = event.message
