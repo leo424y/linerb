@@ -47,23 +47,8 @@ class Talk < ActiveRecord::Base; end
 class Vip < ActiveRecord::Base; end
 
 get '/x/:yy' do download_csv end
-
-get '/n/:yy' do
-  erb <<-EOF
-  <!DOCTYPE html>
-  <html>
-    <body>
-      <%= JSON.parse(client.get_profile(params['yy']).read_body)['displayName'] %>
-    </body>
-  </html>
-  EOF
-end
-
-get '/s/:yy' do
-  yy=[Vip, Store, Group, Pocket, Position, Talk].find { |c| c.to_s == params['yy'] }
-  datas = yy.last(20)
-  render_page datas
-end
+get '/n/:yy' do display_name end
+get '/s/:yy' do render_page end
 
 post '/callback' do
   events = client.parse_events_from(request.body.read)
@@ -85,6 +70,7 @@ post '/callback' do
     when Line::Bot::Event::Postback
       message = "[POSTBACK]\n#{event['postback']['data']} (#{JSON.generate(event['postback']['params'])})"
       reply_text(event, message)
+
     when Line::Bot::Event::Message
       handle_message(event, user_id, in_vip, group_id, is_group)
     end
@@ -100,6 +86,45 @@ def download_csv
       csv << user.attributes.values
     end
   end
+end
+
+def display_name
+  erb <<-EOF
+  <!DOCTYPE html>
+  <html>
+    <body>
+      <%= JSON.parse(client.get_profile(params['yy']).read_body)['displayName'] %>
+    </body>
+  </html>
+  EOF
+end
+
+def render_page
+  yy=[Vip, Store, Group, Pocket, Position, Talk].find { |c| c.to_s == params['yy'] }
+  @datas = yy.last(20)
+
+  erb <<-EOF
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>LinerbSite</title>
+    </head>
+    <body>
+      <table>
+        <tbody>
+          <% @datas.each do |d| %>
+            <tr>
+              <% values = d.attributes.values %>
+              <% values.each do |v| %>
+                <td><%= v if (v.to_s.length < 20) %></td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </body>
+  </html>
+  EOF
 end
 
 def handle_join(event, group_id)
@@ -132,39 +157,6 @@ def handle_location(event, user_id)
     }
   }
   reply_content(event, message_buttons)
-end
-
-
-class String
-  def string_between_markers marker1, marker2
-    self[/#{Regexp.escape(marker1)}(.*?)#{Regexp.escape(marker2)}/m, 1]
-  end
-end
-
-def render_page datas
-  @datas = datas
-  erb <<-EOF
-  <!DOCTYPE html>
-  <html>
-    <head>
-      <title>LinerbSite</title>
-    </head>
-    <body>
-      <table>
-        <tbody>
-          <% @datas.each do |d| %>
-            <tr>
-              <% values = d.attributes.values %>
-              <% values.each do |v| %>
-                <td><%= v if (v.to_s.length < 20) %></td>
-              <% end %>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </body>
-  </html>
-  EOF
 end
 
 def handle_message(event, user_id, in_vip, group_id, is_group)
@@ -326,5 +318,11 @@ def handle_message(event, user_id, in_vip, group_id, is_group)
       }
       client.reply_message(event['replyToken'], message)
     end
+  end
+end
+
+class String
+  def string_between_markers marker1, marker2
+    self[/#{Regexp.escape(marker1)}(.*?)#{Regexp.escape(marker2)}/m, 1]
   end
 end
