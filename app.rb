@@ -48,7 +48,7 @@ class Vip < ActiveRecord::Base; end
 
 get '/x/:yy' do download_csv end
 get '/n/:yy' do display_name end
-get '/s/:yy' do render_page end
+get '/s/:yy' do render_html end
 
 post '/callback' do
   events = client.parse_events_from(request.body.read)
@@ -99,7 +99,7 @@ def display_name
   EOF
 end
 
-def render_page
+def render_html
   yy=[Vip, Store, Group, Pocket, Position, Talk].find { |c| c.to_s == params['yy'] }
   @datas = yy.last(20)
 
