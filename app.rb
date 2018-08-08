@@ -10,6 +10,11 @@ require 'date'
 require 'erb'
 require 'csv'
 
+GG_SEARCH_URL = "https://www.google.com/maps/search/?api=1&query="
+GG_FIND_URL = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
+GG_DETAIL_URL = 'https://maps.googleapis.com/maps/api/place/details/json'
+GMAP_KEY = ENV["GMAP_API_KEY"]
+
 def client
   @client ||= Line::Bot::Client.new { |config|
     config.channel_secret = ENV["LINE_CHANNEL_SECRET"]
@@ -112,7 +117,7 @@ post '/callback' do
         m = event.message['text'].downcase.delete(" .。，,!！?？\t\r\n").chomp('嗎')
         name = m.chomp('有沒有開').chomp('開了沒').chomp('沒開').chomp('有開').chomp('開了').chomp('は開いていますか').chomp('現在')
         place = URI.escape(name)
-        link = "https://www.google.com/maps/search/?api=1&query=#{place}"
+        link = "#{GG_SEARCH_URL}#{place}"
 
         if in_vip
           level_up_button = {
@@ -167,13 +172,12 @@ post '/callback' do
             message_buttons_text = (Date.today < Date.new(2018,8,10)) ? '👻 現在沒開' : '👻👻👻 現在正開'
           elsif user_id && (!skip_name.include? name)
             is_group.update(use_count: is_group.use_count+1) unless group_id.nil?
-            gmap_key = ENV["GMAP_API_KEY"]
-            url = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json?input=#{place}&inputtype=textquery&language=zh-TW&fields=place_id,name&key=#{gmap_key}"
+            url = "#{GG_FIND_URL}?input=#{place}&inputtype=textquery&language=zh-TW&fields=place_id,name&key=#{GMAP_KEY}"
             doc = JSON.parse(open(url).read, :headers => true)
             place_id = doc['candidates'][0]['place_id'] if doc['candidates'][0]
             begin
               unless place_id.nil?
-                place_id_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=#{place_id}&language=zh-TW&fields=name,type,address_component,geometry,opening_hours,formatted_address&key=#{gmap_key}"
+                place_id_url = "#{GG_DETAIL_URL}?placeid=#{place_id}&language=zh-TW&fields=name,type,address_component,geometry,opening_hours,formatted_address&key=#{GMAP_KEY}"
                 place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
                 res = place_id_doc['result']
                 formatted_address = res['formatted_address']
@@ -272,7 +276,7 @@ def handle_location(event, user_id)
   Position.create(user_id: user_id, lat: message['latitude'], lng: message['longitude'])
   actions_a = results.map do |result|
     {
-      type: 'uri', label: "📍 #{result}", uri: "https://www.google.com/maps/search/?api=1&query=#{result}"
+      type: 'uri', label: "📍 #{result}", uri: "#{GG_SEARCH_URL}#{result}"
     }
   end
   message_buttons = {
@@ -286,15 +290,6 @@ def handle_location(event, user_id)
     }
   }
   reply_content(event, message_buttons)
-
-  # message = event.message
-  # reply_content(event, {
-  #   type: 'location',
-  #   title: message['title'] || message['address'],
-  #   address: message['address'],
-  #   latitude: message['latitude'],
-  #   longitude: message['longitude']
-  # })
 end
 
 
