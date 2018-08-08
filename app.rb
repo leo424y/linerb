@@ -92,7 +92,7 @@ post '/callback' do
 
     when Line::Bot::Event::Leave
       Group.update(group_id: group_id, status: 'leave')
-      
+
     when Line::Bot::Event::Postback
       message = "[POSTBACK]\n#{event['postback']['data']} (#{JSON.generate(event['postback']['params'])})"
       reply_text(event, message)
@@ -260,8 +260,8 @@ end
 
 def handle_join(event, group_id)
   Group.create(group_id: group_id, status: 'join')
-  info = "大家好，歡迎輸入【XXX有開嗎】(XXX是你想去的店)，【有開嗎】會自動幫你查詢想去的店家喔！\n嘿！熱情邀請我進來的朋友，或許可以請你示範一下？ 😘"
-  reply_text(event, info)
+  # info = "大家好，歡迎輸入【XXX有開嗎】(XXX是你想去的店)，【有開嗎】會自動幫你查詢想去的店家喔！\n嘿！熱情邀請我進來的朋友，或許可以請你示範一下？ 😘"
+  # reply_text(event, info)
 end
 
 
