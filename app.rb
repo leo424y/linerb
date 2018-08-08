@@ -317,7 +317,10 @@ def render_page datas
         <tbody>
           <% @datas.each do |d| %>
             <tr>
-              <td><%= d.attributes.values %></td>
+              <% values = d.attributes.values %>
+              <% values.each do |v| %>
+                <td><%= v %></td>
+              <% end %>
             </tr>
           <% end %>
         </tbody>
