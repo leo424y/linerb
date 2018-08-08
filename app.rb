@@ -319,7 +319,7 @@ def render_page datas
             <tr>
               <% values = d.attributes.values %>
               <% values.each do |v| %>
-                <td><%= v %></td>
+                <td><%= v if (v.length < 30) %></td>
               <% end %>
             </tr>
           <% end %>
