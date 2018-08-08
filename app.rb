@@ -155,7 +155,6 @@ def handle_location(event, user_id)
       actions: actions_a,
     }
   }
-  message_buttons << {type: 'text', text: '👑'}
   reply_content(event, message_buttons)
 end
 
