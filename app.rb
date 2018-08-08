@@ -305,6 +305,7 @@ class String
 end
 
 def render_page datas
+  @datas = datas
   erb <<-EOF
   <!DOCTYPE html>
   <html>
@@ -314,7 +315,7 @@ def render_page datas
     <body>
       <table>
         <tbody>
-          <% datas.each do |d| %>
+          <% @datas.each do |d| %>
             <tr>
               <td><%= d.attributes.values %></td>
             </tr>
