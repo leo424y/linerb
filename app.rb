@@ -248,8 +248,13 @@ def handle_message(event, user_id, in_vip, group_id, is_group)
               weekday_text = res['opening_hours']['weekday_text']
               opening_hours = is_open_now ? "😃 現在有開" : "🔴 現在沒開"
               message_buttons_text = opening_hours
-
-              # add_vip(event, user_id, group_id) if user_id && group_id
+              if user_id && group_id
+                vip_msg = [
+                  "【#{name}】#{opening_hours}",
+                  add_vip(event, user_id, group_id, opening_hours),
+                ]
+                reply_text(event, vip_msg)
+              end
             else
               message_buttons_text = '😬 請見詳情'
             end
@@ -293,7 +298,7 @@ def handle_message(event, user_id, in_vip, group_id, is_group)
     end
 
     if !in_vip && (m.start_with? '不再落空') && user_id && (group_id || (m.end_with? '讚'))
-      reply_text(event, add_vip(event, user_id, group_id))
+      reply_text(event, add_vip(event, user_id, group_id, opening_hours=''))
     end
 
     if m.start_with? '福賴'
@@ -318,7 +323,7 @@ def handle_message(event, user_id, in_vip, group_id, is_group)
   end
 end
 
-def add_vip(event, user_id, group_id)
+def add_vip(event, user_id, group_id, opening_hours)
   Vip.create(user_id: user_id, group_id: (group_id || 'sponsor'))
   "#{user_name user_id}#{IO.readlines("data/promote_check").join}"
 end
