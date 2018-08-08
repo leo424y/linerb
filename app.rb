@@ -155,6 +155,7 @@ def handle_location(event, user_id)
       actions: actions_a,
     }
   }
+  message_buttons << {type: 'text', text: '👑'}
   reply_content(event, message_buttons)
 end
 
@@ -249,7 +250,7 @@ def handle_message(event, user_id, in_vip, group_id, is_group)
               opening_hours = is_open_now ? "😃 現在有開" : "🔴 現在沒開"
               message_buttons_text = opening_hours
 
-              # add_vip(event, user_id, group_id) if user_id && group_id        
+              # add_vip(event, user_id, group_id) if user_id && group_id
             else
               message_buttons_text = '😬 請見詳情'
             end
@@ -293,7 +294,7 @@ def handle_message(event, user_id, in_vip, group_id, is_group)
     end
 
     if !in_vip && (m.start_with? '不再落空') && user_id && (group_id || (m.end_with? '讚'))
-      add_vip(event, user_id, group_id)
+      reply_text(event, add_vip(event, user_id, group_id))
     end
 
     if m.start_with? '福賴'
@@ -320,7 +321,7 @@ end
 
 def add_vip(event, user_id, group_id)
   Vip.create(user_id: user_id, group_id: (group_id || 'sponsor'))
-  reply_text(event, "#{user_name user_id}#{IO.readlines("data/promote_check").join}")
+  "#{user_name user_id}#{IO.readlines("data/promote_check").join}"
 end
 
 def user_name id
