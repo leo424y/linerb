@@ -63,38 +63,10 @@ get '/n/:yy' do
   EOF
 end
 
-get '/storeyy' do
-  @stores = Store.last(20)
-  erb <<-EOF
-  <!DOCTYPE html>
-  <html>
-    <head>
-      <title>LinerbSite</title>
-    </head>
-    <body>
-      <table>
-        <thead>
-          <tr>
-            <th>Name</th>
-            <th>Info</th>
-            <th>Group</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <% @stores.each do |store| %>
-            <% profile = JSON.parse(client.get_profile(store.info).read_body)['displayName'] %>
-            <tr>
-              <td><%= store.name %></td>
-              <td><%= profile %></td>
-              <td><%= store.group_id %></td>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </body>
-  </html>
-  EOF
+get '/storeyy/:yy' do
+  yy=[Vip, Store, Group, Pocket, Position, Talk].find { |c| c.to_s == params['yy'] }
+  datas = yy.last(20)
+  render_page datas
 end
 
 post '/callback' do
@@ -325,8 +297,31 @@ def handle_location(event, user_id)
   # })
 end
 
+
 class String
   def string_between_markers marker1, marker2
     self[/#{Regexp.escape(marker1)}(.*?)#{Regexp.escape(marker2)}/m, 1]
   end
+end
+
+def render_page datas
+  erb <<-EOF
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>LinerbSite</title>
+    </head>
+    <body>
+      <table>
+        <tbody>
+          <% datas.each do |d| %>
+            <tr>
+              <td><%= d.attributes.values %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </body>
+  </html>
+  EOF
 end
