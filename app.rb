@@ -158,7 +158,7 @@ def handle_location(event, user_id)
       actions: actions_a,
     }
   }
-  reply_content(event, message_buttons)
+  client.reply_message(event['replyToken'], message_buttons)
 end
 
 def handle_message(event, user_id, in_vip, group_id, is_group)
