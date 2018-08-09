@@ -59,7 +59,7 @@ post '/callback' do
 
     unless group_id.nil?
       sys_group = Group.where(group_id: group_id, status: 'join').first
-      is_group = sys_group ? sys_group : Group.create(group_id: group_id, status: 'join')
+      is_group = (sys_group ? sys_group : Group.create(group_id: group_id, status: 'join'))
       is_group.update(talk_count: is_group.talk_count+1)
     end
 
@@ -119,7 +119,7 @@ def render_html
             <tr>
               <% values = d.attributes.values %>
               <% values.each do |v| %>
-                <td><%= v if (v.to_s.length < 35) %></td>
+                <td><%= v if (v.to_s.length < 20) %></td>
               <% end %>
             </tr>
           <% end %>
