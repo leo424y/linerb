@@ -14,7 +14,6 @@ GG_SEARCH_URL = "https://www.google.com/maps/search/?api=1&query="
 GG_FIND_URL = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
 GG_DETAIL_URL = 'https://maps.googleapis.com/maps/api/place/details/json'
 GMAP_KEY = ENV["GMAP_API_KEY"]
-MY_MODELS = [Vip, Store, Group, Pocket, Position, Talk]
 
 def client
   @client ||= Line::Bot::Client.new { |config|
@@ -81,7 +80,7 @@ end
 def download_csv
   content_type 'application/octet-stream'
   CSV.generate do |csv|
-    yy = MY_MODELS.find { |c| c.to_s == params['yy'] }
+    yy = [Vip, Store, Group, Pocket, Position, Talk].find { |c| c.to_s == params['yy'] }
     csv << yy.attribute_names
     yy.all.each do |user|
       csv << user.attributes.values
