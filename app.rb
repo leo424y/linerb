@@ -301,24 +301,9 @@ def handle_message(event, user_id, in_vip, group_id, is_group)
       reply_text(event, add_vip(event, user_id, group_id, opening_hours=''))
     end
 
-    if m.start_with? '福賴'
-      reply = case m
-      when /好運/ then
-        tndcsc_count = ''
-        tndcsc_url = 'http://tndcsc.com.tw/'
-        tndcsc_doc = Nokogiri::HTML(open(tndcsc_url))
-        tndcsc_doc.css('.w3_agile_logo p').each_with_index do |l, index|
-          tndcsc_count += (" #{l.content}".split.map{|x| x[/\d+/]}[0] + (index==0 ? '/350 🏊 ' : '/130 💪'))
-        end
-        cmcsc_url = 'https://cmcsc.cyc.org.tw/api'
-        cmcsc_doc = JSON.parse(open(cmcsc_url).read, :headers => true)
-        "【北區】#{tndcsc_count}     【朝馬】#{cmcsc_doc['swim'][0]}/#{cmcsc_doc['swim'][1]} 🏊 #{cmcsc_doc['gym'][0]}/#{cmcsc_doc['gym'][1]} 💪 快來減脂增肌！"
-      end
-      message = {
-        type: 'text',
-        text: reply
-      }
-      client.reply_message(event['replyToken'], message)
+    if m == ('福賴好運' || '北運' || '朝運')
+      message = count_exercise
+      reply_text(event, message)
     end
   end
 end
@@ -330,6 +315,18 @@ end
 
 def user_name id
   JSON.parse(client.get_profile(id).read_body)['displayName']
+end
+
+def count_exercise
+  tndcsc_count = ''
+  tndcsc_url = 'http://tndcsc.com.tw/'
+  tndcsc_doc = Nokogiri::HTML(open(tndcsc_url))
+  tndcsc_doc.css('.w3_agile_logo p').each_with_index do |l, index|
+    tndcsc_count += (" #{l.content}".split.map{|x| x[/\d+/]}[0] + (index==0 ? '/350 🏊 ' : '/130 💪'))
+  end
+  cmcsc_url = 'https://cmcsc.cyc.org.tw/api'
+  cmcsc_doc = JSON.parse(open(cmcsc_url).read, headers: true)
+  "【北區】#{tndcsc_count}     【朝馬】#{cmcsc_doc['swim'][0]}/#{cmcsc_doc['swim'][1]} 🏊 #{cmcsc_doc['gym'][0]}/#{cmcsc_doc['gym'][1]} 💪 快來減脂增肌！"
 end
 
 class String
