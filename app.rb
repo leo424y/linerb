@@ -56,9 +56,12 @@ post '/callback' do
     user_id = event['source']['userId']
     in_vip = Vip.find_by(user_id: user_id)
     group_id = event['source']['groupId'] || event['source']['roomId']
-    sys_group = Group.where(group_id: group_id, status: 'join').first
-    is_group = sys_group ? sys_group : Group.create(group_id: group_id, status: 'join')
-    is_group.update(talk_count: is_group.talk_count+1) unless group_id.nil?
+
+    unless group_id.nil?
+      sys_group = Group.where(group_id: group_id, status: 'join').first
+      is_group = sys_group ? sys_group : Group.create(group_id: group_id, status: 'join')
+      is_group.update(talk_count: is_group.talk_count+1)
+    end
 
     case event
     when Line::Bot::Event::Join
@@ -116,7 +119,7 @@ def render_html
             <tr>
               <% values = d.attributes.values %>
               <% values.each do |v| %>
-                <td><%= v if (v.to_s.length < 25) %></td>
+                <td><%= v if (v.to_s.length < 30) %></td>
               <% end %>
             </tr>
           <% end %>
