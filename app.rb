@@ -57,12 +57,6 @@ post '/callback' do
     in_vip = Vip.find_by(user_id: user_id)
     group_id = event['source']['groupId'] || event['source']['roomId']
 
-    unless group_id.nil?
-      sys_group = Group.where(group_id: group_id, status: 'join').first
-      is_group = (sys_group ? sys_group : Group.create(group_id: group_id, status: 'join'))
-      is_group.update(talk_count: is_group.talk_count+1)
-    end
-
     case event
     when Line::Bot::Event::Join
       handle_join(event, group_id)
@@ -75,59 +69,9 @@ post '/callback' do
       reply_text(event, message)
 
     when Line::Bot::Event::Message
-      handle_message(event, user_id, in_vip, group_id, is_group)
+      handle_message(event, user_id, in_vip, group_id)
     end
   }
-end
-
-def download_csv
-  content_type 'application/octet-stream'
-  CSV.generate do |csv|
-    yy = [Vip, Store, Group, Pocket, Position, Talk].find { |c| c.to_s == params['yy'] }
-    csv << yy.attribute_names
-    yy.all.each do |user|
-      csv << user.attributes.values
-    end
-  end
-end
-
-def display_name
-  erb <<-EOF
-  <!DOCTYPE html>
-  <html>
-    <body>
-      <%= JSON.parse(client.get_profile(params['yy']).read_body)['displayName'] %>
-    </body>
-  </html>
-  EOF
-end
-
-def render_html
-  yy = [Vip, Store, Group, Pocket, Position, Talk].find { |c| c.to_s == params['yy'] }
-  @datas = yy.last(100).reverse
-
-  erb <<-EOF
-  <!DOCTYPE html>
-  <html>
-    <head>
-      <title>LinerbSite</title>
-    </head>
-    <body>
-      <table>
-        <tbody>
-          <% @datas.each do |d| %>
-            <tr>
-              <% values = d.attributes.values %>
-              <% values.each do |v| %>
-                <td><%= v if (v.to_s.length < 20) %></td>
-              <% end %>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </body>
-  </html>
-  EOF
 end
 
 def handle_join(event, group_id)
@@ -161,7 +105,7 @@ def handle_location(event, user_id)
   reply_content(event, message_buttons)
 end
 
-def handle_message(event, user_id, in_vip, group_id, is_group)
+def handle_message(event, user_id, in_vip, group_id)
   Talk.create(user_id: user_id, group_id: group_id, talk: event.message['text'])
 
   case event.type
@@ -191,6 +135,7 @@ def handle_message(event, user_id, in_vip, group_id, is_group)
         text: IO.readlines("data/promote_text").join
       }
     end
+
     if ['福賴好運', '北運', '朝運'].include? m
       message = count_exercise
       reply_text(event, message)
@@ -230,7 +175,6 @@ def handle_message(event, user_id, in_vip, group_id, is_group)
       elsif name == '鬼門'
         message_buttons_text = (Date.today < Date.new(2018,8,10)) ? '👻 現在沒開' : '👻👻👻 現在正開'
       elsif user_id && (!skip_name.include? name)
-        is_group.update(use_count: is_group.use_count+1) unless group_id.nil?
         url = "#{GG_FIND_URL}?input=#{place}&inputtype=textquery&language=zh-TW&fields=place_id,name&key=#{GMAP_KEY}"
         doc = JSON.parse(open(url).read, :headers => true)
         place_id = doc['candidates'][0]['place_id'] if doc['candidates'][0]
@@ -261,7 +205,6 @@ def handle_message(event, user_id, in_vip, group_id, is_group)
             else
               message_buttons_text = '😬 請見詳情'
             end
-            is_group.update(result_count: is_group.result_count+1) unless group_id.nil?
             Store.create(
               name: name,
               name_sys: name_sys,
@@ -332,5 +275,55 @@ end
 class String
   def string_between_markers marker1, marker2
     self[/#{Regexp.escape(marker1)}(.*?)#{Regexp.escape(marker2)}/m, 1]
+  end
+end
+
+def render_html
+  yy = [Vip, Store, Group, Pocket, Position, Talk].find { |c| c.to_s == params['yy'] }
+  @datas = yy.last(100).reverse
+
+  erb <<-EOF
+  <!DOCTYPE html>
+  <html>
+    <head>
+      <title>LinerbSite</title>
+    </head>
+    <body>
+      <table>
+        <tbody>
+          <% @datas.each do |d| %>
+            <tr>
+              <% values = d.attributes.values %>
+              <% values.each do |v| %>
+                <td><%= v if (v.to_s.length < 20) %></td>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </body>
+  </html>
+  EOF
+end
+
+def display_name
+  erb <<-EOF
+  <!DOCTYPE html>
+  <html>
+    <body>
+      <%= JSON.parse(client.get_profile(params['yy']).read_body)['displayName'] %>
+    </body>
+  </html>
+  EOF
+end
+
+def download_csv
+  content_type 'application/octet-stream'
+  CSV.generate do |csv|
+    yy = [Vip, Store, Group, Pocket, Position, Talk].find { |c| c.to_s == params['yy'] }
+    csv << yy.attribute_names
+    yy.all.each do |user|
+      csv << user.attributes.values
+    end
   end
 end
