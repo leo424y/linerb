@@ -84,25 +84,27 @@ def handle_location(event, user_id)
   my_lat = message['latitude'].to_s[0..4]
   my_lng = message['longitude'].to_s[0..5]
   my_store = Store.where("lat like ?", "#{my_lat}%").where("lng like ?", "#{my_lng}%")
-  results = my_store.pluck(:name_sys).uniq[0..2]
+  results = my_store.pluck(:name_sys, :s_link).uniq[0..2]
   result_message = results.empty? ? "🗽 附近尚無開民蹤影，趕快來當第一吧！" : "🎐 附近開民怕落空的地點有..."
   Position.create(user_id: user_id, lat: message['latitude'], lng: message['longitude'])
-  actions_a = results.map do |result|
-    {
-      type: 'uri', label: "📍 #{result}", uri: "#{GG_SEARCH_URL}#{result}"
-    }
-  end
-  message_buttons = {
-    type: 'template',
-    altText: '...',
-    template: {
-      type: 'buttons',
-      title: '開民雷達',
-      text: result_message,
-      actions: actions_a,
-    }
-  }
-  reply_content(event, message_buttons)
+  msg << result_message
+  results.map { |r| msg << "#{r.join('\n')}"}
+  # actions_a = results.map do |result|
+  #   {
+  #     type: 'uri', label: "📍 #{result}", uri: "#{GG_SEARCH_URL}#{result}"
+  #   }
+  # end
+  # message_buttons = {
+  #   type: 'template',
+  #   altText: '...',
+  #   template: {
+  #     type: 'buttons',
+  #     title: '開民雷達',
+  #     text: result_message,
+  #     actions: actions_a,
+  #   }
+  # }
+  reply_text(event, msg)
 end
 
 def handle_message(event, user_id, in_vip, group_id)
