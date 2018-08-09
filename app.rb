@@ -188,7 +188,7 @@ def handle_message(event, user_id, in_vip, group_id, is_group)
         text: IO.readlines("data/promote_text").join
       }
     end
-    if m == ('福賴好運' || '北運' || '朝運')
+    if ['福賴好運', '北運', '朝運'].include? m
       message = count_exercise
       reply_text(event, message)
 
