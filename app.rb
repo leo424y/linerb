@@ -9,6 +9,7 @@ require 'bitly'
 require 'date'
 require 'erb'
 require 'csv'
+require './model.rb'
 
 GG_SEARCH_URL = "https://www.google.com/maps/search/?api=1&query="
 GG_FIND_URL = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
@@ -38,14 +39,6 @@ def reply_content(event, messages)
   )
   puts res.read_body if res.code != 200
 end
-
-class Log < ActiveRecord::Base; end
-class Group < ActiveRecord::Base; end
-class Pocket < ActiveRecord::Base; end
-class Position < ActiveRecord::Base; end
-class Store < ActiveRecord::Base; end
-class Talk < ActiveRecord::Base; end
-class Vip < ActiveRecord::Base; end
 
 get '/x/:yy' do download_csv end
 get '/n/:yy' do display_name end
