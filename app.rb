@@ -45,8 +45,7 @@ class Pocket < ActiveRecord::Base; end
 class Position < ActiveRecord::Base; end
 class Store < ActiveRecord::Base; end
 class Talk < ActiveRecord::Base; end
-# class Vip < ActiveRecord::Base; end
-Vip = Class.new ActiveRecord::Base
+class Vip < ActiveRecord::Base; end
 
 get '/x/:yy' do download_csv end
 get '/n/:yy' do display_name end
