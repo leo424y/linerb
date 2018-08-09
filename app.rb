@@ -104,7 +104,7 @@ end
 
 def render_html
   yy = [Vip, Store, Group, Pocket, Position, Talk].find { |c| c.to_s == params['yy'] }
-  @datas = yy.last(100)
+  @datas = yy.last(100).reverse
 
   erb <<-EOF
   <!DOCTYPE html>
