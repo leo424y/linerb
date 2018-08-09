@@ -15,7 +15,7 @@ GG_FIND_URL = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json
 GG_DETAIL_URL = 'https://maps.googleapis.com/maps/api/place/details/json'
 GMAP_KEY = ENV["GMAP_API_KEY"]
 L_OPINION_URI = 'line://home/public/post?id=gxs2296l&postId=1153267270308077285'
-
+L_RECOMMEND_URI = "line://nv/recommendOA/@gxs2296l"
 def client
   @client ||= Line::Bot::Client.new { |config|
     config.channel_secret = ENV["LINE_CHANNEL_SECRET"]
@@ -66,7 +66,7 @@ post '/callback' do
       Group.update(group_id: group_id, status: 'leave')
 
     when Line::Bot::Event::Postback
-      message = "[POSTBACK]\n#{event['postback']['data']} (#{JSON.generate(event['postback']['params'])})"
+      message = "[POSTBACK]\n#{event['postback']['data']} (#{JSON.pretty_generate(event['postback']['params'])})"
       reply_text(event, message)
 
     when Line::Bot::Event::Message
@@ -135,7 +135,7 @@ def handle_message(event, user_id, is_vip, group_id)
       actions_a = [
         { label: '📍 詳情', type: 'uri', uri: s_link },
         { label: '💡 建議', type: 'uri', uri: L_OPINION_URI },
-        { label: '👍 推薦', type: 'uri', uri: "line://nv/recommendOA/@gxs2296l"},
+        { label: '👍 推薦', type: 'uri', uri: L_RECOMMEND_URI},
         level_up_button,
       ].compact
       if name == '麥當勞中港四店'
