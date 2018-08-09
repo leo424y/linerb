@@ -116,7 +116,11 @@ def render_html
             <tr>
               <% values = d.attributes.values %>
               <% values.each do |v| %>
-                <td><%= v if (v.to_s.length < 25) %></td>
+                <% if v.instance_of?(DateTime) %>
+                  <td><%= v.strftime('%m%d%H%M%S') %></td>
+                <% elsif v.to_s.length < 50 %>
+                  <td><%= v %></td>
+                <% end %>
               <% end %>
             </tr>
           <% end %>
