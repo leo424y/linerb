@@ -201,7 +201,7 @@ def handle_message(event, user_id, in_vip, group_id, is_group)
         text: message_text
       }
       client.reply_message(event['replyToken'], message)
-    elsif m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40)
+    elsif m.end_with?(*suffixes) && (name != '') && ( (name.bytesize < 40) if (name.is_a? String) )
       s_link = %x(ruby bin/bitly.rb '#{link}').chomp
 
       actions_a = [
