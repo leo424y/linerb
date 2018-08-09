@@ -92,7 +92,7 @@ def handle_location(event, user_id)
   # results.map { |r| msg << "#{r.join(',')}"}
   actions_a = results.map do |result|
     {
-      type: 'uri', label: "📍 #{result}", uri: "#{GG_SEARCH_URL}#{result}"
+      type: 'uri', label: "📍 #{result}", uri: "https://www.google.com/maps/search/?api=1&query=#{result}"
     }
   end
   message_buttons = {
