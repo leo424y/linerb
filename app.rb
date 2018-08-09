@@ -45,7 +45,8 @@ class Pocket < ActiveRecord::Base; end
 class Position < ActiveRecord::Base; end
 class Store < ActiveRecord::Base; end
 class Talk < ActiveRecord::Base; end
-class Vip < ActiveRecord::Base; end
+# class Vip < ActiveRecord::Base; end
+Vip = Class.new ActiveRecord::Base
 
 get '/x/:yy' do download_csv end
 get '/n/:yy' do display_name end
@@ -66,14 +67,13 @@ post '/callback' do
       Group.update(group_id: group_id, status: 'leave')
 
     when Line::Bot::Event::Postback
-      message = "[POSTBACK]\n#{event['postback']['data']}"
-      reply_text(event, message)
+      reply_text(event, event['postback']['data'])
 
     when Line::Bot::Event::Message
       handle_message(event, user_id, is_vip, group_id)
     end
   }
-  ''
+  'OK'
 end
 
 def handle_join(event, group_id)
@@ -210,12 +210,6 @@ def handle_message(event, user_id, is_vip, group_id)
       }
       reply_content(event, message_buttons)
     end
-
-    # to remove
-    if !is_vip && (m.start_with? '不再落空') && user_id && (group_id || (m.end_with? '讚'))
-      reply_text(event, add_vip(event, user_id, group_id, opening_hours=''))
-    end
-    # to remove
   end
 end
 
