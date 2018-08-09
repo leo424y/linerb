@@ -116,7 +116,7 @@ def render_html
             <tr>
               <% values = d.attributes.values %>
               <% values.each do |v| %>
-                <td><%= v if (v.to_s.length < 20) %></td>
+                <td><%= v if (v.to_s.length < 25) %></td>
               <% end %>
             </tr>
           <% end %>
