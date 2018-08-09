@@ -87,11 +87,8 @@ def handle_location(event, user_id)
   results = my_store.pluck(:name_sys).uniq
   result_message = results.empty? ? "🗽 附近尚無開民蹤影，趕快來當第一吧！" : "🎐 附近開民怕落空的地點有..."
   Position.create(user_id: user_id, lat: message['latitude'], lng: message['longitude'])
-  msg = []
-  msg << result_message
-  msg << results.map{|x| "#{GG_SEARCH_URL}#{x}"}.join("\n")
 
-  reply_text(event, msg)
+  reply_text(event, [result_message, results.join("\n")])
 end
 
 def handle_message(event, user_id, in_vip, group_id)
