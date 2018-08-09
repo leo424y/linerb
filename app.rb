@@ -126,13 +126,13 @@ def handle_message(event, user_id, is_vip, group_id)
       s_link = %x(ruby bin/bitly.rb '#{link}').chomp
 
       level_up_button = if is_vip
-        { label: '👜 放口袋', type: 'message', text: "#{name}放口袋~" }
+        { label: 'Send postback2', type: 'postback', data: 'hello world', text: 'hello world' }
+        # { label: '👜 放口袋', type: 'message', text: "#{name}放口袋~" }
       else
         { label: '🥇 升級', type: 'message', text: IO.readlines("data/promote_text").join}
       end
 
       actions_a = [
-        { label: 'Send postback2', type: 'postback', data: 'hello world', text: 'hello world' },
         { label: '📍 詳情', type: 'uri', uri: s_link },
         { label: '💡 建議', type: 'uri', uri: L_OPINION_URI },
         { label: '👍 推薦', type: 'uri', uri: "line://nv/recommendOA/@gxs2296l"},
