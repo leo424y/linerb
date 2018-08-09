@@ -1,16 +1,15 @@
-%w(./model.rb ./config/environments sinatra line/bot sinatra/activerecord nokogiri open-uri json bitly date erb csv).each { |r| require r }
-# require 'sinatra'
-# require 'line/bot'
-# require "sinatra/activerecord"
-# require './config/environments'
-# require 'nokogiri'
-# require 'open-uri'
-# require 'json'
-# require 'bitly'
-# require 'date'
-# require 'erb'
-# require 'csv'
-# require './model.rb'
+require 'sinatra'   # gem 'sinatra'
+require 'line/bot'  # gem 'line-bot-api'
+require "sinatra/activerecord"
+require './config/environments'
+require 'nokogiri'
+require 'open-uri'
+require 'json'
+require 'bitly'
+require 'date'
+require 'erb'
+require 'csv'
+require './model.rb'
 
 GG_SEARCH_URL = "https://www.google.com/maps/search/?api=1&query="
 GG_FIND_URL = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
