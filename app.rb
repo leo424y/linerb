@@ -113,11 +113,11 @@ def handle_message(event, user_id, is_vip, group_id)
       reply_text(event, message)
 
     elsif name.end_with?('放口袋~')
-      if is_vip
+      message_text = if is_vip
         Pocket.create(user_id: user_id, place_name: name.chomp('放口袋~'))
-        message_text = "👜 已將#{name}"
+        "👜 已將#{name}"
       else
-        message_text = '🥇 請先升級就能放口袋囉'
+        '🥇 請先升級就能放口袋囉'
       end
       reply_text(event, message_text)
 
