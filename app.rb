@@ -102,7 +102,7 @@ def handle_location(event, user_id)
       type: 'buttons',
       title: '開民雷達',
       text: result_message,
-      actions: actions_a.compact,
+      actions: actions_a.compact
     }
   }
   reply_content(event, message_buttons)
