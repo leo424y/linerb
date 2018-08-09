@@ -89,7 +89,7 @@ def handle_location(event, user_id)
   Position.create(user_id: user_id, lat: message['latitude'], lng: message['longitude'])
   msg = []
   msg << result_message
-  msg << results.join(' ')
+  msg << results.map{|x| "#{GG_SEARCH_URL}#{x}"}.join("\n")
 
   reply_text(event, msg)
 end
