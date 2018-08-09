@@ -54,7 +54,7 @@ post '/callback' do
   events = client.parse_events_from(request.body.read)
   events.each { |event|
     user_id = event['source']['userId']
-    in_vip = Vip.find_by(user_id: user_id)
+    is_vip = Vip.find_by(user_id: user_id)
     group_id = event['source']['groupId'] || event['source']['roomId']
 
     case event
@@ -69,7 +69,7 @@ post '/callback' do
       reply_text(event, message)
 
     when Line::Bot::Event::Message
-      handle_message(event, user_id, in_vip, group_id)
+      handle_message(event, user_id, is_vip, group_id)
     end
   }
 end
@@ -91,7 +91,7 @@ def handle_location(event, user_id)
   reply_text(event, [result_message, results.join("\n")])
 end
 
-def handle_message(event, user_id, in_vip, group_id)
+def handle_message(event, user_id, is_vip, group_id)
   Talk.create(user_id: user_id, group_id: group_id, talk: event.message['text'])
 
   case event.type
@@ -99,7 +99,6 @@ def handle_message(event, user_id, in_vip, group_id)
     group_id ? handle_location(event, user_id) : reply_text(event, '請於群組中使用')
 
   when Line::Bot::Event::MessageType::Text
-    is_vip = in_vip ? "👑 LVX：不再落空" : "☘ LV0：暫不落空"
     suffixes = IO.readlines("data/keywords").map(&:chomp)
     skip_name = IO.readlines("data/top200_731a").map(&:chomp)
 
@@ -108,7 +107,7 @@ def handle_message(event, user_id, in_vip, group_id)
     place = URI.escape(name)
     link = "#{GG_SEARCH_URL}#{place}"
 
-    if in_vip
+    if is_vip
       level_up_button = {
         type: 'message',
         label: "👜 放口袋",
@@ -127,7 +126,7 @@ def handle_message(event, user_id, in_vip, group_id)
       reply_text(event, message)
 
     elsif name.end_with?('放口袋~')
-      if in_vip
+      if is_vip
         Pocket.create(user_id: user_id, place_name: name.chomp('放口袋~'))
         message_text = "👜 已將#{name}"
       else
@@ -181,7 +180,7 @@ def handle_message(event, user_id, in_vip, group_id)
               weekday_text = res['opening_hours']['weekday_text']
               opening_hours = is_open_now ? "😃 現在有開" : "🔴 現在沒開"
               message_buttons_text = opening_hours
-              if user_id && group_id && !in_vip
+              if user_id && group_id && !is_vip
                 vip_msg = [
                   "【#{name}】#{opening_hours}",
                   add_vip(event, user_id, group_id, opening_hours),
@@ -222,7 +221,7 @@ def handle_message(event, user_id, in_vip, group_id)
         template: {
           type: 'buttons',
           title: name,
-          text: "#{message_buttons_text}\n#{is_vip}",
+          text: "#{message_buttons_text}",
           actions: actions_a,
         }
       }
@@ -230,7 +229,7 @@ def handle_message(event, user_id, in_vip, group_id)
     end
 
     # to remove
-    if !in_vip && (m.start_with? '不再落空') && user_id && (group_id || (m.end_with? '讚'))
+    if !is_vip && (m.start_with? '不再落空') && user_id && (group_id || (m.end_with? '讚'))
       reply_text(event, add_vip(event, user_id, group_id, opening_hours=''))
     end
     # to remove
