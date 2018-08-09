@@ -113,13 +113,13 @@ def handle_message(event, user_id, is_vip, group_id)
       reply_text(event, message)
 
     elsif name.end_with?('放口袋~')
-      message_text = if is_vip
+      message = if is_vip
         Pocket.create(user_id: user_id, place_name: name.chomp('放口袋~'))
         "👜 已將#{name}"
       else
         '🥇 請先升級就能放口袋囉'
       end
-      reply_text(event, message_text)
+      reply_text(event, message)
 
     elsif m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40)
       s_link = %x(ruby bin/bitly.rb '#{link}').chomp
@@ -162,11 +162,11 @@ def handle_message(event, user_id, is_vip, group_id)
               opening_hours = is_open_now ? "😃 現在有開" : "🔴 現在沒開"
               message_buttons_text = opening_hours
               if user_id && group_id && !is_vip
-                vip_msg = [
+                message = [
                   "【#{name}】#{opening_hours}",
                   add_vip(event, user_id, group_id, opening_hours),
                 ]
-                reply_text(event, vip_msg)
+                reply_text(event, message)
               end
             else
               message_buttons_text = '😬 請見詳情'
@@ -198,6 +198,7 @@ def handle_message(event, user_id, is_vip, group_id)
       end
       message_buttons = {
         type: 'template',
+        thumbnailImageUrl: '',
         altText: '...',
         template: {
           type: 'buttons',
