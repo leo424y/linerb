@@ -132,6 +132,7 @@ def handle_message(event, user_id, is_vip, group_id)
       end
 
       actions_a = [
+        { label: 'Send postback2', type: 'postback', data: 'hello world', text: 'hello world' },
         { label: '📍 詳情', type: 'uri', uri: s_link },
         { label: '💡 建議', type: 'uri', uri: L_OPINION_URI },
         { label: '👍 推薦', type: 'uri', uri: "line://nv/recommendOA/@gxs2296l"},
