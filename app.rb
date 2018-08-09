@@ -299,7 +299,7 @@ def handle_message(event, user_id, in_vip, group_id, is_group)
           actions: actions_a,
         }
       }
-      client.reply_message(event['replyToken'], message_buttons )
+      reply_content(event, message_buttons)
     end
 
     # to remove
