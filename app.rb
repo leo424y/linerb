@@ -73,6 +73,7 @@ post '/callback' do
       handle_message(event, user_id, is_vip, group_id)
     end
   }
+  ''
 end
 
 def handle_join(event, group_id)
