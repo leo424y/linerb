@@ -66,7 +66,7 @@ post '/callback' do
       Group.update(group_id: group_id, status: 'leave')
 
     when Line::Bot::Event::Postback
-      message = "[POSTBACK]\n#{event['postback']['data']} (#{event['postback']['params'].to_json})"
+      message = "[POSTBACK]\n#{event['postback']['data']}"
       reply_text(event, message)
 
     when Line::Bot::Event::Message
@@ -126,8 +126,7 @@ def handle_message(event, user_id, is_vip, group_id)
       s_link = %x(ruby bin/bitly.rb '#{link}').chomp
 
       level_up_button = if is_vip
-        { label: 'Send postback2', type: 'postback', data: 'hello world', text: 'hello world' }
-        # { label: '👜 放口袋', type: 'message', text: "#{name}放口袋~" }
+        { label: '👜 放口袋', type: 'message', text: "#{name}放口袋~" }
       else
         { label: '🥇 升級', type: 'message', text: IO.readlines("data/promote_text").join}
       end
