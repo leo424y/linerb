@@ -14,6 +14,7 @@ GG_SEARCH_URL = "https://www.google.com/maps/search/?api=1&query="
 GG_FIND_URL = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
 GG_DETAIL_URL = 'https://maps.googleapis.com/maps/api/place/details/json'
 GMAP_KEY = ENV["GMAP_API_KEY"]
+L_OPINION_URI = 'line://home/public/post?id=gxs2296l&postId=1153267270308077285'
 
 def client
   @client ||= Line::Bot::Client.new { |config|
@@ -107,20 +108,6 @@ def handle_message(event, user_id, is_vip, group_id)
     place = URI.escape(name)
     link = "#{GG_SEARCH_URL}#{place}"
 
-    if is_vip
-      level_up_button = {
-        type: 'message',
-        label: "👜 放口袋",
-        text: "#{name}放口袋~"
-      }
-    else
-      level_up_button = {
-        type: 'message',
-        label: '🥇 升級',
-        text: IO.readlines("data/promote_text").join
-      }
-    end
-
     if ['福賴好運', '北運', '朝運'].include? m
       message = count_exercise
       reply_text(event, message)
@@ -137,22 +124,16 @@ def handle_message(event, user_id, is_vip, group_id)
     elsif m.end_with?(*suffixes) && (name != '') && (name.bytesize < 40)
       s_link = %x(ruby bin/bitly.rb '#{link}').chomp
 
+      level_up_button = if is_vip
+        { label: '👜 放口袋', type: 'message', text: "#{name}放口袋~" }
+      else
+        { label: '🥇 升級', type: 'message', text: IO.readlines("data/promote_text").join}
+      end
+
       actions_a = [
-        {
-          type: 'uri',
-          label: '📍 詳情',
-          uri: s_link
-        },
-        {
-          type: 'uri',
-          label: '💡 建議',
-          uri: 'line://home/public/post?id=gxs2296l&postId=1153267270308077285'
-        },
-        {
-          type: 'uri',
-          label: '👍 推薦',
-          uri: "line://nv/recommendOA/@gxs2296l"
-        },
+        { label: '📍 詳情', type: 'uri', uri: s_link },
+        { label: '💡 建議', type: 'uri', uri: L_OPINION_URI },
+        { label: '👍 推薦', type: 'uri', uri: "line://nv/recommendOA/@gxs2296l"},
         level_up_button,
       ].compact
       if name == '麥當勞中港四店'
