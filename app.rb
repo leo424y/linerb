@@ -66,7 +66,7 @@ post '/callback' do
       Group.update(group_id: group_id, status: 'leave')
 
     when Line::Bot::Event::Postback
-      message = "[POSTBACK]\n#{event['postback']['data']} (#{JSON.pretty_generate(event['postback']['params'])})"
+      message = "[POSTBACK]\n#{event['postback']['data']} (#{event['postback']['params'].to_json})"
       reply_text(event, message)
 
     when Line::Bot::Event::Message
