@@ -188,8 +188,11 @@ def handle_message(event, user_id, in_vip, group_id, is_group)
         text: IO.readlines("data/promote_text").join
       }
     end
+    if m == ('福賴好運' || '北運' || '朝運')
+      message = count_exercise
+      reply_text(event, message)
 
-    if name.end_with?('放口袋~')
+    elsif name.end_with?('放口袋~')
       if in_vip
         Pocket.create(user_id: user_id, place_name: name.chomp('放口袋~'))
         message_text = "👜 已將#{name}"
@@ -201,6 +204,7 @@ def handle_message(event, user_id, in_vip, group_id, is_group)
         text: message_text
       }
       client.reply_message(event['replyToken'], message)
+
     elsif m.end_with?(*suffixes) && (name != '') && ( (name.bytesize < 40) if (name.is_a? String) )
       s_link = %x(ruby bin/bitly.rb '#{link}').chomp
 
@@ -297,14 +301,11 @@ def handle_message(event, user_id, in_vip, group_id, is_group)
       client.reply_message(event['replyToken'], message_buttons )
     end
 
+    # to remove
     if !in_vip && (m.start_with? '不再落空') && user_id && (group_id || (m.end_with? '讚'))
       reply_text(event, add_vip(event, user_id, group_id, opening_hours=''))
     end
-
-    if m == ('福賴好運' || '北運' || '朝運')
-      message = count_exercise
-      reply_text(event, message)
-    end
+    # to remove
   end
 end
 
