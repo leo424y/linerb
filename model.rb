@@ -5,3 +5,4 @@ class Position < ActiveRecord::Base; end
 class Store < ActiveRecord::Base; end
 class Talk < ActiveRecord::Base; end
 class Vip < ActiveRecord::Base; end
+class Offer < ActiveRecord::Base; end
