@@ -117,8 +117,8 @@ def handle_message(event, user_id, is_vip, group_id)
       reply_text(event, '請先查詢要去的地點【有開嗎】？若有營業資訊，則可以點選【🎐 附近】偷瞄開民們的口袋名單囉！')
 
     elsif ( (origin_message.split("\n").count > 1) && !group_id )
-      Offer.create(user_id: user_id, store_name: m.split("\n")[0], info: m.split("\n")[1..-1].join("\n"))
-      reply_text(event, "已將#{m.split("\n")[0]}情報收錄，感謝提供！")
+      Offer.create(user_id: user_id, store_name: origin_message.split("\n")[0], info: origin_message.split("\n")[1..-1].join("\n"))
+      reply_text(event, "已將#{origin_message.split("\n")[0]}情報收錄，感謝提供！")
 
     elsif ['福賴好運', '北運', '朝運'].include? m
       message = count_exercise
