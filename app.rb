@@ -93,7 +93,7 @@ def handle_nearby lat, lng, origin_name
   my_lat = lat.to_s[0..4]
   my_lng = lng.to_s[0..5]
   my_store = Store.where("lat like ?", "#{my_lat}%").where("lng like ?", "#{my_lng}%")
-  my_store.pluck(:name_sys).uniq[0..3] - [origin_name]
+  my_store.pluck(:name_sys).uniq[0..2] - [origin_name]
 end
 
 def handle_message(event, user_id, is_vip, group_id)
