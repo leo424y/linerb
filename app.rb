@@ -166,7 +166,7 @@ def handle_message(event, user_id, is_vip, group_id)
               opening_hours = is_open_now ? "😃 現在有開" : "🔴 現在沒開"
               message_buttons_text = opening_hours
 
-              nearby_button = { label: '🎐 附近', type: 'postback', data: "#{place_id}nearby" },
+              nearby_button = { label: '🎐 附近', type: 'postback', data: "#{place_id}nearby" }
 
               if user_id && group_id && !is_vip
                 message = [
