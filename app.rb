@@ -112,7 +112,7 @@ def handle_message(event, user_id, is_vip, group_id)
     place = URI.escape(name)
     link = "#{GG_SEARCH_URL}#{place}"
 
-    if ['附近'].include? m
+    if ( m.end_with?('附近') || m.start_with?('附近') )
       reply_text(event, '請先查詢要去的地點【有開嗎】？若有營業資訊，則可以查到附近開民的口袋名單囉！')
 
     end
