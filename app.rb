@@ -190,20 +190,23 @@ def handle_message(event, user_id, is_vip, group_id)
       else
         message_buttons_text = '🤔 請見詳情'
       end
-      message_buttons = {
-        type: 'template',
-        thumbnailImageUrl: '',
-        altText: '...',
-        template: {
-          type: 'buttons',
-          title: name,
-          text: "#{message_buttons_text}",
-          actions: actions_a,
-        }
-      }
-      reply_content(event, message_buttons)
+      reply_content(event, message_buttons_h(name, message_buttons_text, actions_a))
     end
   end
+end
+
+def message_buttons_h title, text, actions
+  {
+    type: 'template',
+    thumbnailImageUrl: '',
+    altText: '...',
+    template: {
+      type: 'buttons',
+      title: title,
+      text: text,
+      actions: actions,
+    }
+  }
 end
 
 def add_vip(event, user_id, group_id, opening_hours)
