@@ -267,7 +267,7 @@ class String
 end
 
 def render_html
-  yy = [Vip, Store, Group, Pocket, Position, Talk].find { |c| c.to_s == params['yy'] }
+  yy = to_model params['yy']
   @datas = yy.last(100).reverse
 
   erb <<-EOF
@@ -308,10 +308,14 @@ end
 def download_csv
   content_type 'application/octet-stream'
   CSV.generate do |csv|
-    yy = [Vip, Store, Group, Pocket, Position, Talk].find { |c| c.to_s == params['yy'] }
+    yy = to_model params['yy']
     csv << yy.attribute_names
     yy.all.each do |user|
       csv << user.attributes.values
     end
   end
+end
+
+def to_model yy
+  [Vip, Store, Group, Pocket, Position, Talk, Offer].find { |c| c.to_s == yy }
 end
