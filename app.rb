@@ -97,7 +97,8 @@ def handle_nearby lat, lng, origin_name
 end
 
 def handle_message(event, user_id, is_vip, group_id)
-  Talk.create(user_id: user_id, group_id: group_id, talk: event.message['text'])
+  origin_message = event.message['text']
+  Talk.create(user_id: user_id, group_id: group_id, talk: origin_message)
 
   case event.type
   when Line::Bot::Event::MessageType::Location
@@ -107,21 +108,19 @@ def handle_message(event, user_id, is_vip, group_id)
     suffixes = IO.readlines("data/keywords").map(&:chomp)
     skip_name = IO.readlines("data/top200_731a").map(&:chomp)
 
-    m = event.message['text'].downcase.delete(" .。，,!！?？\t\r\n").chomp('嗎')
+    m = origin_message.downcase.delete(" .。，,!！?？\t\r\n").chomp('嗎')
     name = m.chomp('有沒有開').chomp('開了沒').chomp('沒開').chomp('有開').chomp('開了').chomp('は開いていますか').chomp('現在')
     place = URI.escape(name)
     link = "#{GG_SEARCH_URL}#{place}"
 
-    if ( (m.split("\n").count > 1) && !group_id )
-      Offer.create(user_id: user_id, store_name: m.split("\n")[0], info: m.split("\n")[1..-1].join("\n"))
-      reply_text(event, "已將#{m.split("\n")[0]}情報收錄，感謝提供！")
-    end
-
     if ( m.end_with?('附近') || m.start_with?('附近') )
       reply_text(event, '請先查詢要去的地點【有開嗎】？若有營業資訊，則可以點選【🎐 附近】偷瞄開民們的口袋名單囉！')
-    end
 
-    if ['福賴好運', '北運', '朝運'].include? m
+    elsif ( (origin_message.split("\n").count > 1) && !group_id )
+      Offer.create(user_id: user_id, store_name: m.split("\n")[0], info: m.split("\n")[1..-1].join("\n"))
+      reply_text(event, "已將#{m.split("\n")[0]}情報收錄，感謝提供！")
+
+    elsif ['福賴好運', '北運', '朝運'].include? m
       message = count_exercise
       reply_text(event, message)
 
