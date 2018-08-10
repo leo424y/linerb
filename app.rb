@@ -136,7 +136,7 @@ def handle_message(event, user_id, is_vip, group_id)
         message_buttons_text = (Date.today < Date.new(2018,8,10)) ? '👻 現在沒開' : '👻👻👻 現在正開'
       elsif user_id && (!skip_name.include? name)
         url = "#{GG_FIND_URL}?input=#{place}&inputtype=textquery&language=zh-TW&fields=place_id,name&key=#{GMAP_KEY}"
-        doc = JSON.parse(open(url).read, :headers => true)
+        doc = JSON.parse(open(url).read, headers: true)
         place_id = doc['candidates'][0]['place_id'] if doc['candidates'][0]
         begin
           unless place_id.nil?
