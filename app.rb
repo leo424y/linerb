@@ -64,7 +64,7 @@ post '/callback' do
       if data.end_with? 'nearby'
         place_id = data.chomp('nearby')
         store = Store.find_by(place_id: place_id)
-        handle_location(event, user_id, group_id, store.lat, store.lng)
+        handle_location(event, user_id, group_id, store.lat, store.lng, store.name_sys)
       end
 
     when Line::Bot::Event::Message
@@ -79,8 +79,8 @@ def handle_join(event, group_id)
   reply_text(event, IO.readlines("data/join").map(&:chomp))
 end
 
-def handle_location(event, user_id, group_id, lat, lng)
-  results = handle_nearby(lat, lng)
+def handle_location(event, user_id, group_id, lat, lng, origin_name)
+  results = handle_nearby(lat, lng, origin_name)
   result_message = results.empty? ? "🗽 附近尚無開民蹤影，趕快來當第一吧！" : "🎐 附近開民怕落空的地點有..."
   actions_a = results.map { |r|
     { label: "📍 #{r}" , type: 'message', text: "#{r}有開嗎？" }
@@ -89,11 +89,11 @@ def handle_location(event, user_id, group_id, lat, lng)
   reply_content(event, message_buttons_h('開民雷達', result_message, actions_a))
 end
 
-def handle_nearby lat, lng
+def handle_nearby lat, lng, origin_name
   my_lat = lat.to_s[0..4]
   my_lng = lng.to_s[0..5]
   my_store = Store.where("lat like ?", "#{my_lat}%").where("lng like ?", "#{my_lng}%")
-  my_store.pluck(:name_sys).uniq[0..2]
+  my_store.pluck(:name_sys).uniq[0..3] - [origin_name]
 end
 
 def handle_message(event, user_id, is_vip, group_id)
@@ -101,7 +101,7 @@ def handle_message(event, user_id, is_vip, group_id)
 
   case event.type
   when Line::Bot::Event::MessageType::Location
-    group_id ? handle_location(event, user_id, group_id, event.message['latitude'], event.message['longitude']) : reply_text(event, '請於群組中使用')
+    group_id ? handle_location(event, user_id, group_id, event.message['latitude'], event.message['longitude'], '') : reply_text(event, '請於群組中使用')
 
   when Line::Bot::Event::MessageType::Text
     suffixes = IO.readlines("data/keywords").map(&:chomp)
