@@ -60,7 +60,12 @@ post '/callback' do
       Group.update(group_id: group_id, status: 'leave')
 
     when Line::Bot::Event::Postback
-      reply_text(event, event['postback']['data'])
+      data = event['postback']['data']
+      if data.end_with? 'nearby'
+        place_id = data.chomp('nearby')
+        store = Store.find_by(place_id: place_id)
+        handle_location(event, user_id, group_id, store.lat, store.lng)
+      end
 
     when Line::Bot::Event::Message
       handle_message(event, user_id, is_vip, group_id)
@@ -129,12 +134,12 @@ def handle_message(event, user_id, is_vip, group_id)
         { label: '🥇 升級', type: 'message', text: IO.readlines("data/promote_text").join}
       end
 
-      actions_a = [
-        { label: '📍 詳情', type: 'uri', uri: s_link },
-        { label: '💡 建議', type: 'uri', uri: L_OPINION_URI },
-        { label: '👍 推薦', type: 'uri', uri: L_RECOMMEND_URI},
-        level_up_button,
-      ].compact
+      suggest_button = if is_vip
+        { label: '👍 推薦', type: 'uri', uri: L_RECOMMEND_URI}
+      else
+        { label: '💡 建議', type: 'uri', uri: L_OPINION_URI }
+      end
+
       if name == '麥當勞中港四店'
         message_buttons_text = '😃 現在有開'
       elsif name == '鬼門'
@@ -160,6 +165,9 @@ def handle_message(event, user_id, is_vip, group_id)
               weekday_text = res['opening_hours']['weekday_text']
               opening_hours = is_open_now ? "😃 現在有開" : "🔴 現在沒開"
               message_buttons_text = opening_hours
+
+              nearby_button = { label: '🎐 附近', type: 'postback', data: "#{place_id}nearby" },
+
               if user_id && group_id && !is_vip
                 message = [
                   "【#{name}】#{opening_hours}",
@@ -195,6 +203,14 @@ def handle_message(event, user_id, is_vip, group_id)
       else
         message_buttons_text = '🤔 請見詳情'
       end
+
+      actions_a = [
+        { label: '📍 詳情', type: 'uri', uri: s_link },
+        nearby_button,
+        suggest_button,
+        level_up_button,
+      ].compact
+
       reply_content(event, message_buttons_h(name, message_buttons_text, actions_a))
     end
   end
