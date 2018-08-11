@@ -181,7 +181,7 @@ def handle_message(event, user_id, is_vip, group_id)
               in_offer = Offer.where("store_name like ?", "%#{name}%")
               offer = in_offer.last.info if in_offer
 
-              message_buttons_text = "#{opening_hours}\n#{offer}"
+              message_buttons_text = offer ? "#{opening_hours}\n#{offer}" : opening_hours
               nearby_button = { label: '🎐 附近', type: 'postback', data: "#{place_id}nearby" }
 
               if user_id && group_id && !is_vip
