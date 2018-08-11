@@ -102,7 +102,8 @@ def handle_message(event, user_id, is_vip, group_id)
 
   case event.type
   when Line::Bot::Event::MessageType::Location
-    group_id ? handle_location(event, user_id, group_id, event.message['latitude'], event.message['longitude'], '') : reply_text(event, '請於群組中使用')
+    # group_id ? handle_location(event, user_id, group_id, event.message['latitude'], event.message['longitude'], '') : reply_text(event, '請於群組中使用')
+    handle_location(event, user_id, group_id, event.message['latitude'], event.message['longitude'], '') 
 
   when Line::Bot::Event::MessageType::Text
     suffixes = IO.readlines("data/keywords").map(&:chomp)
