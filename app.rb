@@ -178,10 +178,10 @@ def handle_message(event, user_id, is_vip, group_id)
               periods = res['opening_hours']['periods']
               weekday_text = res['opening_hours']['weekday_text']
               opening_hours = is_open_now ? "😃 現在有開" : "🔴 現在沒開"
-              offer = Offer.where("store_name like ?", "%#{name}%").last.info
+              in_offer = Offer.where("store_name like ?", "%#{name}%")
+              offer = in_offer.last.info if in_offer
 
               message_buttons_text = "#{opening_hours}\n#{offer}"
-
               nearby_button = { label: '🎐 附近', type: 'postback', data: "#{place_id}nearby" }
 
               if user_id && group_id && !is_vip
