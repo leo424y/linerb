@@ -139,7 +139,7 @@ def handle_message(event, user_id, is_vip, group_id)
         Pocket.create(user_id: user_id, place_name: name.chomp('放口袋~'))
         "👜 已將#{name}"
       else
-        '🥇 請先升級就能放口袋囉'
+        '🥇 請先在任一群組使用一次【有開嗎】就能將它放口袋囉'
       end
       reply_text(event, message)
 
