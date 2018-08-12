@@ -134,6 +134,12 @@ def handle_message(event, user_id, is_vip, group_id)
       message = count_exercise
       reply_text(event, message)
 
+    elsif name.end_with?('口袋有洞')
+      pocket = Pocket.where(user_id: user_id).last(4).pluck(:place_name)
+      actions_a = pocket.map { |p|
+        {label: "📍 #{p}", type: 'uri', uri: "#{GG_SEARCH_URL}#{p}"}
+      }
+      reply_content( event, message_buttons_h('口袋有洞', '', actions_a) )
     elsif name.end_with?('放口袋~')
       message = if is_vip
         Pocket.create(user_id: user_id, place_name: name.chomp('放口袋~'))
