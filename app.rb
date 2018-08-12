@@ -146,11 +146,12 @@ def handle_message(event, user_id, is_vip, group_id)
     elsif (m.end_with?(*suffixes) || !group_id) && (name != '') && (name.bytesize < 40)
       s_link = %x(ruby bin/bitly.rb '#{link}').chomp
 
-      level_up_button = if is_vip
-        { label: '👜 放口袋', type: 'message', text: "#{name}放口袋~" }
-      else
-        { label: '🥇 升級', type: 'message', text: IO.readlines("data/promote_text").join}
-      end
+      level_up_button = { label: '👜 放口袋', type: 'message', text: "#{name}放口袋~" }
+      # level_up_button = if is_vip
+      #   { label: '👜 放口袋', type: 'message', text: "#{name}放口袋~" }
+      # else
+      #   { label: '🥇 升級', type: 'message', text: IO.readlines("data/promote_text").join}
+      # end
 
       suggest_button = if is_vip
         { label: '👍 推薦', type: 'uri', uri: L_RECOMMEND_URI}
