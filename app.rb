@@ -131,13 +131,13 @@ def handle_message(event, user_id, is_vip, group_id)
       reply_text(event, "已將【#{store_name}】情報收錄，感謝提供！")
 
     elsif ['福賴好運', '北運', '朝運'].include? m
-      message = count_exercise
+      message = count_exercise m
       reply_text(event, message)
 
     elsif name.end_with?('口袋有洞')
       pocket = Pocket.where(user_id: user_id).pluck(:place_name)[-4..-1]
       if pocket.empty?
-        reply_text(event, '口袋裡目前空空，請先將想要結果放口袋~')        
+        reply_text(event, '口袋裡目前空空，請先將想要結果放口袋~')
       else
         actions_a = pocket.map { |p|
           {label: "📍 #{p}", type: 'uri', uri: "#{GG_SEARCH_URL}#{URI.escape(p)}"}
@@ -269,16 +269,30 @@ def user_name id
   JSON.parse(client.get_profile(id).read_body)['displayName']
 end
 
-def count_exercise
+def count_exercise m
+  case m
+  when '福賴好運'
+    "【北區】#{p_tndcsc_count}     【朝馬】#{p_tndcsc_count['swim'][0]}/#{p_tndcsc_count['swim'][1]} 🏊 #{p_tndcsc_count['gym'][0]}/#{p_tndcsc_count['gym'][1]} 💪 快來減脂增肌！"
+  when '北運'
+    "【北區】#{p_tndcsc_count} 💪 快來減脂增肌！"
+  when '朝運'
+    "【朝馬】#{p_tndcsc_count['swim'][0]}/#{p_tndcsc_count['swim'][1]} 🏊 #{p_tndcsc_count['gym'][0]}/#{p_tndcsc_count['gym'][1]} 💪 快來減脂增肌！"
+  end
+end
+
+def p_tndcsc_count
   tndcsc_count = ''
   tndcsc_url = 'http://tndcsc.com.tw/'
   tndcsc_doc = Nokogiri::HTML(open(tndcsc_url))
   tndcsc_doc.css('.w3_agile_logo p').each_with_index do |l, index|
     tndcsc_count += (" #{l.content}".split.map{|x| x[/\d+/]}[0] + (index==0 ? '/350 🏊 ' : '/130 💪'))
   end
+  tndcsc_count
+end
+
+def p_tndcsc_count
   cmcsc_url = 'https://cmcsc.cyc.org.tw/api'
-  cmcsc_doc = JSON.parse(open(cmcsc_url).read, headers: true)
-  "【北區】#{tndcsc_count}     【朝馬】#{cmcsc_doc['swim'][0]}/#{cmcsc_doc['swim'][1]} 🏊 #{cmcsc_doc['gym'][0]}/#{cmcsc_doc['gym'][1]} 💪 快來減脂增肌！"
+  JSON.parse(open(cmcsc_url).read, headers: true)
 end
 
 class String
