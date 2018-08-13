@@ -274,9 +274,9 @@ def count_exercise m
   when '福賴好運'
     "【北區】#{p_tndcsc_count}     【朝馬】#{p_tndcsc_count['swim'][0]}/#{p_tndcsc_count['swim'][1]} 🏊 #{p_tndcsc_count['gym'][0]}/#{p_tndcsc_count['gym'][1]} 💪 快來減脂增肌！"
   when '北運'
-    "【北區】#{p_tndcsc_count} 💪 快來減脂增肌！"
+    "#{p_tndcsc_count} 💪 快來減脂增肌！"
   when '朝運'
-    "【朝馬】#{p_tndcsc_count['swim'][0]}/#{p_tndcsc_count['swim'][1]} 🏊 #{p_tndcsc_count['gym'][0]}/#{p_tndcsc_count['gym'][1]} 💪 快來減脂增肌！"
+    "#{p_cmcsc_count['swim'][0]}/#{p_cmcsc_count['swim'][1]} 🏊 #{p_cmcsc_count['gym'][0]}/#{p_cmcsc_count['gym'][1]} 💪 快來減脂增肌！"
   end
 end
 
@@ -290,7 +290,7 @@ def p_tndcsc_count
   tndcsc_count
 end
 
-def p_tndcsc_count
+def p_cmcsc_count
   cmcsc_url = 'https://cmcsc.cyc.org.tw/api'
   JSON.parse(open(cmcsc_url).read, headers: true)
 end
