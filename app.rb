@@ -130,7 +130,8 @@ def handle_message(event, user_id, is_vip, group_id)
       Offer.create(user_id: user_id, store_name: store_name, info: origin_message.split("\n")[1..-1].join("\n"))
       reply_text(event, "已將【#{store_name}】情報收錄，感謝提供！")
 
-    elsif ['福賴好運', '北運', '朝運'].include? m
+    elsif ['福賴好運', '北運', '朝運', '北運', '北區國民運動中心', '台中市北區國民運動中心'].include? m
+      (m = '北運') if (is_tndcsc? m)
       message = count_exercise m
       reply_text(event, message)
 
@@ -199,7 +200,9 @@ def handle_message(event, user_id, is_vip, group_id)
               opening_hours = is_open_now ? "😃 現在有開" : "🔴 現在沒開"
               in_offer = Offer.where("store_name like ?", "%#{name}%")
 
-              message_buttons_text = in_offer.empty? ? opening_hours : "#{opening_hours}\n#{in_offer.last.info}"
+              (cohost = count_exercise '北運') if (is_tndcsc? name)
+
+              message_buttons_text = in_offer.empty? ? opening_hours : "#{opening_hours}\n#{cohost}\n#{in_offer.last.info}"
               nearby_button = { label: '🎐 附近', type: 'postback', data: "#{place_id}nearby" }
 
               if user_id && group_id && !is_vip
@@ -357,4 +360,8 @@ end
 
 def to_model yy
   [Vip, Store, Group, Pocket, Position, Talk, Offer].find { |c| c.to_s == yy }
+end
+
+def is_tndcsc? name
+  ['北運', '北區國民運動中心', '台中市北區國民運動中心'].include name
 end
