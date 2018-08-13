@@ -136,13 +136,13 @@ def handle_message(event, user_id, is_vip, group_id)
 
     elsif name.end_with?('口袋有洞')
       pocket = Pocket.where(user_id: user_id).pluck(:place_name)[-4..-1]
-      if pocket.empty?
-        reply_text(event, '口袋裡目前空空，請先將想要結果放口袋~')
-      else
+      if !pocket.empty? || !pocket
         actions_a = pocket.map { |p|
           {label: "📍 #{p}", type: 'uri', uri: "#{GG_SEARCH_URL}#{URI.escape(p)}"}
         }
         reply_content( event, message_buttons_h('口袋有洞', '裡頭掉出了...', actions_a) )
+      else
+        reply_text(event, '口袋裡目前空空，請先將想要的結果放口袋~')
       end
     elsif name.end_with?('放口袋~')
       message = if is_vip
