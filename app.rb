@@ -130,7 +130,7 @@ def handle_message(event, user_id, is_vip, group_id)
       Offer.create(user_id: user_id, store_name: store_name, info: origin_message.split("\n")[1..-1].join("\n"))
       reply_text(event, "已將【#{store_name}】情報收錄，感謝提供！")
 
-    elsif ['福賴好運', '北運', '朝運', '北運', '北區國民運動中心', '台中市北區國民運動中心'].include? m
+    elsif ['福賴好運', '北運', '朝運', '北運', '北區運動中心', '北區國民運動中心', '台中市北區國民運動中心'].include? m
       (m = '北運') if (is_tndcsc? m)
       message = count_exercise m
       reply_text(event, message)
@@ -363,5 +363,5 @@ def to_model yy
 end
 
 def is_tndcsc? name
-  ['北運', '北區國民運動中心', '台中市北區國民運動中心'].include? name
+  ['北運', '北區運動中心', '北區國民運動中心', '台中市北區國民運動中心'].include? name
 end
