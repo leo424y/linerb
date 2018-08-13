@@ -363,5 +363,5 @@ def to_model yy
 end
 
 def is_tndcsc? name
-  ['北運', '北區國民運動中心', '台中市北區國民運動中心'].include name
+  ['北運', '北區國民運動中心', '台中市北區國民運動中心'].include? name
 end
