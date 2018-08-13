@@ -142,7 +142,7 @@ def handle_message(event, user_id, is_vip, group_id)
         }
         reply_content( event, message_buttons_h('口袋有洞', '裡頭掉出了...', actions_a) )
       else
-        reply_text(event, '口袋裡目前空空，請先將想要的結果放口袋~')
+        reply_text(event, '口袋裡目前空空，請先問完要去的店有開嗎後，再將想要的結果放口袋~')
       end
     elsif name.end_with?('放口袋~')
       message = if is_vip
