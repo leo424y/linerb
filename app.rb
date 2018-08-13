@@ -136,7 +136,7 @@ def handle_message(event, user_id, is_vip, group_id)
 
     elsif name.end_with?('口袋有洞')
       pocket = Pocket.where(user_id: user_id).pluck(:place_name)[-4..-1]
-      if !pocket
+      if pocket
         actions_a = pocket.map { |p|
           {label: "📍 #{p}", type: 'uri', uri: "#{GG_SEARCH_URL}#{URI.escape(p)}"}
         }
