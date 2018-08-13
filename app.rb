@@ -144,6 +144,7 @@ def handle_message(event, user_id, is_vip, group_id)
       else
         reply_text(event, '口袋裡目前空空，請先問完要去的店有開嗎後，再將想要的結果放口袋~')
       end
+      
     elsif name.end_with?('放口袋~')
       message = if is_vip
         Pocket.create(user_id: user_id, place_name: name.chomp('放口袋~'))
@@ -152,6 +153,9 @@ def handle_message(event, user_id, is_vip, group_id)
         '🥇 請先在任一群組使用一次【有開嗎】就能將它放口袋囉'
       end
       reply_text(event, message)
+
+    elsif name != ''
+      reply_text(event, IO.readlines("data/intro").map(&:chomp))
 
     elsif (m.end_with?(*suffixes) || !group_id) && (name != '') && (name.bytesize < 40)
       s_link = %x(ruby bin/bitly.rb '#{link}').chomp
