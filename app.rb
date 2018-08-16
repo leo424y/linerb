@@ -65,8 +65,8 @@ post '/callback' do
         place_id = data.chomp('nearby')
         store = Store.find_by(place_id: place_id)
         handle_location(event, user_id, group_id, store.lat, store.lng, store.name_sys)
-      elsif data.spilt('/')[0] == 'book'
-        Book.create(user_id: data.spilt('/')[1], place_id: data.spilt('/')[2], cost: data.spilt('/')[3])
+      elsif data.split('/')[0] == 'book'
+        Book.create(user_id: data.split('/')[1], place_id: data.split('/')[2], cost: data.split('/')[3])
         reply_text(event, "已新增你在【#{data[1][1]}】的消費【#{data[2]}】元")
       end
 
