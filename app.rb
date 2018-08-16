@@ -68,6 +68,8 @@ post '/callback' do
       elsif data.split('/')[0] == 'book'
         Book.create(user_id: data.split('/')[1], place_id: data.split('/')[2], cost: data.split('/')[4])
         reply_text(event, "已新增你在#{data.split('/')[3]}的消費#{data.split('/')[4]}元")
+      else
+        reply_text(event, data)
       end
 
     when Line::Bot::Event::Message
@@ -167,11 +169,6 @@ def handle_message(event, user_id, is_vip, group_id)
       s_link = %x(ruby bin/bitly.rb '#{link}').chomp
 
       level_up_button = { label: '👜 放口袋', type: 'message', text: "#{name}放口袋~" }
-      # level_up_button = if is_vip
-      #   { label: '👜 放口袋', type: 'message', text: "#{name}放口袋~" }
-      # else
-      #   { label: '🥇 升級', type: 'message', text: IO.readlines("data/promote_text").join}
-      # end
 
       suggest_button = if is_vip
         { label: '👍 推薦', type: 'uri', uri: L_RECOMMEND_URI}
@@ -382,7 +379,7 @@ def number_to_cost_h user_id, place_info, cost
       text: "確認在#{place_info[1]}花了#{cost}元？",
       actions: [
         { label: '是的', type: 'postback', data: "book/#{user_id}/#{place_info[0]}/#{place_info[1]}/#{cost}"},
-        { label: '沒有', type: 'message', text: '沒有' },
+        { label: '沒有', type: 'postback', data: '沒有' },
       ],
     }
   }
