@@ -163,7 +163,7 @@ def handle_message(event, user_id, is_vip, group_id)
       end
       reply_text(event, message)
 
-    elsif name == ''
+    elsif name == '' && !group_id
       reply_text(event, IO.readlines("data/intro").map(&:chomp))
 
     elsif (m.end_with?(*suffixes) || !group_id) && (name != '') && (name.bytesize < 40)
