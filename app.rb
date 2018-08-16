@@ -128,7 +128,7 @@ def handle_message(event, user_id, is_vip, group_id)
     if ( m.end_with?('附近') || m.start_with?('附近') )
       reply_text(event, '請先查詢要去的地點【有開嗎】？若有營業資訊，則可以點選【🎐 附近】偷瞄開民們的口袋名單囉！')
 
-    elsif m.to_i > 0
+    elsif (m.to_i > 0) && !group_id
       place = Store.where(info: user_id).last
       place_info = [place[:place_id], place[:name_sys]]
       reply_content(event, number_to_cost_h(user_id, place_info, m)) if place_id
