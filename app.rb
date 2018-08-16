@@ -66,8 +66,8 @@ post '/callback' do
         store = Store.find_by(place_id: place_id)
         handle_location(event, user_id, group_id, store.lat, store.lng, store.name_sys)
       elsif data.split('/')[0] == 'book'
-        Book.create(user_id: data.split('/')[1], place_id: data.split('/')[2], cost: data.split('/')[3])
-        reply_text(event, "已新增你在【#{data[1][1]}】的消費【#{data[2]}】元")
+        Book.create(user_id: data.split('/')[1], place_id: data.split('/')[2], cost: data.split('/')[4])
+        reply_text(event, "已新增你在#{data.split('/')[3]}的消費#{data.split('/')[4]}元")
       end
 
     when Line::Bot::Event::Message
@@ -366,7 +366,7 @@ def download_csv
 end
 
 def to_model yy
-  [Vip, Store, Group, Pocket, Position, Talk, Offer].find { |c| c.to_s == yy }
+  [Vip, Store, Group, Pocket, Position, Talk, Offer, Book].find { |c| c.to_s == yy }
 end
 
 def is_tndcsc? name
@@ -381,7 +381,7 @@ def number_to_cost_h user_id, place_info, cost
       type: 'confirm',
       text: "確認在#{place_info[1]}花了#{cost}元？",
       actions: [
-        { label: '是的', type: 'postback', data: "book/#{place_info[0]}/#{place_info[1]}/#{cost}"},
+        { label: '是的', type: 'postback', data: "book/#{user_id}/#{place_info[0]}/#{place_info[1]}/#{cost}"},
         { label: '沒有', type: 'message', text: '好的，沒事。' },
       ],
     }
