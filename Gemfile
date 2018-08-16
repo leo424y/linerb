@@ -6,3 +6,5 @@ gem "rake"
 gem 'pg'
 gem 'nokogiri'
 gem 'bitly'
+gem 'capybara'
+gem 'selenium-webdriver'
