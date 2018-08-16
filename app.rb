@@ -163,9 +163,6 @@ def handle_message(event, user_id, is_vip, group_id)
       end
       reply_text(event, message)
 
-    elsif name == '' && !group_id
-      reply_text(event, IO.readlines("data/intro").map(&:chomp))
-
     elsif (m.end_with?(*suffixes) || !group_id) && (name != '') && (name.bytesize < 40)
       s_link = %x(ruby bin/bitly.rb '#{link}').chomp
 
@@ -256,6 +253,9 @@ def handle_message(event, user_id, is_vip, group_id)
       ].compact
 
       reply_content(event, message_buttons_h(name, message_buttons_text, actions_a))
+    elsif !group_id
+      reply_text(event, IO.readlines("data/intro").map(&:chomp))
+      
     end
   end
 end
