@@ -65,8 +65,8 @@ post '/callback' do
         place_id = data.chomp('nearby')
         store = Store.find_by(place_id: place_id)
         handle_location(event, user_id, group_id, store.lat, store.lng, store.name_sys)
-      elsif data[2] > 0
-        Book.create(user_id: data[0], place_id: data[1][0], cost: data[2])
+      elsif data.spilt('/')[0] == 'book'
+        Book.create(user_id: data.spilt('/')[1], place_id: data.spilt('/')[2], cost: data.spilt('/')[3])
         reply_text(event, "已新增你在【#{data[1][1]}】的消費【#{data[2]}】元")
       end
 
@@ -381,7 +381,7 @@ def number_to_cost_h user_id, place_info, cost
       type: 'confirm',
       text: "確認在#{place_info[1]}花了#{cost}元？",
       actions: [
-        { label: 'Yes', type: 'postback', data: '1'},
+        { label: 'Yes', type: 'postback', data: "book/#{place_info[0]}/#{place_info[1]}/#{cost}"},
         { label: 'No', type: 'message', text: '好的，沒事。' },
       ],
     }
