@@ -209,7 +209,7 @@ def handle_message(event, user_id, is_vip, group_id)
               message_buttons_text = in_offer.empty? ? opening_hours : "#{opening_hours}\n#{in_offer.last.info}"
               message_buttons_text = (is_tndcsc? name) ? "#{opening_hours}\n#{count_exercise '北運'}" : opening_hours
               message_buttons_text = (is_tpsc? name) ? "#{opening_hours}\n#{p_tp_count name}" : opening_hours
-              
+
               nearby_button = { label: '🎐 附近', type: 'postback', data: "#{place_id}nearby" }
 
               if user_id && group_id && !is_vip
@@ -399,5 +399,5 @@ def p_tp_count name
   a = %x(curl 'http://booking.tpsc.sporetrofit.com/Home/loadLocationPeopleNum' -XPOST -H 'Host: booking.tpsc.sporetrofit.com' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:61.0) Gecko/20100101 Firefox/61.0' -H 'Accept: */*' -H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate' -H 'Referer: http://booking.tpsc.sporetrofit.com/Home/LocationPeopleNum' -H 'X-Requested-With: XMLHttpRequest' -H 'Cookie: _culture=zh-TW' -H 'Connection: keep-alive' -H 'Content-Length: 0')
   b = JSON.parse(a)['locationPeopleNums']
   c = b.select {|h1| h1['lidName']=="#{name}"}.first
-  "目前場館人數：🏊 #{c['swPeopleNum']} / #{c['swMaxPeopleNum']} | 💪 #{c['gymPeopleNum']} / #{c['gymMaxPeopleNum']} "
+  "🏊 #{c['swPeopleNum']} / #{c['swMaxPeopleNum']} \n 💪 #{c['gymPeopleNum']} / #{c['gymMaxPeopleNum']} "
 end
