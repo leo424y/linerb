@@ -255,7 +255,7 @@ def handle_message(event, user_id, is_vip, group_id)
       reply_content(event, message_buttons_h(name, message_buttons_text, actions_a))
     elsif !group_id
       reply_text(event, IO.readlines("data/intro").map(&:chomp))
-      
+
     end
   end
 end
@@ -382,7 +382,7 @@ def number_to_cost_h user_id, place_info, cost
       text: "確認在#{place_info[1]}花了#{cost}元？",
       actions: [
         { label: '是的', type: 'postback', data: "book/#{user_id}/#{place_info[0]}/#{place_info[1]}/#{cost}"},
-        { label: '沒有', type: 'message', text: '好的，沒事。' },
+        { label: '沒有', type: 'message', text: '好的沒事' },
       ],
     }
   }
