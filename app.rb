@@ -130,7 +130,7 @@ def handle_message(event, user_id, is_vip, group_id)
 
     elsif (m.to_i > 0) && !group_id
       place = Store.where(info: user_id).last
-      place_info = [place[:place_id], place[:name_sys]]
+      place_info = [place.place_id, place.name_sys]
       reply_content(event, number_to_cost_h(user_id, place_info, m)) if place
 
     elsif ( (origin_message.split("\n").count > 1) && !group_id )
@@ -381,7 +381,7 @@ def number_to_cost_h user_id, place_info, cost
       type: 'confirm',
       text: "確認在#{place_info[1]}花了#{cost}元？",
       actions: [
-        { label: 'Yes', type: 'postback', data: [user_id, place_info, cost]},
+        { label: 'Yes', type: 'postback', data: '1'},
         { label: 'No', type: 'message', text: '好的，沒事。' },
       ],
     }
