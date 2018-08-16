@@ -11,6 +11,15 @@ require 'erb'
 require 'csv'
 require './model.rb'
 
+require 'capybara'
+require 'capybara/dsl'
+require 'capybara/poltergeist'
+include Capybara::DSL
+
+
+Capybara.default_driver = :selenium
+Capybara.run_server = false
+
 GG_SEARCH_URL = "https://www.google.com/maps/search/?api=1&query="
 GG_FIND_URL = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
 GG_DETAIL_URL = 'https://maps.googleapis.com/maps/api/place/details/json'
@@ -390,9 +399,13 @@ def number_to_cost_h user_id, place_info, cost
 end
 
 def p_tp_count
-  include GetCount
   css='#CurSwPNum_BTSC'
   url = 'http://booking.tpsc.sporetrofit.com/Home/LocationPeopleNum'
-  scraper = GetCount::WebScraper.new
-  puts scraper.get_page_data(url, css)
+  puts get_page_data(url, css)
+end
+
+def get_page_data(url, css)
+  visit(url)
+  doc = Nokogiri::HTML(page.html)
+  doc.css(css).text
 end
