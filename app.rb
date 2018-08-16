@@ -208,6 +208,8 @@ def handle_message(event, user_id, is_vip, group_id)
 
               message_buttons_text = in_offer.empty? ? opening_hours : "#{opening_hours}\n#{in_offer.last.info}"
               message_buttons_text = (is_tndcsc? name) ? "#{opening_hours}\n#{count_exercise '北運'}" : opening_hours
+              message_buttons_text = (is_tpsc? name) ? "#{opening_hours}\n#{p_tp_count name}" : opening_hours
+              
               nearby_button = { label: '🎐 附近', type: 'postback', data: "#{place_id}nearby" }
 
               if user_id && group_id && !is_vip
@@ -289,7 +291,7 @@ def count_exercise m
   when '福賴好運'
     "【北區】#{p_tndcsc_count}     【朝馬】#{p_tndcsc_count['swim'][0]}/#{p_tndcsc_count['swim'][1]} 🏊 #{p_tndcsc_count['gym'][0]}/#{p_tndcsc_count['gym'][1]} 💪 快來減脂增肌！"
   when '北運'
-    "#{p_tndcsc_count} 💪 快來減脂增肌！"
+    "#{p_tndcsc_count} 快來減脂增肌！"
   when '朝運'
     "#{p_cmcsc_count['swim'][0]}/#{p_cmcsc_count['swim'][1]} 🏊 #{p_cmcsc_count['gym'][0]}/#{p_cmcsc_count['gym'][1]} 💪 快來減脂增肌！"
   end
@@ -374,6 +376,10 @@ def is_tndcsc? name
   ['北運', '北區運動中心', '北區國民運動中心', '台中市北區國民運動中心'].include? name
 end
 
+def is_tpsc? name
+  ['北投運動中心', '大安運動中心', '中正運動中心', '南港運動中心', '內湖運動中心', '士林運動中心', '文山運動中心', '信義運動中心', '中山運動中心'].include? name
+end
+
 def number_to_cost_h user_id, place_info, cost
   {
     type: 'template',
@@ -387,4 +393,11 @@ def number_to_cost_h user_id, place_info, cost
       ],
     }
   }
+end
+
+def p_tp_count name
+  a = %x(curl 'http://booking.tpsc.sporetrofit.com/Home/loadLocationPeopleNum' -XPOST -H 'Host: booking.tpsc.sporetrofit.com' -H 'User-Agent: Mozilla/5.0 (Macintosh; Intel Mac OS X 10.13; rv:61.0) Gecko/20100101 Firefox/61.0' -H 'Accept: */*' -H 'Accept-Language: en-US,en;q=0.5' -H 'Accept-Encoding: gzip, deflate' -H 'Referer: http://booking.tpsc.sporetrofit.com/Home/LocationPeopleNum' -H 'X-Requested-With: XMLHttpRequest' -H 'Cookie: _culture=zh-TW' -H 'Connection: keep-alive' -H 'Content-Length: 0')
+  b = JSON.parse(a)['locationPeopleNums']
+  c = b.select {|h1| h1['lidName']=="#{name}"}.first
+  "目前場館人數：🏊 #{c['swPeopleNum']} / #{c['swMaxPeopleNum']} | 💪 #{c['gymPeopleNum']} / #{c['gymMaxPeopleNum']} "
 end
