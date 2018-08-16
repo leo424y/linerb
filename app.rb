@@ -129,7 +129,7 @@ def handle_message(event, user_id, is_vip, group_id)
       reply_text(event, '請先查詢要去的地點【有開嗎】？若有營業資訊，則可以點選【🎐 附近】偷瞄開民們的口袋名單囉！')
 
     elsif m.to_i > 0
-      place_info = Store.where(user_id: user_id).last.pluck(:place_id, :place_name)
+      place_info = Store.where(info: user_id).last.pluck(:place_id, :place_name)
       reply_content(event, number_to_cost_h(user_id, place_info, m)) if place_id
 
     elsif ( (origin_message.split("\n").count > 1) && !group_id )
