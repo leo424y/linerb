@@ -66,8 +66,8 @@ post '/callback' do
         store = Store.find_by(place_id: place_id)
         handle_location(event, user_id, group_id, store.lat, store.lng, store.name_sys)
       elsif data[2] > 0
-        Book.create(user_id: data[0], place_id: data[1][:place_id], cost: data[2])
-        reply_text(event, "已新增你在【#{data[1][:name_sys]}】的消費【#{data[2]}】元")
+        Book.create(user_id: data[0], place_id: data[1][0], cost: data[2])
+        reply_text(event, "已新增你在【#{data[1][1]}】的消費【#{data[2]}】元")
       end
 
     when Line::Bot::Event::Message
@@ -129,7 +129,8 @@ def handle_message(event, user_id, is_vip, group_id)
       reply_text(event, '請先查詢要去的地點【有開嗎】？若有營業資訊，則可以點選【🎐 附近】偷瞄開民們的口袋名單囉！')
 
     elsif m.to_i > 0
-      place_info = Store.where(info: user_id).select(:place_id, :name_sys).last
+      place = Store.where(info: user_id).last
+      place_info = [place.place_id, place.name_sys]
       reply_content(event, number_to_cost_h(user_id, place_info, m)) if place_id
 
     elsif ( (origin_message.split("\n").count > 1) && !group_id )
@@ -378,7 +379,7 @@ def number_to_cost_h user_id, place_info, cost
     altText: 'Confirm alt text',
     template: {
       type: 'confirm',
-      text: "確認在#{place_info.name_sys}花了#{cost}元？",
+      text: "確認在#{place_info[1]}花了#{cost}元？",
       actions: [
         { label: 'Yes', type: 'postback', data: [user_id, place_info, cost]},
         { label: 'No', type: 'message', text: '好的，沒事。' },
