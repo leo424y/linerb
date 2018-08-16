@@ -130,7 +130,7 @@ def handle_message(event, user_id, is_vip, group_id)
 
     elsif m.to_i > 0
       place = Store.where(info: user_id).last
-      place_info = [place.place_id, place.name_sys]
+      place_info = [place[:place_id], place[:name_sys]]
       reply_content(event, number_to_cost_h(user_id, place_info, m)) if place_id
 
     elsif ( (origin_message.split("\n").count > 1) && !group_id )
