@@ -66,8 +66,8 @@ post '/callback' do
         store = Store.find_by(place_id: place_id)
         handle_location(event, user_id, group_id, store.lat, store.lng, store.name_sys)
       elsif data[2] > 0
-        Book.create(user_id: data[0], place_id: data[1].place_id, cost: data[2])
-        reply_text(event, "已新增你在【#{data[1].name_sys}】的消費【#{data[2]}】元")
+        Book.create(user_id: data[0], place_id: data[1][:place_id], cost: data[2])
+        reply_text(event, "已新增你在【#{data[1][:name_sys]}】的消費【#{data[2]}】元")
       end
 
     when Line::Bot::Event::Message
