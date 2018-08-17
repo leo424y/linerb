@@ -127,7 +127,7 @@ def handle_message(event, user_id, is_vip, group_id)
     place = URI.escape(name)
     link = "#{GG_SEARCH_URL}#{place}"
 
-    if ( m.end_with?('附近') || m.start_with?('附近') )
+    if ( m.end_with?('附近') || m.start_with?('附近') && !group_id)
       reply_text(event, '請先查詢要去的地點【有開嗎】？若有營業資訊，則可以點選【🎐 附近】偷瞄開民們的口袋名單囉！')
 
     elsif (m.to_i > 0) && !group_id
@@ -139,10 +139,6 @@ def handle_message(event, user_id, is_vip, group_id)
       store_name = origin_message.split("\n")[0]
       Offer.create(user_id: user_id, store_name: store_name, info: origin_message.split("\n")[1..-1].join("\n"))
       reply_text(event, "已將【#{store_name}】情報收錄，感謝提供！")
-
-    elsif ['北投運'].include? m
-      message = p_tp_count
-      reply_text(event, message)
 
     elsif ['福賴好運', '北運', '朝運', '北運', '北區運動中心', '北區國民運動中心', '台中市北區國民運動中心'].include? m
       (m = '北運') if (is_tndcsc? m)
@@ -169,7 +165,11 @@ def handle_message(event, user_id, is_vip, group_id)
       end
       reply_text(event, message)
 
-    elsif (m.end_with?(*suffixes) || !group_id) && (name != '') && (name.bytesize < 40)
+    elsif (name.bytesize > 40 && !group_id)
+      Idea.create(user_id: user_id, content: m)
+      reply_text(event, '感謝你提供建議，【有開嗎】因你的回饋將變得更好！')
+
+    elsif (m.end_with?(*suffixes) || !group_id) && (name != '')
       s_link = %x(ruby bin/bitly.rb '#{link}').chomp
 
       level_up_button = { label: '👜 放口袋', type: 'message', text: "#{name}放口袋~" }
@@ -368,10 +368,6 @@ def download_csv
   end
 end
 
-def to_model yy
-  [Vip, Store, Group, Pocket, Position, Talk, Offer, Book].find { |c| c.to_s == yy }
-end
-
 def is_tndcsc? name
   ['北運', '北區運動中心', '北區國民運動中心', '台中市北區國民運動中心'].include? name
 end
@@ -400,4 +396,8 @@ def p_tp_count name
   b = JSON.parse(a)['locationPeopleNums']
   c = b.select {|h1| h1['lidName']=="#{name}"}.first
   "🏊 #{c['swPeopleNum']} / #{c['swMaxPeopleNum']} \n💪 #{c['gymPeopleNum']} / #{c['gymMaxPeopleNum']} "
+end
+
+def to_model yy
+  [Vip, Store, Group, Pocket, Position, Talk, Offer, Book, Idea].find { |c| c.to_s == yy }
 end
