@@ -7,3 +7,4 @@ class Talk < ActiveRecord::Base; end
 class Vip < ActiveRecord::Base; end
 class Offer < ActiveRecord::Base; end
 class Book < ActiveRecord::Base; end
+class Idea < ActiveRecord::Base; end
