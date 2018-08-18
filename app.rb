@@ -183,7 +183,7 @@ def handle_message(event, user_id, is_vip, group_id)
       if name == '麥當勞中港四店'
         message_buttons_text = '😃 現在有開'
       elsif name == '鬼門'
-        message_buttons_text = (Date.today < Date.new(2018,8,10)) ? '👻 現在沒開' : '👻👻👻 現在正開'
+        message_buttons_text = ( (Date.today < Date.new(2018,8,10)) && (Date.today > Date.new(2018,9,9)) ) ? '👻 現在沒開' : '👻👻👻 現在正開'
       elsif user_id && (!skip_name.include? name)
         nickname = Nickname.find_by(nickname: name)
         if nickname
