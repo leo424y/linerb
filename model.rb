@@ -1,3 +1,4 @@
+class Alia < ActiveRecord::Base; end
 class Log < ActiveRecord::Base; end
 class Group < ActiveRecord::Base; end
 class Place < ActiveRecord::Base; end

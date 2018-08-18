@@ -165,7 +165,7 @@ def handle_message(event, user_id, is_vip, group_id)
       end
       reply_text(event, message)
 
-    elsif (name.bytesize > 40 && !group_id)
+    elsif (name.bytesize > 30 && !group_id)
       Idea.create(user_id: user_id, content: m)
       reply_text(event, '感謝你提供建議，【有開嗎】因你的回饋將變得更好！')
 
@@ -185,9 +185,15 @@ def handle_message(event, user_id, is_vip, group_id)
       elsif name == '鬼門'
         message_buttons_text = (Date.today < Date.new(2018,8,10)) ? '👻 現在沒開' : '👻👻👻 現在正開'
       elsif user_id && (!skip_name.include? name)
-        url = "#{GG_FIND_URL}?input=#{place}&inputtype=textquery&language=zh-TW&fields=place_id,name&key=#{GMAP_KEY}"
-        doc = JSON.parse(open(url).read, headers: true)
-        place_id = doc['candidates'][0]['place_id'] if doc['candidates'][0]
+        alia = Alia.find_by(alias_name: name)
+        if alia
+          place_id = alia.place_id
+        else
+          place_url = "#{GG_FIND_URL}?input=#{place}&inputtype=textquery&language=zh-TW&fields=place_id,name&key=#{GMAP_KEY}"
+          place_doc = JSON.parse(open(place_url).read, headers: true)
+          place_id = place_doc['candidates'][0]['place_id'] if place_doc['candidates'][0]
+        end
+
         begin
           unless place_id.nil?
             place_id_url = "#{GG_DETAIL_URL}?placeid=#{place_id}&language=zh-TW&fields=name,type,address_component,geometry,opening_hours,formatted_address&key=#{GMAP_KEY}"
@@ -222,6 +228,13 @@ def handle_message(event, user_id, is_vip, group_id)
             else
               message_buttons_text = '😬 請見詳情'
             end
+
+            Alia.create(
+              place_id: place_id,
+              place_name: name_sys,
+              alias_name: name
+            ) unless alia
+
             Store.create(
               name: name,
               name_sys: name_sys,
@@ -428,5 +441,5 @@ def p_tp_count name
 end
 
 def to_model yy
-  [Vip, Store, Group, Place, Pocket, Position, Talk, Offer, Book, Idea].find { |c| c.to_s == yy }
+  [Alia, Vip, Store, Group, Place, Pocket, Position, Talk, Offer, Book, Idea].find { |c| c.to_s == yy }
 end
