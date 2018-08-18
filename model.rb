@@ -1,12 +1,12 @@
-class Alia < ActiveRecord::Base; end
-class Log < ActiveRecord::Base; end
+class Book < ActiveRecord::Base; end
 class Group < ActiveRecord::Base; end
+class Idea < ActiveRecord::Base; end
+class Log < ActiveRecord::Base; end
+class Nickname < ActiveRecord::Base; end
+class Offer < ActiveRecord::Base; end
 class Place < ActiveRecord::Base; end
 class Pocket < ActiveRecord::Base; end
 class Position < ActiveRecord::Base; end
 class Store < ActiveRecord::Base; end
 class Talk < ActiveRecord::Base; end
 class Vip < ActiveRecord::Base; end
-class Offer < ActiveRecord::Base; end
-class Book < ActiveRecord::Base; end
-class Idea < ActiveRecord::Base; end

@@ -185,14 +185,14 @@ def handle_message(event, user_id, is_vip, group_id)
       elsif name == '鬼門'
         message_buttons_text = (Date.today < Date.new(2018,8,10)) ? '👻 現在沒開' : '👻👻👻 現在正開'
       elsif user_id && (!skip_name.include? name)
-        # alia = Alia.find_by(alias_name: name)
-        # if alia
-        #   place_id = alia.place_id
-        # else
-        #   place_url = "#{GG_FIND_URL}?input=#{place}&inputtype=textquery&language=zh-TW&fields=place_id,name&key=#{GMAP_KEY}"
-        #   place_doc = JSON.parse(open(place_url).read, headers: true)
-        #   place_id = place_doc['candidates'][0]['place_id'] if place_doc['candidates'][0]
-        # end
+        nickname = Nickname.find_by(nickname: name)
+        if nickname
+          place_id = nickname.place_id
+        else
+          place_url = "#{GG_FIND_URL}?input=#{place}&inputtype=textquery&language=zh-TW&fields=place_id,name&key=#{GMAP_KEY}"
+          place_doc = JSON.parse(open(place_url).read, headers: true)
+          place_id = place_doc['candidates'][0]['place_id'] if place_doc['candidates'][0]
+        end
 
         begin
           unless place_id.nil?
@@ -229,11 +229,11 @@ def handle_message(event, user_id, is_vip, group_id)
               message_buttons_text = '😬 請見詳情'
             end
 
-            # Alia.create(
-            #   place_id: place_id,
-            #   place_name: name_sys,
-            #   alias_name: name
-            # ) unless alia
+            Nickname.create(
+              place_id: place_id,
+              place_name: name_sys,
+              nickname: name
+            ) unless nickname
 
             Store.create(
               name: name,
@@ -441,5 +441,5 @@ def p_tp_count name
 end
 
 def to_model yy
-  [Vip, Store, Group, Place, Pocket, Position, Talk, Offer, Book, Idea].find { |c| c.to_s == yy }
+  [Book, Group, Idea, Nickname, Place, Pocket, Position, Offer, Store, Talk, Vip].find { |c| c.to_s == yy }
 end
