@@ -415,7 +415,7 @@ def is_tndcsc? name
 end
 
 def is_tpsc? name
-  ['北投運動中心', '大安運動中心', '中正運動中心', '南港運動中心', '內湖運動中心', '士林運動中心', '文山運動中心', '信義運動中心', '中山運動中心'].include? name
+  ['北投運動中心', '大安運動中心', '大同運動中心', '中正運動中心', '南港運動中心', '內湖運動中心', '士林運動中心', '文山運動中心', '信義運動中心', '中山運動中心'].include? name
 end
 
 def number_to_cost_h user_id, place_info, cost
