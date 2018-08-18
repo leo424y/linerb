@@ -171,8 +171,11 @@ def handle_message(event, user_id, is_vip, group_id)
 
     elsif (m.end_with?(*suffixes) || !group_id) && (name != '')
       in_offer = Offer.where("store_name like ?", "%#{name}%")
-      offer_info = "\n💁 #{in_offer.last.info[0..50]}" unless in_offer.empty?
-
+      unless in_offer.empty?
+        offer_at = in_offer.last.created_at.strftime('%m/%d')
+        offer_at = (Date.today.strftime('%m/%d') == offer_at) ? '-今天' : "-#{offer_at}"
+        offer_info = "\n💁 #{in_offer.last.info[0..50]}#{offer_at}"
+      end
       s_link = %x(ruby bin/bitly.rb '#{link}').chomp
 
       level_up_button = { label: '👜 放口袋', type: 'message', text: "#{name}放口袋~" }
