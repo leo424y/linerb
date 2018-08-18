@@ -170,6 +170,9 @@ def handle_message(event, user_id, is_vip, group_id)
       reply_text(event, '感謝你提供建議，【有開嗎】因你的回饋將變得更好！')
 
     elsif (m.end_with?(*suffixes) || !group_id) && (name != '')
+      in_offer = Offer.where("store_name like ?", "%#{name}%")
+      offer_info = "\n💁 #{in_offer.last.info[0..50]}" unless in_offer.empty?
+
       s_link = %x(ruby bin/bitly.rb '#{link}').chomp
 
       level_up_button = { label: '👜 放口袋', type: 'message', text: "#{name}放口袋~" }
@@ -210,10 +213,9 @@ def handle_message(event, user_id, is_vip, group_id)
               periods = res['opening_hours']['periods']
               weekday_text = res['opening_hours']['weekday_text']
               opening_hours = is_open_now ? "😃 現在有開" : "🔴 現在沒開"
-              in_offer = Offer.where("store_name like ?", "%#{name}%")
 
               # {"message":"must not be longer than 60 characters","property":"template/text"}
-              store_info = in_offer.empty? ? opening_hours : "#{opening_hours}\n💁 #{in_offer.last.info[0..50]}"
+              store_info = in_offer.empty? ? opening_hours : "#{opening_hours}#{offer_info}"
               message_buttons_text = (is_tndcsc? name) ? "#{opening_hours}\n#{count_exercise '北運'}" : store_info
               message_buttons_text = (is_tpsc? name) ? "#{opening_hours}\n#{p_tp_count name}" : store_info
 
@@ -282,13 +284,13 @@ def handle_message(event, user_id, is_vip, group_id)
               )
             end
           else
-            message_buttons_text = '⏰ 請見詳情'
+            message_buttons_text = "⏰ 請見詳情#{offer_info}"
           end
         rescue
-          message_buttons_text = '😂 請見詳情'
+          message_buttons_text = "😂 請見詳情#{offer_info}"
         end
       else
-        message_buttons_text = '🤔 請見詳情'
+        message_buttons_text = "🤔 請見詳情#{offer_info}"
       end
 
       actions_a = [
