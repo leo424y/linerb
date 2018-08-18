@@ -123,7 +123,7 @@ def handle_message(event, user_id, is_vip, group_id)
     skip_name = IO.readlines("data/top200_731a").map(&:chomp)
 
     m = origin_message.downcase.delete(" .。，,!！?？\t\r\n").chomp('嗎')
-    name = m.chomp('有沒有開').chomp('開了沒').chomp('沒開').chomp('有開').chomp('開了').chomp('は開いていますか').chomp('現在')
+    name = m.chomp('有沒有開').chomp('開了沒').chomp('有開').chomp('開了').chomp('は開いていますか').chomp('現在')
     place = URI.escape(name)
     link = "#{GG_SEARCH_URL}#{place}"
 
