@@ -345,16 +345,25 @@ def user_name id
 end
 
 def count_exercise m
-  case m
-  when '福賴好運'
+  if ['福賴好運', '台中運'].include? m
     "【北區】#{p_tndcsc_count}     【朝馬】#{p_tndcsc_count['swim'][0]}/#{p_tndcsc_count['swim'][1]} 🏊 #{p_tndcsc_count['gym'][0]}/#{p_tndcsc_count['gym'][1]} 💪 快來減脂增肌！"
-  when '北運'
+  elsif m == '北運'
     "#{p_tndcsc_count} 快來減脂增肌！"
-  when '朝運', '朝馬運動中心', '朝馬國民運動中心'
-    j = cyc_j '朝運'
-    "🏊 #{j['swim'][0]}/#{j['swim'][1]}\n💪 #{j['gym'][0]}/#{j['gym'][1]}"
-  when '桃運', '桃園運動中心', '桃園國民運動中心'
-    j = cyc_j '桃運'
+  else
+    j = case m
+    when '朝運', '朝馬運動中心', '朝馬國民運動中心'
+      cyc_j '朝運'
+    when '桃運', '桃園運動中心', '桃園國民運動中心'
+      cyc_j '桃運'
+    when '永運', '永和運動中心', '永和國民運動中心'
+      cyc_j '永運'
+    when '蘆運', '蘆洲運動中心', '蘆洲國民運動中心'
+      cyc_j '蘆運'
+    when '土運', '土城運動中心', '土城國民運動中心'
+      cyc_j '土運'
+    when '汐運', '汐止運動中心', '汐止國民運動中心'
+      cyc_j '汐運'
+    end
     "🏊 #{j['swim'][0]}/#{j['swim'][1]}\n💪 #{j['gym'][0]}/#{j['gym'][1]}"
   end
 end
@@ -375,6 +384,14 @@ def cyc_j m
     cyc_domain = 'tycsc'
   when '朝運'
     cyc_domain = 'cmcsc'
+  when '永運'
+    cyc_domain = 'yhcsc'
+  when '蘆運'
+    cyc_domain = 'lzcsc'
+  when '土運'
+    cyc_domain = 'tccsc'
+  when '汐運'
+    cyc_domain = 'xzcsc'
   end
   JSON.parse(open("https://#{cyc_domain}.cyc.org.tw/api").read, headers: true)
 end
@@ -440,7 +457,7 @@ def is_tndcsc? name
 end
 
 def is_cyc? name
-  ['朝運', '朝馬運動中心', '朝馬國民運動中心', '台中市朝馬國民運動中心', '桃運', '桃園運動中心', '桃園國民運動中心'].include? name
+  ['朝運', '朝馬運動中心', '朝馬國民運動中心', '台中市朝馬國民運動中心', '桃運', '桃園運動中心', '桃園國民運動中心','永運', '永和運動中心', '永和國民運動中心','蘆運', '蘆洲運動中心', '蘆洲國民運動中心','土運', '土城運動中心', '土城國民運動中心','汐運', '汐止運動中心', '汐止國民運動中心'].include? name
 end
 
 def is_tpsc? name
