@@ -221,11 +221,16 @@ def handle_message(event, user_id, is_vip, group_id)
               weekday_text = res['opening_hours']['weekday_text']
               opening_hours = is_open_now ? "😃 現在有開" : "🔴 現在沒開"
 
-              # {"message":"must not be longer than 60 characters","property":"template/text"}
-              store_info = in_offer.empty? ? opening_hours : "#{opening_hours}#{offer_info}"
-              message_buttons_text = (is_tndcsc? name) ? "#{opening_hours}\n#{count_exercise '北運'}" : store_info
-              message_buttons_text = (is_cyc? name) ? "#{opening_hours}\n#{count_exercise name}" : store_info
-              message_buttons_text = (is_tpsc? name) ? "#{opening_hours}\n#{p_tp_count name}" : store_info
+              message_buttons_text = if (is_cyc? name)
+                "#{opening_hours}\n#{count_exercise name}"
+              elsif is_tndcsc? name
+                "#{opening_hours}\n#{count_exercise '北運'}"
+              elsif is_tpsc? name
+                "#{opening_hours}\n#{p_tp_count name}"
+              else
+                # {"message":"must not be longer than 60 characters","property":"template/text"}
+                in_offer.empty? ? opening_hours : "#{opening_hours}#{offer_info}"
+              end
 
               nearby_button = { label: '🎐 附近', type: 'postback', data: "#{place_id}nearby" }
 
