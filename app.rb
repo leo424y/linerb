@@ -54,10 +54,11 @@ post '/callback' do
 
     case event
     when Line::Bot::Event::Join
-      handle_join(event, group_id)
+      Group.create(group_id: group_id, status: 'join')
+      reply_text(event, IO.readlines("data/join").map(&:chomp))
 
     when Line::Bot::Event::Leave
-      Group.update(group_id: group_id, status: 'leave')
+      Group.find_by(group_id: group_id).update(status: 'leave')
 
     when Line::Bot::Event::Postback
       data = event['postback']['data']
@@ -73,15 +74,11 @@ post '/callback' do
       end
 
     when Line::Bot::Event::Message
+      Group.create(group_id: group_id, status: 'join') unless Group.find_by(group_id: group_id)
       handle_message(event, user_id, is_vip, group_id)
     end
   }
   'OK'
-end
-
-def handle_join(event, group_id)
-  Group.create(group_id: group_id, status: 'join')
-  reply_text(event, IO.readlines("data/join").map(&:chomp))
 end
 
 def handle_location(event, user_id, group_id, lat, lng, origin_name)
@@ -115,7 +112,6 @@ def handle_message(event, user_id, is_vip, group_id)
 
   case event.type
   when Line::Bot::Event::MessageType::Location
-    # group_id ? handle_location(event, user_id, group_id, event.message['latitude'], event.message['longitude'], '') : reply_text(event, '請於群組中使用')
     handle_location(event, user_id, group_id, event.message['latitude'], event.message['longitude'], '')
 
   when Line::Bot::Event::MessageType::Text
