@@ -362,7 +362,7 @@ def count_exercise m
       cyc_j '蘆運'
     when '土運', '土城運動中心', '土城國民運動中心'
       i = cyc_j '土運'
-      ice = "\n🍧 #{i['ice'][0]}/#{i['ice'][1]}"
+      ice = " 🍧 #{i['ice'][0]}/#{i['ice'][1]}"
       i
     when '汐運', '汐止運動中心', '汐止國民運動中心'
       cyc_j '汐運'
