@@ -140,9 +140,12 @@ def handle_message(event, user_id, is_vip, group_id)
       Offer.create(user_id: user_id, store_name: store_name, info: origin_message.split("\n")[1..-1].join("\n"))
       reply_text(event, "已將【#{store_name}】情報收錄，感謝提供！")
 
-    elsif ['福賴好運', '北運', '北區運動中心', '北區國民運動中心', '朝運', '朝馬運動中心', '朝馬國民運動中心', '台中市朝馬國民運動中心', '台中市北區國民運動中心'].include? m
-      (m = '北運') if (is_tndcsc? m)
-      (m = '朝運') if (is_cmsc? m)
+    elsif (is_tndcsc? m)
+      m = '北運'
+      message = count_exercise m
+      reply_text(event, message)
+
+    elsif (is_cyc? m)
       message = count_exercise m
       reply_text(event, message)
 
@@ -221,7 +224,7 @@ def handle_message(event, user_id, is_vip, group_id)
               # {"message":"must not be longer than 60 characters","property":"template/text"}
               store_info = in_offer.empty? ? opening_hours : "#{opening_hours}#{offer_info}"
               message_buttons_text = (is_tndcsc? name) ? "#{opening_hours}\n#{count_exercise '北運'}" : store_info
-              message_buttons_text = (is_cmsc? name) ? "#{opening_hours}\n#{count_exercise '朝運'}" : store_info
+              message_buttons_text = (is_cyc? name) ? "#{opening_hours}\n#{count_exercise name}" : store_info
               message_buttons_text = (is_tpsc? name) ? "#{opening_hours}\n#{p_tp_count name}" : store_info
 
               nearby_button = { label: '🎐 附近', type: 'postback', data: "#{place_id}nearby" }
@@ -342,8 +345,12 @@ def count_exercise m
     "【北區】#{p_tndcsc_count}     【朝馬】#{p_tndcsc_count['swim'][0]}/#{p_tndcsc_count['swim'][1]} 🏊 #{p_tndcsc_count['gym'][0]}/#{p_tndcsc_count['gym'][1]} 💪 快來減脂增肌！"
   when '北運'
     "#{p_tndcsc_count} 快來減脂增肌！"
-  when '朝運'
-    "#{p_cmcsc_count['swim'][0]}/#{p_cmcsc_count['swim'][1]} 🏊 #{p_cmcsc_count['gym'][0]}/#{p_cmcsc_count['gym'][1]} 💪 快來減脂增肌！"
+  when '朝運', '朝馬運動中心', '朝馬國民運動中心'
+    j = cyc_j '朝運'
+    "🏊 #{j['swim'][0]}/#{j['swim'][1]}\n💪 #{j['gym'][0]}/#{j['gym'][1]}"
+  when '桃運', '桃園運動中心', '桃園國民運動中心'
+    j = cyc_j '桃運'
+    "🏊 #{j['swim'][0]}/#{j['swim'][1]}\n💪 #{j['gym'][0]}/#{j['gym'][1]}"
   end
 end
 
@@ -357,9 +364,14 @@ def p_tndcsc_count
   tndcsc_count
 end
 
-def p_cmcsc_count
-  cmcsc_url = 'https://cmcsc.cyc.org.tw/api'
-  JSON.parse(open(cmcsc_url).read, headers: true)
+def cyc_j m
+  case m
+  when '桃運'
+    cyc_domain = 'tycsc'
+  when '朝運'
+    cyc_domain = 'cmcsc'
+  end
+  JSON.parse(open("https://#{cyc_domain}.cyc.org.tw/api").read, headers: true)
 end
 
 class String
@@ -421,8 +433,9 @@ end
 def is_tndcsc? name
   ['北運', '北區運動中心', '北區國民運動中心', '台中市北區國民運動中心'].include? name
 end
-def is_cmsc? name
-  ['朝運', '朝馬運動中心', '朝馬國民運動中心', '台中市朝馬國民運動中心'].include? name
+
+def is_cyc? name
+  ['朝運', '朝馬運動中心', '朝馬國民運動中心', '台中市朝馬國民運動中心', '桃運', '桃園運動中心', '桃園國民運動中心'].include? name
 end
 
 def is_tpsc? name
