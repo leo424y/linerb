@@ -162,7 +162,7 @@ def handle_message(event, user_id, is_vip, group_id)
         Pocket.create(user_id: user_id, place_name: name.chomp('放口袋~'))
         "👜 已將#{name}"
       else
-        '🥇 請先在任一群組使用一次【有開嗎】就能將它放口袋囉'
+        '🥇 邀請有開嗎至任一群組，並成功問到一家有開的店，即能啟用放口袋功能'
       end
       reply_text(event, message)
 
