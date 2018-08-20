@@ -17,6 +17,7 @@ GG_DETAIL_URL = 'https://maps.googleapis.com/maps/api/place/details/json'
 GMAP_KEY = ENV["GMAP_API_KEY"]
 L_OPINION_URI = 'line://home/public/post?id=gxs2296l&postId=1153267270308077285'
 L_RECOMMEND_URI = "line://nv/recommendOA/@gxs2296l"
+L_SPONSOR_URI = 'http://j.mp/open_sponsor'
 
 def client
   @client ||= Line::Bot::Client.new { |config|
@@ -180,10 +181,14 @@ def handle_message(event, user_id, is_vip, group_id)
 
       level_up_button = { label: '👜 放口袋', type: 'message', text: "#{name}放口袋~" }
 
-      suggest_button = if is_vip
+      random_info = [0, 1].sample
+      suggest_button = case random_info
+      when 0
         { label: '👍 推薦', type: 'uri', uri: L_RECOMMEND_URI}
-      else
+      when 1
         { label: '💡 建議', type: 'uri', uri: L_OPINION_URI }
+      else
+        { label: '👼 贊助', type: 'uri', uri: L_SPONSOR_URI }
       end
 
       if name == '麥當勞中港四店'
