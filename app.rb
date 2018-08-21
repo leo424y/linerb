@@ -17,6 +17,7 @@ require './handle_location.rb'
 require './handle_message.rb'
 require './handle_event.rb'
 require './reply.rb'
+require './control_place.rb'
 
 get '/x/:yy' do download_csv end
 get '/n/:yy' do display_name end
