@@ -307,7 +307,7 @@ def handle_message(event, user_id, is_vip, group_id)
         message_buttons_text = "🤔 請見詳情#{offer_info}"
       end
 
-      details_button = if (is_vip && place_id && is_open_now)
+      if (is_vip && place_id && is_open_now)
         place_review = []
         place_id_url = "#{GG_DETAIL_URL}?placeid=#{place_id}&language=zh-TW&fields=name,review&key=#{GMAP_KEY}"
         place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
@@ -323,9 +323,9 @@ def handle_message(event, user_id, is_vip, group_id)
           )
           place_review << r['text']
         end
-        { label: '⭐ 評論', type: 'postback', data: place_review }
+        details_button = { label: '⭐ 評論', type: 'postback', data: place_review }
       else
-        { label: '📍 詳情', type: 'uri', uri: s_link }
+        details_button = { label: '📍 詳情', type: 'uri', uri: s_link }
       end
 
       actions_a = [
