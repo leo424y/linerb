@@ -308,7 +308,7 @@ def handle_message(event, user_id, is_vip, group_id)
         message_buttons_text = "🤔 請見詳情#{offer_info}"
       end
 
-      if (is_vip && place && is_open_now )
+      if (is_vip && place_id && !place && is_open_now )
         place_review = []
         place_id_url = "#{GG_DETAIL_URL}?placeid=#{place_id}&language=zh-TW&fields=name,review&key=#{GMAP_KEY}"
         place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
