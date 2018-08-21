@@ -326,7 +326,7 @@ def handle_message(event, user_id, is_vip, group_id)
       end
 
       if is_vip
-        place_review = Review.find_by(place_id: place_id).text
+        place_review = Review.order("RANDOM()").find_by(place_id: place_id).text
         details_button = { label: '⭐ 評論', type: 'postback', data: place_review }
       else
         details_button = { label: '📍 詳情', type: 'uri', uri: s_link }
