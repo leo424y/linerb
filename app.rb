@@ -71,7 +71,7 @@ post '/callback' do
         Book.create(user_id: data.split('/')[1], place_id: data.split('/')[2], cost: data.split('/')[4])
         reply_text(event, "已新增你在#{data.split('/')[3]}的消費#{data.split('/')[4]}元")
       else
-        reply_text(event, data)
+        reply_text(event, data.split('___'))
       end
 
     when Line::Bot::Event::Message
@@ -324,9 +324,9 @@ def handle_message(event, user_id, is_vip, group_id)
           )
         end
       end
-      
+
       if is_vip
-        place_review = Review.where(place_id: place_id).pluck(:text)
+        place_review = Review.where(place_id: place_id).pluck(:text).join('___')
         details_button = { label: '⭐ 評論', type: 'postback', data: place_review }
       else
         details_button = { label: '📍 詳情', type: 'uri', uri: s_link }
