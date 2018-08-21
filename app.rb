@@ -15,6 +15,7 @@ require './constant.rb'
 require './helper.rb'
 require './handle_location.rb'
 require './handle_message.rb'
+require './handle_event.rb'
 require './reply.rb'
 
 get '/x/:yy' do download_csv end
