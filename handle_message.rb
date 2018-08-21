@@ -1,4 +1,4 @@
-def handle_message(event, user_id, is_vip, group_id)
+def handle_message(event, user_id, group_id)
   origin_message = event.message['text']
   Talk.create(user_id: user_id, group_id: group_id, talk: origin_message)
 

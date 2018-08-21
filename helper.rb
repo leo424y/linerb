@@ -1,3 +1,6 @@
+def is_vip
+  Vip.find_by(user_id: user_id)
+end
 
 def add_vip(event, user_id, group_id, opening_hours)
   Vip.create(user_id: user_id, group_id: (group_id || 'sponsor'))
