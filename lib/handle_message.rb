@@ -15,6 +15,6 @@ def handle_message(event, user_id, group_id)
     name_uri = URI.escape(name)
     link = "#{GG_SEARCH_URL}#{name_uri}"
 
-    handle_text suffixes, skip_name, m, name, name_uri, link
+    handle_text suffixes, skip_name, m, name, name_uri, link, origin_message
   end
 end
