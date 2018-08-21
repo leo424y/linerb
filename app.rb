@@ -323,9 +323,10 @@ def handle_message(event, user_id, is_vip, group_id)
             text: r['text'],
           )
         end
+        reviewed = true
       end
 
-      if is_vip && review 
+      if is_vip && reviewed
         place_review = review.pluck(:text)
         details_button = { label: '⭐ 評論', type: 'postback', data: place_review }
       else
