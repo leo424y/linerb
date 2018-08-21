@@ -308,26 +308,27 @@ def handle_message(event, user_id, is_vip, group_id)
         message_buttons_text = "🤔 請見詳情#{offer_info}"
       end
 
-      if (is_vip && place_id && !place && is_open_now )
-        place_review = []
-        place_id_url = "#{GG_DETAIL_URL}?placeid=#{place_id}&language=zh-TW&fields=name,review&key=#{GMAP_KEY}"
-        place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
-        res = place_id_doc['result']['reviews']
-        res.each do |r|
-          Review.create(
-            place_id: place_id,
-            author_name: r['author_name'],
-            author_url: r['author_url'],
-            profile_photo_url: r['profile_photo_url'],
-            rating: r['rating'],
-            text: r['text'],
-          )
-          place_review << r['text']
-        end
-        details_button = { label: '⭐ 評論', type: 'postback', data: place_review }
-      else
-        details_button = { label: '📍 詳情', type: 'uri', uri: s_link }
-      end
+      # if (is_vip && place_id && !place && is_open_now )
+      #   place_review = []
+      #   place_id_url = "#{GG_DETAIL_URL}?placeid=#{place_id}&language=zh-TW&fields=name,review&key=#{GMAP_KEY}"
+      #   place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
+      #   res = place_id_doc['result']['reviews']
+      #   res.each do |r|
+      #     Review.create(
+      #       place_id: place_id,
+      #       author_name: r['author_name'],
+      #       author_url: r['author_url'],
+      #       profile_photo_url: r['profile_photo_url'],
+      #       rating: r['rating'],
+      #       text: r['text'],
+      #     )
+      #     place_review << r['text']
+      #   end
+      #   details_button = { label: '⭐ 評論', type: 'postback', data: place_review }
+      # else
+      #   details_button = { label: '📍 詳情', type: 'uri', uri: s_link }
+      # end
+      details_button = { label: '📍 詳情', type: 'uri', uri: s_link }
 
       actions_a = [
         details_button,
