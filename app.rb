@@ -10,6 +10,7 @@ require 'date'
 require 'erb'
 require 'csv'
 require './model.rb'
+require './view.rb'
 
 GG_SEARCH_URL = "https://www.google.com/maps/search/?api=1&query="
 GG_FIND_URL = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
@@ -426,56 +427,6 @@ end
 class String
   def string_between_markers marker1, marker2
     self[/#{Regexp.escape(marker1)}(.*?)#{Regexp.escape(marker2)}/m, 1]
-  end
-end
-
-def render_html
-  yy = to_model params['yy']
-  @datas = yy.last(100).reverse
-
-  erb <<-EOF
-  <!DOCTYPE html>
-  <html>
-    <head>
-      <title>LinerbSite</title>
-    </head>
-    <body>
-      <table>
-        <tbody>
-          <% @datas.each do |d| %>
-            <tr>
-              <% values = d.attributes.values %>
-              <% values.each do |v| %>
-                <td><%= v if (v.to_s.length < 20) %></td>
-              <% end %>
-            </tr>
-          <% end %>
-        </tbody>
-      </table>
-    </body>
-  </html>
-  EOF
-end
-
-def display_name
-  erb <<-EOF
-  <!DOCTYPE html>
-  <html>
-    <body>
-      <%= JSON.parse(client.get_profile(params['yy']).read_body)['displayName'] %>
-    </body>
-  </html>
-  EOF
-end
-
-def download_csv
-  content_type 'application/octet-stream'
-  CSV.generate do |csv|
-    yy = to_model params['yy']
-    csv << yy.attribute_names
-    yy.all.each do |user|
-      csv << user.attributes.values
-    end
   end
 end
 
