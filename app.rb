@@ -181,16 +181,6 @@ def handle_message(event, user_id, is_vip, group_id)
 
       level_up_button = { label: '👜 放口袋', type: 'message', text: "#{name}放口袋~" }
 
-      random_info = [0, 1, 2].sample
-      suggest_button = case random_info
-      when 0
-        { label: '👍 推薦', type: 'uri', uri: L_RECOMMEND_URI}
-      when 1
-        { label: '💡 建議', type: 'uri', uri: L_OPINION_URI }
-      when 2
-        { label: '👼 贊助', type: 'uri', uri: L_SPONSOR_URI }
-      end
-
       if name == '麥當勞中港四店'
         message_buttons_text = '😃 現在有開'
       elsif name == '鬼門'
@@ -325,15 +315,23 @@ def handle_message(event, user_id, is_vip, group_id)
         end
       end
 
-      if is_vip
-        place_review = Review.order("RANDOM()").find_by(place_id: place_id).text
-        details_button = { label: '⭐ 評論', type: 'postback', data: place_review }
-      else
-        details_button = { label: '📍 詳情', type: 'uri', uri: s_link }
+      # if is_vip
+      #   Review.order("RANDOM()").find_by(place_id: place_id).text
+      #   { label: '⭐ 評論', type: 'postback', data: place_review }
+      # end
+
+      random_info = [0, 1, 2].sample
+      suggest_button = case random_info
+      when 0
+        { label: '👍 推薦', type: 'uri', uri: L_RECOMMEND_URI}
+      when 1
+        { label: '💡 建議', type: 'uri', uri: L_OPINION_URI }
+      when 2
+        { label: '👼 贊助', type: 'uri', uri: L_SPONSOR_URI }
       end
 
       actions_a = [
-        details_button,
+        { label: '📍 詳情', type: 'uri', uri: s_link },
         nearby_button,
         suggest_button,
         level_up_button,
