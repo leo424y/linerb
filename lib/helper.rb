@@ -1,4 +1,4 @@
-def is_vip
+def is_vip user_id
   Vip.find_by(user_id: user_id)
 end
 

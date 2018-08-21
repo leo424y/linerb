@@ -33,7 +33,7 @@ def handle_text event, user_id, group_id, suffixes, skip_name, m, name, name_uri
     end
 
   elsif name.end_with? '放口袋~'
-    message = if is_vip
+    message = if (is_vip user_id)
       Pocket.create(user_id: user_id, place_name: name.chomp('放口袋~'))
       "👜 已將#{name}"
     else
@@ -102,7 +102,7 @@ def handle_text event, user_id, group_id, suffixes, skip_name, m, name, name_uri
 
             nearby_button = { label: '🎐 附近', type: 'postback', data: "#{place_id}nearby" }
 
-            if user_id && group_id && !is_vip
+            if user_id && group_id && !(is_vip user_id)
               message = [
                 "【#{name}】#{opening_hours}",
                 add_vip(event, user_id, group_id, opening_hours),
