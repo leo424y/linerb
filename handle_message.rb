@@ -203,7 +203,7 @@ def handle_message(event, user_id, group_id)
             rating: r['rating'],
             text: r['text'],
           )
-        end
+        end if res
       end
 
       # if is_vip
