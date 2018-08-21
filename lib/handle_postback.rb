@@ -1,4 +1,5 @@
-def handle_postback data
+def handle_postback event, user_id, group_id
+  data = event['postback']['data']
   if data.end_with? 'nearby'
     place_id = data.chomp('nearby')
     store = Store.find_by(place_id: place_id)

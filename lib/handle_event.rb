@@ -1,6 +1,6 @@
 def handle_event event, user_id, group_id
   group = Group.find_by(group_id: group_id)
-  
+
   case event
   when Line::Bot::Event::Join
     Group.create(group_id: group_id, status: 'join')
@@ -10,7 +10,7 @@ def handle_event event, user_id, group_id
     group.update(status: 'leave')
 
   when Line::Bot::Event::Postback
-    handle_postback event['postback']['data']
+    handle_postback event, user_id, group_id
 
   when Line::Bot::Event::Message
     Group.create(group_id: group_id, status: 'join') unless group

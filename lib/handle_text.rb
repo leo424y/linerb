@@ -10,7 +10,7 @@ def handle_text event, user_id, group_id, suffixes, skip_name, m, name, name_uri
   elsif ( (origin_message.split("\n").count > 1) && !group_id )
     store_name = origin_message.split("\n")[0]
     Offer.create(user_id: user_id, store_name: store_name, info: origin_message.split("\n")[1..-1].join("\n"))
-    reply_text(event, "已將【#{store_name}】情報收錄，感謝提供！")
+    reply_text event, "已將【#{store_name}】情報收錄，感謝提供！"
 
   elsif (is_tndcsc? m)
     m = '北運'
@@ -21,7 +21,7 @@ def handle_text event, user_id, group_id, suffixes, skip_name, m, name, name_uri
     message = count_exercise m
     reply_text(event, message)
 
-  elsif name.end_with?('口袋有洞')
+  elsif name.end_with? '口袋有洞'
     pocket = Pocket.where(user_id: user_id).pluck(:place_name).uniq.shuffle[-4..-1]
     if pocket
       actions_a = pocket.map { |p|
@@ -32,7 +32,7 @@ def handle_text event, user_id, group_id, suffixes, skip_name, m, name, name_uri
       reply_text(event, '口袋裡目前空空，請先問完要去的店有開嗎後，再將想要的結果放口袋~')
     end
 
-  elsif name.end_with?('放口袋~')
+  elsif name.end_with? '放口袋~'
     message = if is_vip
       Pocket.create(user_id: user_id, place_name: name.chomp('放口袋~'))
       "👜 已將#{name}"
@@ -43,7 +43,7 @@ def handle_text event, user_id, group_id, suffixes, skip_name, m, name, name_uri
 
   elsif (name.bytesize > 30 && !group_id)
     Idea.create(user_id: user_id, content: m)
-    reply_text(event, '感謝你提供建議，【有開嗎】因你的回饋將變得更好！')
+    reply_text event, '感謝你提供建議，【有開嗎】因你的回饋將變得更好！'
 
   elsif (m.end_with?(*suffixes) || !group_id) && (name != '')
     in_offer = Offer.where("store_name like ?", "%#{name}%")
@@ -107,7 +107,7 @@ def handle_text event, user_id, group_id, suffixes, skip_name, m, name, name_uri
                 "【#{name}】#{opening_hours}",
                 add_vip(event, user_id, group_id, opening_hours),
               ]
-              reply_text(event, message)
+              reply_text event, message
             end
           else
             message_buttons_text = '😬 請見詳情'
@@ -185,9 +185,9 @@ def handle_text event, user_id, group_id, suffixes, skip_name, m, name, name_uri
       level_up_button,
     ].compact
 
-    reply_content(event, message_buttons_h(name, message_buttons_text, actions_a))
+    reply_content event, message_buttons_h(name, message_buttons_text, actions_a)
   elsif !group_id
-    reply_text(event, IO.readlines("data/intro").map(&:chomp))
+    reply_text event, IO.readlines("data/intro").map(&:chomp)
 
   end
 end
