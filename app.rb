@@ -323,11 +323,11 @@ def handle_message(event, user_id, is_vip, group_id)
             text: r['text'],
           )
         end
-        reviewed = true
+        (reviewed = true) unless res.empty?
       end
 
       if is_vip && (review || reviewed)
-        place_review = review.pluck(:text)
+        place_review = review ? review.pluck(:text) : Review.find_by(place_id: place_id)
         details_button = { label: '⭐ 評論', type: 'postback', data: place_review }
       else
         details_button = { label: '📍 詳情', type: 'uri', uri: s_link }
