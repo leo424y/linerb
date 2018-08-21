@@ -9,15 +9,7 @@ require 'bitly'
 require 'date'
 require 'erb'
 require 'csv'
-require './model.rb'
-require './view.rb'
-require './constant.rb'
-require './helper.rb'
-require './handle_location.rb'
-require './handle_message.rb'
-require './handle_event.rb'
-require './reply.rb'
-require './control_place.rb'
+Dir["./lib/*.rb"].each {|file| require file }
 
 get '/x/:yy' do download_csv end
 get '/n/:yy' do display_name end
