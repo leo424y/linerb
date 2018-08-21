@@ -207,6 +207,8 @@ def handle_message(event, user_id, is_vip, group_id)
 
         begin
           unless place_id.nil?
+            place = Place.find_by(place_id: place_id)
+
             place_id_url = "#{GG_DETAIL_URL}?placeid=#{place_id}&language=zh-TW&fields=name,type,address_component,geometry,opening_hours,formatted_address&key=#{GMAP_KEY}"
             place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
             res = place_id_doc['result']
@@ -269,7 +271,6 @@ def handle_message(event, user_id, is_vip, group_id)
               s_link: s_link
             )
             place_name_glink = %x(ruby bin/bitly.rb '#{GG_SEARCH_URL}#{URI.escape(name_sys)}').chomp
-            place = Place.find_by(place_id: place_id)
             if place
               place.update(
                 place_id: place_id,
@@ -307,7 +308,7 @@ def handle_message(event, user_id, is_vip, group_id)
         message_buttons_text = "🤔 請見詳情#{offer_info}"
       end
 
-      if (is_vip && place_id && is_open_now)
+      if (is_vip && place && is_open_now )
         place_review = []
         place_id_url = "#{GG_DETAIL_URL}?placeid=#{place_id}&language=zh-TW&fields=name,review&key=#{GMAP_KEY}"
         place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
