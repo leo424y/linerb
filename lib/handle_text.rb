@@ -1,4 +1,4 @@
-def handle_text suffixes, skip_name, m, name, name_uri, link, origin_message
+def handle_text event, user_id, group_id, suffixes, skip_name, m, name, name_uri, link, origin_message
   if ( m.end_with?('附近') || m.start_with?('附近') && !group_id)
     reply_text(event, '請先查詢要去的地點【有開嗎】？若有營業資訊，則可以點選【🎐 附近】偷瞄開民們的口袋名單囉！')
 
