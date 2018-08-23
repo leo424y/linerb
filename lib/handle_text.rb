@@ -147,7 +147,7 @@ def handle_text event, user_id, group_id, suffixes, skip_name, m, name, name_uri
     end
 
     review = Review.find_by(place_id: place_id)
-    unless review && !place_id
+    unless review && !place_id && nickname
       place_id_url = "#{GG_DETAIL_URL}?placeid=#{place_id}&language=zh-TW&fields=name,review&key=#{GMAP_KEY}"
       place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
       res = place_id_doc['result']['reviews']
