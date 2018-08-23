@@ -137,7 +137,7 @@ def handle_text event, user_id, group_id, suffixes, skip_name, m, name, name_uri
           )
           create_place place, place_id, name_sys, address_components, formatted_address, lat, lng, place_types, weekday_text, periods
         else
-          message_buttons_text = "⏰ 查無或有多個結果，請見詳情#{offer_info}"
+          message_buttons_text = "⏰ 有多個結果或查無，請見詳情#{offer_info}"
         end
       rescue
         message_buttons_text = "😂 請見詳情#{offer_info}"
