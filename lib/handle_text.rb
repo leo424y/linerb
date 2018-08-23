@@ -137,7 +137,7 @@ def handle_text event, user_id, group_id, suffixes, skip_name, m, name, name_uri
           )
           create_place place, place_id, name_sys, address_components, formatted_address, lat, lng, place_types, weekday_text, periods
         else
-          message_buttons_text = "⏰ 請見詳情#{offer_info}"
+          message_buttons_text = "⏰ 查無或有多個結果，請見詳情#{offer_info}"
         end
       rescue
         message_buttons_text = "😂 請見詳情#{offer_info}"
@@ -150,7 +150,7 @@ def handle_text event, user_id, group_id, suffixes, skip_name, m, name, name_uri
     unless review && !place_id
       place_id_url = "#{GG_DETAIL_URL}?placeid=#{place_id}&language=zh-TW&fields=name,review&key=#{GMAP_KEY}"
       place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
-      res = place_id_doc['result']['reviews'] if (place_id_doc['result'] && place_id_doc)
+      res = place_id_doc['result']['reviews']
       res.each do |r|
         Review.create(
           place_id: place_id,
