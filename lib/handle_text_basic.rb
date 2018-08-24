@@ -14,14 +14,8 @@ def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, na
   elsif name == '鬼門'
     message_buttons_text = ( (Date.today < Date.new(2018,8,10)) && (Date.today > Date.new(2018,9,9)) ) ? '👻 現在沒開' : '👻👻👻 現在正開'
   elsif user_id && (!skip_name.include? name)
-    nickname = Nickname.find_by(nickname: name)
-    if nickname
-      place_id = nickname.place_id
-    else
-      place_url = "#{GG_FIND_URL}?input=#{name_uri}&inputtype=textquery&language=zh-TW&fields=place_id,name&key=#{GMAP_KEY}"
-      place_doc = JSON.parse(open(place_url).read, headers: true)
-      place_id = place_doc['candidates'][0]['place_id'] if place_doc['candidates'][0]
-    end
+    place_id = handle_place_id name, name_uri
+    handle_review place_id
 
     begin
       unless place_id.nil?
@@ -98,28 +92,6 @@ def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, na
   else
     message_buttons_text = "🤔 請見詳情#{offer_info}"
   end
-
-  review = Review.find_by(place_id: place_id)
-  unless review && !place_id
-    place_id_url = "#{GG_DETAIL_URL}?placeid=#{place_id}&language=zh-TW&fields=name,review&key=#{GMAP_KEY}"
-    place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
-    res = place_id_doc['result']['reviews'] if place_id_doc['result']
-    res.each do |r|
-      Review.create(
-        place_id: place_id,
-        author_name: r['author_name'],
-        author_url: r['author_url'],
-        profile_photo_url: r['profile_photo_url'],
-        rating: r['rating'],
-        text: r['text'],
-      )
-    end if res
-  end
-
-  # if is_vip
-  #   Review.order("RANDOM()").find_by(place_id: place_id).text
-  #   { label: '⭐ 評論', type: 'postback', data: place_review }
-  # end
 
   random_info = [0, 1, 2].sample
   suggest_button = case random_info
