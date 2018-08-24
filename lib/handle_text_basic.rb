@@ -86,7 +86,8 @@ def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, na
       else
         message_buttons_text = "⏰ 有多個結果或查無，請見詳情#{offer_info}"
       end
-    rescue
+    rescue => exception
+      p exception.backtrace
       message_buttons_text = "😂 請見詳情#{offer_info}"
     end
   else
