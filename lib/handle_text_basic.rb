@@ -14,7 +14,8 @@ def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, na
   elsif name == '鬼門'
     message_buttons_text = ( (Date.today < Date.new(2018,8,10)) && (Date.today > Date.new(2018,9,9)) ) ? '👻 現在沒開' : '👻👻👻 現在正開'
   elsif user_id && (!skip_name.include? name)
-    place_id = handle_place_id name, name_uri
+    nickname = Nickname.find_by(nickname: name)
+    place_id = handle_place_id name, name_uri, nickname
     handle_review place_id
 
     begin

@@ -1,5 +1,4 @@
-def handle_place_id name, name_uri
-  nickname = Nickname.find_by(nickname: name)
+def handle_place_id name, name_uri, nickname
   if nickname
     nickname.place_id
   else
