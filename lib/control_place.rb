@@ -1,4 +1,4 @@
-def create_place place, place_id, name_sys, address_components, formatted_address, lat, lng, place_types, weekday_text, periods
+def control_place place, place_id, name_sys, address_components, formatted_address, lat, lng, place_types, weekday_text, periods
   place_name_glink = %x(ruby bin/bitly.rb '#{GG_SEARCH_URL}#{URI.escape(name_sys)}').chomp
 
   if place

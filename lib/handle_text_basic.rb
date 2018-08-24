@@ -61,11 +61,7 @@ def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, na
           message_buttons_text = '😬 請見詳情'
         end
 
-        Nickname.create(
-          place_id: place_id,
-          place_name: name_sys,
-          nickname: name
-        ) unless nickname
+        Nickname.create(place_id: place_id, place_name: name_sys, nickname: name) unless nickname
 
         Store.create(
           name: name,
@@ -83,7 +79,7 @@ def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, na
           periods: periods,
           s_link: s_link
         )
-        create_place place, place_id, name_sys, address_components, formatted_address, lat, lng, place_types, weekday_text, periods
+        control_place place, place_id, name_sys, address_components, formatted_address, lat, lng, place_types, weekday_text, periods
       else
         message_buttons_text = "⏰ 有多個結果或查無，請見詳情#{offer_info}"
       end
