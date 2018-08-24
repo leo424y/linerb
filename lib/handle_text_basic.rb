@@ -7,8 +7,6 @@ def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, na
   end
   s_link = %x(ruby bin/bitly.rb '#{link}').chomp
 
-  level_up_button = { label: '👜 放口袋', type: 'message', text: "#{name}放口袋~" }
-
   if name == '麥當勞中港四店'
     message_buttons_text = '😃 現在有開'
   elsif name == '鬼門'
@@ -47,8 +45,6 @@ def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, na
             # {"message":"must not be longer than 60 characters","property":"template/text"}
             in_offer.empty? ? opening_hours : "#{opening_hours}#{offer_info}"
           end
-
-          nearby_button = { label: '🎐 附近', type: 'postback', data: "#{place_id}nearby" }
 
           if user_id && group_id && !(is_vip user_id)
             message = [
@@ -91,22 +87,5 @@ def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, na
     message_buttons_text = "🤔 請見詳情#{offer_info}"
   end
 
-  random_info = [0, 1, 2].sample
-  suggest_button = case random_info
-  when 0
-    { label: '👍 推薦', type: 'uri', uri: L_RECOMMEND_URI}
-  when 1
-    { label: '💡 建議', type: 'uri', uri: L_OPINION_URI }
-  when 2
-    { label: '👼 贊助', type: 'uri', uri: L_SPONSOR_URI }
-  end
-
-  actions_a = [
-    { label: '📍 詳情', type: 'uri', uri: s_link },
-    nearby_button,
-    suggest_button,
-    level_up_button,
-  ].compact
-
-  reply_content event, message_buttons_h(name, message_buttons_text, actions_a)
+  reply_content event, message_buttons_h(name, message_buttons_text, (handle_button place_id, name, s_link))
 end
