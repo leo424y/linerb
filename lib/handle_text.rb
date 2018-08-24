@@ -13,33 +13,16 @@ def handle_text event, user_id, group_id, suffixes, skip_name, m, name, name_uri
     reply_text event, "已將【#{store_name}】情報收錄，感謝提供！"
 
   elsif (is_tndcsc? m)
-    m = '北運'
-    message = count_exercise m
-    reply_text(event, message)
+    reply_text(event, (count_exercise '北運'))
 
   elsif (is_cyc? m)
-    message = count_exercise m
-    reply_text(event, message)
+    reply_text(event, (count_exercise m))
 
   elsif name.end_with? '口袋有洞'
-    pocket = Pocket.where(user_id: user_id).pluck(:place_name).uniq.shuffle[-4..-1]
-    if pocket
-      actions_a = pocket.map { |p|
-        {label: "📍 #{p}", type: 'uri', uri: "#{GG_SEARCH_URL}#{URI.escape(p)}"}
-      }
-      reply_content( event, message_buttons_h('口袋有洞', '裡頭掉出了...', actions_a) )
-    else
-      reply_text(event, '口袋裡目前空空，請先問完要去的店有開嗎後，再將想要的結果放口袋~')
-    end
+    open_pocket user_id
 
   elsif name.end_with? '放口袋~'
-    message = if (is_vip user_id)
-      Pocket.create(user_id: user_id, place_name: name.chomp('放口袋~'))
-      "👜 已將#{name}"
-    else
-      '🥇 試著在任何含【有開嗎】的群組內成功問到一家有開的店，即能啟用放口袋功能'
-    end
-    reply_text(event, message)
+    reply_text(event, (handle_pocket user_id, name))
 
   elsif (name.bytesize > 30 && !group_id)
     Idea.create(user_id: user_id, content: m)
