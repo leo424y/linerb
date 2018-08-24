@@ -19,12 +19,12 @@ def handle_text event, user_id, group_id, suffixes, skip_name, m, name, name_uri
     reply_text(event, (count_exercise m))
 
   elsif name.end_with? '口袋有洞'
-    open_pocket user_id
+    open_pocket user_id, event
 
   elsif name.end_with? '放口袋~'
     reply_text(event, (handle_pocket user_id, name))
 
-  elsif (name.bytesize > 30 && !group_id)
+  elsif (name.bytesize > 35 && !group_id)
     Idea.create(user_id: user_id, content: m)
     reply_text event, '感謝你提供建議，【有開嗎】因你的回饋將變得更好！'
 
