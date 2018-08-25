@@ -87,12 +87,6 @@ def cyc_j m
   JSON.parse(open("https://#{cyc_domain}.cyc.org.tw/api").read, headers: true)
 end
 
-class String
-  def string_between_markers marker1, marker2
-    self[/#{Regexp.escape(marker1)}(.*?)#{Regexp.escape(marker2)}/m, 1]
-  end
-end
-
 def is_tndcsc? name
   ['北運', '北區運動中心', '北區國民運動中心', '台中市北區國民運動中心'].include? name
 end
@@ -139,4 +133,16 @@ def message_buttons_h title, text, actions
       actions: actions,
     }
   }
+end
+
+class String
+  def string_between_markers marker1, marker2
+    self[/#{Regexp.escape(marker1)}(.*?)#{Regexp.escape(marker2)}/m, 1]
+  end
+end
+
+class Object
+  def is_number?
+    self.to_f.to_s == self.to_s || self.to_i.to_s == self.to_s
+  end
 end
