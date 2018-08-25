@@ -8,8 +8,8 @@ def handle_button place_id, name, s_link
   when 2
     { label: '👼 贊助', type: 'uri', uri: L_SPONSOR_URI }
   when 3
-    king_points = User.maximum(:points)
-    king_users = User.where(points: king_points).pluck(:user_id)-['Ubee12276c9fb5bbb3989329e80587244']
+    king_points = User.where.not(user_id: 'Ubee12276c9fb5bbb3989329e80587244').maximum(:points)
+    king_users = User.where(points: king_points).pluck(:user_id)
     king_user_name = king_users.map{|n| user_name n}.join(' ')
     { label: '👑 名人堂', type: 'postback', data: "#{king_user_name}" }
   end
