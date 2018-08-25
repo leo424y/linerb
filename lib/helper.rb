@@ -8,12 +8,28 @@ def add_vip(event, user_id, group_id, opening_hours)
 end
 
 def user_name id
-  JSON.parse(client.get_profile(id).read_body)['displayName']
+  user = User.find_by(user_id: id)
+  display_name = user.display_name
+  unless display_name
+    i = JSON.parse(client.get_profile(id).read_body)
+    user.update(display_name: i['displayName'], status_message: i['statusMessage'])
+    "#{i['displayName']}"
+  else
+    "#{display_name}"
+  end
 end
 
 def user_info id
-  i = JSON.parse(client.get_profile(id).read_body)
-  "#{i['displayName']} #{i['statusMessage']}".rstrip
+  user = User.find_by(user_id: id)
+  display_name = user.display_name
+  status_message = user.status_message
+  unless display_name
+    i = JSON.parse(client.get_profile(id).read_body)
+    user.update(display_name: i['displayName'], status_message: i['statusMessage'])
+    "#{i['displayName']} #{i['statusMessage']}".rstrip
+  else
+    "#{display_name} #{status_message}"
+  end
 end
 
 def count_exercise m
