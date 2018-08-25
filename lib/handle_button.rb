@@ -19,7 +19,7 @@ def handle_button place_id, name, s_link
   nearby_button = if place_id
     { label: "💁 #{name}附近", type: 'postback', data: "#{place_id}nearby" }
   else
-    { label: '💁 我附近', type: 'uri', data: "#{L_LOCATION_URI}" }
+    { label: '💁 我附近', type: 'uri', uri: "#{L_LOCATION_URI}" }
   end
   level_up_button = { label: '👜 放口袋', type: 'message', text: "#{name}放口袋~" }
 
