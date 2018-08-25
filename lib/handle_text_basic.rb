@@ -77,14 +77,14 @@ def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, na
         )
         control_place place, place_id, name_sys, address_components, formatted_address, lat, lng, place_types, weekday_text, periods
       else
-        message_buttons_text = "⏰ 有多個結果或查無，請見詳情#{offer_info}"
+        message_buttons_text = "⏰ 有多個結果或查無，請附上分店地區，或見詳情#{offer_info}"
       end
     rescue => exception
       p exception.backtrace
       message_buttons_text = "😂 請見詳情#{offer_info}"
     end
   else
-    message_buttons_text = "🤔 請見詳情#{offer_info}"
+    message_buttons_text = "🤔 有多個結果，請附上分店地區，或見詳情#{offer_info}"
   end
 
   reply_content event, message_buttons_h(name, message_buttons_text, (handle_button place_id, name, s_link))
