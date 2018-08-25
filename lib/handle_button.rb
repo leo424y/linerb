@@ -8,11 +8,11 @@ def handle_button place_id, name, s_link
   when 2
     { label: '👼 贊助', type: 'uri', uri: L_SPONSOR_URI }
   when 3, 4
-    { label: "👑 開王：#{name_king_user}", type: 'message', data: "開王榜" }
+    { label: "👑 開王：#{name_king_user}", type: 'message', text: "開王榜" }
   end
 
   nearby_button = if place_id
-    { label: "💁 #{name}附近", type: 'message', data: "#{name}附近" }
+    { label: "💁 #{name}附近", type: 'message', text: "#{name}附近" }
   else
     { label: '💁 我附近', type: 'uri', uri: "#{L_LOCATION_URI}" }
   end
