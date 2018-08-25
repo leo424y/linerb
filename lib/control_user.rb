@@ -8,7 +8,6 @@ def list_king_user_names
 end
 
 def name_king_user
-  User.find_by(user_id: 'Ubee12276c9fb5bbb3989329e80587244').update(points: 0)
   king_user_points = User.maximum(:points)
   king_user_id = User.where(points: king_user_points).first.user_id
   user_name king_user_id
