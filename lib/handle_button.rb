@@ -11,7 +11,7 @@ def handle_button place_id, name, s_link
     king_points = User.where.not(user_id: 'Ubee12276c9fb5bbb3989329e80587244').maximum(:points)
     king_users = User.where(points: king_points).pluck(:user_id)
     king_user_name = king_users.map{|n| user_name n}.join(' ')
-    { label: '👑 名人堂', type: 'postback', data: "#{king_user_name}" }
+    king_user_name.empty? ? nil : { label: '👑 名人堂', type: 'postback', data: "#{king_user_name}" }
   end
 
   nearby_button = { label: '🎐 附近', type: 'postback', data: "#{place_id}nearby" }
