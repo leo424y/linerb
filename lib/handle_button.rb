@@ -21,7 +21,7 @@ def handle_button place_id, name, s_link
   else
     { label: '💁 我附近', type: 'uri', uri: "#{L_LOCATION_URI}" }
   end
-  level_up_button = { label: '👜 放口袋', type: 'message', text: "#{name}放口袋~" }
+  level_up_button = { label: "👜 #{name}放口袋~", type: 'message', text: "#{name}放口袋~" }
 
   [
     { label: '📍 詳情', type: 'uri', uri: s_link },
