@@ -37,7 +37,7 @@ def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, na
           periods = res['opening_hours']['periods']
           weekday_text = res['opening_hours']['weekday_text']
           if is_open_now
-            point = point+2
+            point = point+1
             opening_hours = "😃 現在有開"
           else
             opening_hours = "🔴 現在沒開"
