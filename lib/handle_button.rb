@@ -1,5 +1,5 @@
 def handle_button place_id, name, s_link
-  random_info = [0, 1, 2, 3].sample
+  random_info = [0, 1, 2, 3, 4].sample
   suggest_button = case random_info
   when 0
     { label: '👍 推薦', type: 'uri', uri: L_RECOMMEND_URI}
@@ -7,10 +7,10 @@ def handle_button place_id, name, s_link
     { label: '💡 建議', type: 'uri', uri: L_OPINION_URI }
   when 2
     { label: '👼 贊助', type: 'uri', uri: L_SPONSOR_URI }
-  when 3
+  when 3, 4
     king_users = User.order(points: :desc).pluck(:user_id)[1..10]
     king_user_name = king_users.map{|n| user_name n}.join(' ')
-    king_user_name.empty? ? nil : { label: '👑 名人堂', type: 'postback', data: "#{king_user_name}" }
+    { label: '👑 名人堂', type: 'postback', data: "#{king_user_name}" }
   end
 
   nearby_button = { label: '🎐 附近', type: 'postback', data: "#{place_id}nearby" }
