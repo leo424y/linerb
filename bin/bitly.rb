@@ -7,7 +7,7 @@ require 'bitly'
 # API_KEY='R_9def63bcade34721826109d5dcd98fb1'
 
 # fendon666
-Name='o_1grrs284e7'
+NAME='o_1grrs284e7'
 API_KEY='R_31c388a19eb1495895f28d3a50f34db2'
 
 Bitly.use_api_version_3
