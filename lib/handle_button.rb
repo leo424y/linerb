@@ -9,11 +9,11 @@ def handle_button place_id, name, s_link
     { label: '👼 贊助', type: 'uri', uri: L_SPONSOR_URI }
   when 3, 4
     king_users = User.order(points: :desc).pluck(:user_id)[1..21]
-    king_user_name = king_users.map do |n|
-      name = "#{user_name n}"
-      name unless name.empty?
+    king_user_names = king_users.map do |n|
+      king_user_name = "#{user_name n}"
+      king_user_name unless name.empty?
     end.compact[0..9].map.with_index{|k,i| i==0 ? "#{k} 👑": "#{k}"}.join("\n")
-    { label: "👑 開王：#{king_user_name.split(' ')[0]}", type: 'postback', data: "【開王榜】\n\n#{king_user_name}\n\n趕緊來發揮你的專家雷達，查詢少人知道的好店！" }
+    { label: "👑 開王：#{king_user_names.split(' ')[0]}", type: 'postback', data: "【開王榜】\n\n#{king_user_names}\n\n趕緊來發揮你的專家雷達，查詢少人知道的好店！" }
   end
 
   nearby_button = { label: '💁 附近', type: 'postback', data: "#{place_id}nearby" } if place_id
