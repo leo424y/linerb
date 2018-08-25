@@ -12,6 +12,8 @@ def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, na
   elsif name == '鬼門'
     message_buttons_text = ( (Date.today < Date.new(2018,8,10)) && (Date.today > Date.new(2018,9,9)) ) ? '👻 現在沒開' : '👻👻👻 現在正開'
   elsif user_id && (!skip_name.include? name)
+    add_point user_id, group_id, (group_id ? 3 : 1)
+
     nickname = Nickname.find_by(nickname: name)
     place_id = handle_place_id name, name_uri, nickname
     handle_review place_id
@@ -33,8 +35,12 @@ def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, na
           is_open_now = res['opening_hours']['open_now']
           periods = res['opening_hours']['periods']
           weekday_text = res['opening_hours']['weekday_text']
-          opening_hours = is_open_now ? "😃 現在有開" : "🔴 現在沒開"
-
+          if is_open_now
+            add_point user_id, group_id, 1
+            opening_hours = "😃 現在有開"
+          else
+            opening_hours = "🔴 現在沒開"
+          end
           message_buttons_text = if (is_cyc? name)
             "#{opening_hours}\n#{count_exercise name}"
           elsif is_tndcsc? name
