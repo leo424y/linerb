@@ -1,5 +1,5 @@
 def list_king_user_names
-  king_users = User.order(points: :desc).pluck(:user_id)[1..21]
+  king_users = User.order(points: :desc).pluck(:user_id)[0..15]
   king_user_names = king_users.map do |n|
     king_user_name = "#{user_name n}"
     king_user_name unless king_user_name.empty?
