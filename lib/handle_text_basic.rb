@@ -1,11 +1,13 @@
 def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, name_uri, link, origin_message
+  point = 0
   in_offer = Offer.where("store_name like ?", "%#{name}%")
+  s_link = %x(ruby bin/bitly.rb '#{link}').chomp
+
   unless in_offer.empty?
     offer_at = in_offer.last.created_at.strftime('%m/%d')
     offer_at = (Date.today.strftime('%m/%d') == offer_at) ? '-今天' : "-#{offer_at}"
     offer_info = "\n💁 #{in_offer.last.info[0..50]}#{offer_at}"
   end
-  s_link = %x(ruby bin/bitly.rb '#{link}').chomp
 
   if name == '麥當勞中港四店'
     message_buttons_text = '😃 現在有開'
