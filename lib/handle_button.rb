@@ -10,7 +10,7 @@ def handle_button place_id, name, s_link
   when 3, 4
     king_users = User.order(points: :desc).pluck(:user_id)[1..10]
     king_user_name = king_users.map do |n|
-      user_name n
+      "#{user_name n} #{user_status_message n}"
     end.compact.map.with_index{|k,i| i==0 ? "#{k} 👑": "#{k}"}.join("\n")
     { label: '👑 名人堂', type: 'postback', data: "發揮名店雷達，取得【開王】稱號！\n#{king_user_name}" }
   end

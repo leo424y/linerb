@@ -11,6 +11,10 @@ def user_name id
   JSON.parse(client.get_profile(id).read_body)['displayName']
 end
 
+def user_status_message id
+  JSON.parse(client.get_profile(id).read_body)['statusMessage']
+end
+
 def count_exercise m
   if ['福賴好運', '台中運'].include? m
     "【北區】#{p_tndcsc_count}     【朝馬】#{p_tndcsc_count['swim'][0]}/#{p_tndcsc_count['swim'][1]} 🏊 #{p_tndcsc_count['gym'][0]}/#{p_tndcsc_count['gym'][1]} 💪 快來減脂增肌！"
