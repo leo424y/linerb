@@ -106,10 +106,6 @@ def p_tp_count name
   "🏊 #{c['swPeopleNum']} / #{c['swMaxPeopleNum']} \n💪 #{c['gymPeopleNum']} / #{c['gymMaxPeopleNum']} "
 end
 
-def to_model yy
-  [Book, Group, Idea, Nickname, Offer, Place, Pocket, Position, Review, Store, Talk, Vip].find { |c| c.to_s == yy }
-end
-
 def message_buttons_h title, text, actions
   {
     type: 'template',

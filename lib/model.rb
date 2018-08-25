@@ -6,8 +6,29 @@ class Nickname < ActiveRecord::Base; end
 class Offer < ActiveRecord::Base; end
 class Place < ActiveRecord::Base; end
 class Pocket < ActiveRecord::Base; end
+class Point < ActiveRecord::Base; end
 class Position < ActiveRecord::Base; end
 class Review < ActiveRecord::Base; end
 class Store < ActiveRecord::Base; end
+class User < ActiveRecord::Base; end
 class Talk < ActiveRecord::Base; end
 class Vip < ActiveRecord::Base; end
+
+def to_model yy
+  [
+    Book,
+    Group,
+    Idea,
+    Nickname,
+    Offer,
+    Place,
+    Pocket,
+    Point,
+    Position,
+    Review,
+    Store,
+    Talk,
+    User,
+    Vip,
+  ].find { |c| c.to_s == yy }
+end
