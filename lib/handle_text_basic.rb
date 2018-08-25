@@ -83,7 +83,7 @@ def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, na
           periods: periods,
           s_link: s_link
         )
-        control_place place, place_id, name_sys, address_components, formatted_address, lat, lng, place_types, weekday_text, periods
+        control_place user_id, group_id, place, place_id, name_sys, address_components, formatted_address, lat, lng, place_types, weekday_text, periods
       else
         message_buttons_text = "⏰ 有多個結果或查無，請附上分店地區#{offer_info}"
       end
