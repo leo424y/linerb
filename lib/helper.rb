@@ -11,8 +11,9 @@ def user_name id
   JSON.parse(client.get_profile(id).read_body)['displayName']
 end
 
-def user_status_message id
-  JSON.parse(client.get_profile(id).read_body)['statusMessage']
+def user_info id
+  i = JSON.parse(client.get_profile(id).read_body)
+  "#{i['displayName']} #{i['statusMessage']}".rstrip
 end
 
 def count_exercise m
