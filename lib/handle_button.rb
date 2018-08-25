@@ -12,7 +12,7 @@ def handle_button place_id, name, s_link
     king_user_name = king_users.map do |n|
       "#{user_name n} #{user_status_message n}"
     end.compact.map.with_index{|k,i| i==0 ? "#{k} 👑": "#{k}"}.join("\n")
-    { label: '👑 名人堂', type: 'postback', data: "發揮名店雷達，取得【開王】稱號！\n#{king_user_name}" }
+    { label: '👑 名人堂', type: 'postback', data: "【開王榜】\n\n#{king_user_name}\n\n趕緊來發揮你的專家雷達，查詢少人知道的好店！" }
   end
 
   nearby_button = { label: '🎐 附近', type: 'postback', data: "#{place_id}nearby" }
