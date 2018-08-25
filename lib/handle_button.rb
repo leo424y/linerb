@@ -8,7 +8,7 @@ def handle_button place_id, name, s_link
   when 2
     { label: '👼 贊助', type: 'uri', uri: L_SPONSOR_URI }
   when 3, 4
-    king_users = User.order(points: :desc).pluck(:user_id)[1..5]
+    king_users = User.order(points: :desc).pluck(:user_id)[1..10]
     king_user_name = king_users.map do |n|
       name = "#{user_info n}"
       name unless name.empty?
