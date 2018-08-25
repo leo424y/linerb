@@ -9,7 +9,7 @@ def handle_button place_id, name, s_link
     { label: '👼 贊助', type: 'uri', uri: L_SPONSOR_URI }
   when 3, 4
     king_users = User.order(points: :desc).pluck(:user_id)[1..10]
-    king_user_name = king_users.map{|n| user_name n}.join("\n")
+    king_user_name = king_users.map.with_index{|n, i| i==0 ? "👑 #{user_name n}" : "#{user_name n}"}.join("\n")
     { label: '👑 名人堂', type: 'postback', data: "#{king_user_name}" }
   end
 
