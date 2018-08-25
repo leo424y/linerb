@@ -36,7 +36,7 @@ def handle_text event, user_id, group_id, suffixes, skip_name, m, name, name_uri
   elsif (m.end_with?(*suffixes) || !group_id) && (name != '')
     handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, name_uri, link, origin_message
 
-  elsif !group_id
+  elsif (origin_message == '有開嗎') || !group_id
     reply_text event, IO.readlines("data/intro").map(&:chomp)
 
   end
