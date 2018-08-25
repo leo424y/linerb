@@ -15,7 +15,7 @@ def control_place user_id, group_id, place, place_id, name_sys, address_componen
       place_name_glink: place_name_glink
     )
   else
-    add_point user_id, group_id, 2
+    add_point user_id, group_id, 3
 
     Place.create(
       place_id: place_id,

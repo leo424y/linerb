@@ -16,7 +16,7 @@ def handle_button place_id, name, s_link
     { label: "👑 開王：#{king_user_name.split(' ')[0]}", type: 'postback', data: "【開王榜】\n\n#{king_user_name}\n\n趕緊來發揮你的專家雷達，查詢少人知道的好店！" }
   end
 
-  nearby_button = { label: '🎐 附近', type: 'postback', data: "#{place_id}nearby" } if place_id
+  nearby_button = { label: '💁 附近', type: 'postback', data: "#{place_id}nearby" } if place_id
   level_up_button = { label: '👜 放口袋', type: 'message', text: "#{name}放口袋~" }
 
   [
