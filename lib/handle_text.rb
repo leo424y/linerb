@@ -1,6 +1,8 @@
 def handle_text event, user_id, group_id, suffixes, skip_name, m, name, name_uri, link, origin_message
-  if ( m.end_with?('附近') || m.start_with?('附近') && !group_id)
-    reply_text(event, '請先查詢要去的地點【有開嗎】？若有營業資訊，則可以點選【🎐 附近】偷瞄開民們的口袋名單囉！')
+  if m.end_with?('附近')
+    nickname = Nickname.find_by(nickname: m.chomp('附近'))
+    store = Store.find_by(place_id: nickname.place_id) if nickname
+    handle_location(event, user_id, group_id, store.lat, store.lng, store.name_sys) if store
 
   elsif m.is_number? && !group_id
     place = Store.where(info: user_id).last
@@ -13,16 +15,19 @@ def handle_text event, user_id, group_id, suffixes, skip_name, m, name, name_uri
     reply_text event, "已將【#{store_name}】情報收錄，感謝提供！"
 
   elsif (is_tndcsc? m)
-    reply_text(event, (count_exercise '北運'))
+    reply_text event, (count_exercise '北運')
 
   elsif (is_cyc? m)
-    reply_text(event, (count_exercise m))
+    reply_text event, (count_exercise m)
 
-  elsif name.end_with? '口袋有洞'
-    open_pocket user_id, event
-
-  elsif name.end_with? '放口袋~'
+  elsif name.end_with? '放口袋'
     reply_text(event, (handle_pocket user_id, name))
+
+  elsif name == '口袋有洞'
+    open_pocket event, user_id
+
+  elsif name == '開王榜'
+    reply_text event, list_king_user_names
 
   elsif (name.bytesize > 40 && !group_id)
     Idea.create(user_id: user_id, content: m)
