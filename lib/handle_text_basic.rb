@@ -1,7 +1,7 @@
 def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, name_uri, link, origin_message
-  point = 0
   in_offer = Offer.where("store_name like ?", "%#{name}%")
   s_link = %x(ruby bin/bitly.rb '#{link}').chomp
+  point = (group_id ? 4 : 1)
 
   unless in_offer.empty?
     offer_at = in_offer.last.created_at.strftime('%m/%d')
@@ -14,7 +14,6 @@ def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, na
   elsif name == '鬼門'
     message_buttons_text = ( (Date.today < Date.new(2018,8,10)) && (Date.today > Date.new(2018,9,9)) ) ? '👻 現在沒開' : '👻👻👻 現在正開'
   elsif user_id && (!skip_name.include? name)
-    point = (group_id ? 4 : 1)
 
     nickname = Nickname.find_by(nickname: name)
     place_id = handle_place_id name, name_uri, nickname
@@ -38,11 +37,12 @@ def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, na
           periods = res['opening_hours']['periods']
           weekday_text = res['opening_hours']['weekday_text']
           if is_open_now
-            add_point user_id, group_id, (point+2)
+            point = point+2
             opening_hours = "😃 現在有開"
           else
             opening_hours = "🔴 現在沒開"
           end
+
           message_buttons_text = if (is_cyc? name)
             "#{opening_hours}\n#{count_exercise name}"
           elsif is_tndcsc? name
@@ -61,9 +61,11 @@ def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, na
             ]
             reply_text event, message
           end
+
         else
           message_buttons_text = '😬 請見詳情'
         end
+
 
         Nickname.create(place_id: place_id, place_name: name_sys, nickname: name) unless nickname
 
@@ -95,5 +97,6 @@ def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, na
     message_buttons_text = "🤔 有多個結果，請附上分店地區#{offer_info}"
   end
 
+  add_point user_id, group_id, point
   reply_content event, message_buttons_h(name, message_buttons_text, (handle_button place_id, name, s_link))
 end
