@@ -1,4 +1,7 @@
-def handle_text event, user_id, group_id, suffixes, skip_name, m, name, name_uri, link, origin_message
+def handle_text event, user_id, group_id, m, name, name_uri, link, origin_message
+  suffixes = IO.readlines("data/keywords").map(&:chomp)
+  skip_name = IO.readlines("data/top200_731a").map(&:chomp)
+
   if m.end_with?('附近')
     nickname = Nickname.find_by(nickname: m.chomp('附近'))
     store = Store.find_by(place_id: nickname.place_id) if nickname
