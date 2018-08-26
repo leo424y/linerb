@@ -2,11 +2,11 @@ def handle_button place_id, name, s_link, group_id
   random_info = [0, 1, 2, 3, 4].sample
   suggest_button = case random_info
   when 0
-    { label: '👍 推薦', type: 'uri', uri: L_RECOMMEND_URI}
+    { label: '👍 推薦', type: 'uri', uri: "#{L_MSG_TEXT}加【有開嗎】好友，查詢店家營業時間不落空。#{L_BOT_URL}"}
   when 1
-    { label: '💡 建議', type: 'uri', uri: L_OPINION_URI }
+    { label: '💡 建議', type: 'uri', uri: L_OPINION }
   when 2
-    { label: '👼 贊助', type: 'uri', uri: L_SPONSOR_URI }
+    { label: '👼 贊助', type: 'uri', uri: L_SPONSOR }
   when 3, 4
     { label: "👑 開王：#{name_king_user}", type: 'message', text: "開王榜" }
   end
@@ -14,11 +14,11 @@ def handle_button place_id, name, s_link, group_id
   nearby_button = if place_id
     { label: "💁 #{name}附近", type: 'message', text: "#{name}附近" }
   else
-    { label: '💁 我附近', type: 'uri', uri: L_LOCATION_URI }
+    { label: '💁 我附近', type: 'uri', uri: L_LOCATION }
   end
 
   level_up_button = if group_id
-    { label: '📖 指令', type: 'uri', uri: L_RECOMMEND_DEMO}
+    { label: '📖 指令', type: 'uri', uri: L_DM_DEMO}
   else
     { label: "👜 #{name}放口袋", type: 'message', text: "#{name}放口袋" }
   end

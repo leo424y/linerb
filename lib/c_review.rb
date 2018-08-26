@@ -1,7 +1,7 @@
 def handle_review place_id
   review = Review.find_by(place_id: place_id)
   unless review && !place_id
-    place_id_url = "#{GG_DETAIL_URL}?placeid=#{place_id}&language=zh-TW&fields=name,review&key=#{GMAP_KEY}"
+    place_id_url = "#{GG_DETAIL}?placeid=#{place_id}&language=zh-TW&fields=name,review&key=#{GMAP_KEY}"
     place_id_doc = JSON.parse(open(place_id_url).read, headers: true)
     res = place_id_doc['result']['reviews'] if place_id_doc['result']
     res.each do |r|

@@ -11,7 +11,7 @@ def open_pocket event, user_id
   pocket = Pocket.where(user_id: user_id).pluck(:place_name).uniq.shuffle[-4..-1]
   if pocket
     actions_a = pocket.map { |p|
-      {label: "📍 #{p}", type: 'uri', uri: "#{GG_SEARCH_URL}#{URI.escape(p)}"}
+      {label: "📍 #{p}", type: 'uri', uri: "#{GG_SEARCH}#{URI.escape(p)}"}
     }
     reply_content(event, message_buttons_h('口袋有洞', '裡頭掉出了...', actions_a) )
   else

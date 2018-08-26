@@ -17,7 +17,7 @@ def handle_text_basic event, user_id, group_id, m, name, name_uri, link, origin_
       unless place_id.nil?
         place = Place.find_by(place_id: place_id)
 
-        place_id_url = "#{GG_DETAIL_URL}?placeid=#{place_id}&language=zh-TW&fields=name,type,address_component,geometry,opening_hours,formatted_address&key=#{GMAP_KEY}"
+        place_id_url = "#{GG_DETAIL}?placeid=#{place_id}&language=zh-TW&fields=name,type,address_component,geometry,opening_hours,formatted_address&key=#{GMAP_KEY}"
         place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
         res = place_id_doc['result']
         formatted_address = res['formatted_address']

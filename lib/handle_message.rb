@@ -13,7 +13,7 @@ def handle_message event, user_id, group_id
     m = origin_message.downcase.delete(" .。，,?？\t\r\n").chomp('嗎')
     name = m.chomp('有沒有開').chomp('開了沒').chomp('有開').chomp('開了').chomp('は開いていますか').chomp('現在')
     name_uri = URI.escape(name)
-    link = "#{GG_SEARCH_URL}#{name_uri}"
+    link = "#{GG_SEARCH}#{name_uri}"
 
     handle_text event, user_id, group_id, m, name, name_uri, link, origin_message
   end
