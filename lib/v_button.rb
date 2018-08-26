@@ -1,4 +1,4 @@
-def handle_button place_id, name, s_link
+def handle_button place_id, name, s_link, group_id
   random_info = [0, 1, 2, 3, 4].sample
   suggest_button = case random_info
   when 0
@@ -14,9 +14,14 @@ def handle_button place_id, name, s_link
   nearby_button = if place_id
     { label: "💁 #{name}附近", type: 'message', text: "#{name}附近" }
   else
-    { label: '💁 我附近', type: 'uri', uri: "#{L_LOCATION_URI}" }
+    { label: '💁 我附近', type: 'uri', uri: L_LOCATION_URI }
   end
-  level_up_button = { label: "👜 #{name}放口袋", type: 'message', text: "#{name}放口袋" }
+
+  level_up_button = if group_id
+    { label: '📖 指令', type: 'uri', uri: L_RECOMMEND_DEMO}
+  else
+    { label: "👜 #{name}放口袋", type: 'message', text: "#{name}放口袋" }
+  end
 
   [
     { label: '📍 詳情', type: 'uri', uri: s_link },
