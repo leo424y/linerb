@@ -14,7 +14,7 @@ def handle_text event, user_id, group_id, m, name, name_uri, link, origin_messag
       reply_text event, "已推薦過"
     else
       Boom.create(user_id: user_id, boom_user_id: boom_user.user_id)
-      reply_text event, "#{m}成功"
+      reply_text event, "#{origin_message}成功"
     end
 
   elsif m.is_number? && !group_id
