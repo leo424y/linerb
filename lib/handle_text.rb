@@ -6,8 +6,8 @@ def handle_text event, user_id, group_id, m, name, name_uri, link, origin_messag
     store = Store.find_by(place_id: nickname.place_id) if nickname
     handle_location(event, user_id, group_id, store.lat, store.lng, store.name_sys) if store
 
-  elsif m.end_with?('推薦') && !group_id
-    user_display_name = m.chomp('推薦')
+  elsif origin_message.end_with?('推薦有開嗎') && !group_id
+    user_display_name = origin_message.chomp('推薦有開嗎')
     boom_user = User.find_by(display_name: user_display_name)
     boom = Boom.find(user_id: user_id, boom_user_id: boom_user.user_id) if boom_user
     if boom
