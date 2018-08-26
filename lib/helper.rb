@@ -1,36 +1,4 @@
-def is_vip user_id
-  Vip.find_by(user_id: user_id)
-end
 
-def add_vip(event, user_id, group_id, opening_hours)
-  Vip.create(user_id: user_id, group_id: (group_id || 'sponsor'))
-  "#{user_name user_id}#{IO.readlines("data/promote_check").join}"
-end
-
-def user_name id
-  user = User.find_by(user_id: id)
-  display_name = user.display_name
-  unless display_name
-    i = JSON.parse(client.get_profile(id).read_body)
-    user.update(display_name: i['displayName'], status_message: i['statusMessage'])
-    "#{i['displayName']}"
-  else
-    "#{display_name}"
-  end
-end
-
-def user_info id
-  user = User.find_by(user_id: id)
-  display_name = user.display_name
-  status_message = user.status_message
-  unless display_name
-    i = JSON.parse(client.get_profile(id).read_body)
-    user.update(display_name: i['displayName'], status_message: i['statusMessage'])
-    "#{i['displayName']} #{i['statusMessage']}".rstrip
-  else
-    "#{display_name} #{status_message}"
-  end
-end
 
 def count_exercise m
   if ['福賴好運', '台中運'].include? m

@@ -1,20 +1,13 @@
 def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, name_uri, link, origin_message
-  in_offer = Offer.where("store_name like ?", "%#{name}%")
   s_link = %x(ruby bin/bitly.rb '#{link}').chomp
   point = (group_id ? 4 : 1)
-
-  unless in_offer.empty?
-    offer_at = in_offer.last.created_at.strftime('%m/%d')
-    offer_at = (Date.today.strftime('%m/%d') == offer_at) ? '-今天' : "-#{offer_at}"
-    offer_info = "\n💁 #{in_offer.last.info[0..50]}#{offer_at}"
-  end
+  offer_info = offer_info_s name
 
   if name == '麥當勞中港四店'
     message_buttons_text = '😃 現在有開'
   elsif name == '鬼門'
     message_buttons_text = ( (Date.today < Date.new(2018,8,10)) && (Date.today > Date.new(2018,9,9)) ) ? '👻 現在沒開' : '👻👻👻 現在正開'
   elsif user_id && (!skip_name.include? name)
-
     nickname = Nickname.find_by(nickname: name)
     place_id = handle_place_id name, name_uri, nickname
     handle_review place_id
@@ -51,7 +44,7 @@ def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, na
             "#{opening_hours}\n#{p_tp_count name}"
           else
             # {"message":"must not be longer than 60 characters","property":"template/text"}
-            in_offer.empty? ? opening_hours : "#{opening_hours}#{offer_info}"
+            "#{opening_hours}#{offer_info}"
           end
 
           if user_id && group_id && !(is_vip user_id)
