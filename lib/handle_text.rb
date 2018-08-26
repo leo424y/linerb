@@ -6,6 +6,17 @@ def handle_text event, user_id, group_id, m, name, name_uri, link, origin_messag
     store = Store.find_by(place_id: nickname.place_id) if nickname
     handle_location(event, user_id, group_id, store.lat, store.lng, store.name_sys) if store
 
+  elsif m.end_with?('推薦') && !group_id
+    user_display_name = m.chomp('推薦')
+    boom_user = User.find_by(display_name: user_display_name)
+    boom = Boom.find(user_id: user_id, boom_user_id: boom_user.user_id) if boom_user
+    if boom
+      reply_text event, "已推薦過"
+    else
+      Boom.create(user_id: user_id, boom_user_id: boom_user.user_id)
+      reply_text event, "#{m}成功"
+    end
+
   elsif m.is_number? && !group_id
     place = Store.where(info: user_id).last
     place_info = [place.place_id, place.name_sys]

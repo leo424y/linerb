@@ -70,5 +70,5 @@ def handle_text_basic event, user_id, group_id, m, name, name_uri, link, origin_
   end
 
   add_point user_id, group_id, point
-  reply_content event, message_buttons_h(name, message_buttons_text, (handle_button place_id, name, s_link, group_id))
+  reply_content event, message_buttons_h(name, message_buttons_text, (handle_button place_id, name, s_link, group_id, user_id))
 end
