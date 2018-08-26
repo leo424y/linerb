@@ -12,7 +12,7 @@ require 'csv'
 Dir["./lib/*.rb"].each {|file| require file }
 
 get '/x/:yy' do download_csv end
-get '/n/:yy' do display_name end
+get '/n/:yy' do display_info end
 get '/s/:yy' do render_html end
 
 post '/callback' do
