@@ -1,4 +1,4 @@
-def offer_info_s
+def offer_info_s name
   in_offer = Offer.where("store_name like ?", "%#{name}%")
 
   unless in_offer.empty?
