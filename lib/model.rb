@@ -1,4 +1,5 @@
 class Book < ActiveRecord::Base; end
+class Boom < ActiveRecord::Base; end
 class Group < ActiveRecord::Base; end
 class Idea < ActiveRecord::Base; end
 class Log < ActiveRecord::Base; end
@@ -17,6 +18,7 @@ class Vip < ActiveRecord::Base; end
 def to_model yy
   [
     Book,
+    Boom,
     Group,
     Idea,
     Nickname,
