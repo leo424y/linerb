@@ -1,6 +1,5 @@
 def handle_text event, user_id, group_id, m, name, name_uri, link, origin_message
   suffixes = IO.readlines("data/keywords").map(&:chomp)
-  skip_name = IO.readlines("data/top200_731a").map(&:chomp)
 
   if m.end_with?('附近')
     nickname = Nickname.find_by(nickname: m.chomp('附近'))
@@ -37,7 +36,7 @@ def handle_text event, user_id, group_id, m, name, name_uri, link, origin_messag
     reply_text event, '感謝你提供建議，【有開嗎】因你的回饋將變得更好！'
 
   elsif (m.end_with?(*suffixes) || !group_id) && (name != '')
-    handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, name_uri, link, origin_message
+    handle_text_basic event, user_id, group_id, m, name, name_uri, link, origin_message
 
   elsif (origin_message == '有開嗎') || !group_id
     reply_text event, IO.readlines("data/intro").map(&:chomp)

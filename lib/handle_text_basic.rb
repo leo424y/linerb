@@ -1,4 +1,5 @@
-def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, name_uri, link, origin_message
+def handle_text_basic event, user_id, group_id, m, name, name_uri, link, origin_message
+  skip_name = IO.readlines("data/top200_731a").map(&:chomp)
   s_link = %x(ruby bin/bitly.rb '#{link}').chomp
   point = (group_id ? 4 : 1)
   offer_info = offer_info_s name
