@@ -29,34 +29,13 @@ def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, na
           is_open_now = res['opening_hours']['open_now']
           periods = res['opening_hours']['periods']
           weekday_text = res['opening_hours']['weekday_text']
-          if is_open_now
-            point = point+1
-            opening_hours = "😃 現在有開"
-          else
-            opening_hours = "🔴 現在沒開"
-          end
+          point = point + 1 if is_open_now
+          opening_hours = is_open_now ? "😃 現在有開" : "🔴 現在沒開"
 
-          message_buttons_text = if (is_cyc? name)
-            "#{opening_hours}\n#{count_exercise name}"
-          elsif is_tndcsc? name
-            "#{opening_hours}\n#{count_exercise '北運'}"
-          elsif is_tpsc? name
-            "#{opening_hours}\n#{p_tp_count name}"
-          else
-            # {"message":"must not be longer than 60 characters","property":"template/text"}
-            "#{opening_hours}#{offer_info}"
-          end
-
-          if user_id && group_id && !(is_vip user_id)
-            message = [
-              "【#{name}】#{opening_hours}",
-              add_vip(event, user_id, group_id, opening_hours),
-            ]
-            reply_text event, message
-          end
-
+          message_buttons_text = if_message_buttons_text name, opening_hours, offer_info
+          reply_join_vip_info(name, opening_hours) if user_id && group_id && !(is_vip user_id)
         else
-          message_buttons_text = '😬 請見詳情'
+          message_buttons_text = '😬 無營業時間資訊，請見詳情'
         end
 
 
