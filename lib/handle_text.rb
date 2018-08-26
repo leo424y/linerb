@@ -13,7 +13,7 @@ def handle_text event, user_id, group_id, m, name, name_uri, link, origin_messag
     if boom
       reply_text event, "已推薦過"
     else
-      add_boom_point boom_user_id, group_id, 10
+      add_boom_point boom_user.user_id, group_id, 10
       Boom.create(user_id: user_id, boom_user_id: boom_user.user_id)
       reply_text event, "#{origin_message}推薦你成功！歡迎來查查你心目中的好店"
     end
