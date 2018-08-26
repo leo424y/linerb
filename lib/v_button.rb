@@ -25,3 +25,17 @@ def handle_button place_id, name, s_link
     level_up_button,
   ].compact
 end
+
+def message_buttons_h title, text, actions
+  {
+    type: 'template',
+    thumbnailImageUrl: '',
+    altText: '...',
+    template: {
+      type: 'buttons',
+      title: title,
+      text: text,
+      actions: actions,
+    }
+  }
+end

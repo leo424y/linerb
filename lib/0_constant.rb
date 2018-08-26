@@ -5,5 +5,9 @@ GMAP_KEY = ENV["GMAP_API_KEY"]
 L_RECOMMEND_URI = "line://nv/recommendOA/@gxs2296l"
 L_LOCATION_URI = "line://nv/location"
 L_SPONSOR_URI = 'http://j.mp/open_sponsor'
+
+# 第一篇
 # L_OPINION_URI = 'line://home/public/post?id=gxs2296l&postId=1153267270308077285'
+
+# 集點活動文
 L_OPINION_URI = 'line://home/public/post?id=gxs2296l&postId=1153518766808074504'

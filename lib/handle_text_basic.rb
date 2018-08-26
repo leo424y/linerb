@@ -38,7 +38,6 @@ def handle_text_basic event, user_id, group_id, suffixes, skip_name, m, name, na
           message_buttons_text = '😬 無營業時間資訊，請見詳情'
         end
 
-
         Nickname.create(place_id: place_id, place_name: name_sys, nickname: name) unless nickname
 
         Store.create(
