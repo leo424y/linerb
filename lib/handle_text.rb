@@ -49,7 +49,7 @@ def handle_text event, user_id, group_id, m, name, name_uri, link, origin_messag
   elsif (m.end_with?(*suffixes) || !group_id) && (name != '')
     handle_text_basic event, user_id, group_id, m, name, name_uri, link, origin_message
 
-  elsif (origin_message == '有開嗎') || !group_id
+  elsif (origin_message == '有開嗎' || origin_message == '有開嗎指令') || !group_id
     reply_text event, IO.readlines("data/intro").map(&:chomp)
 
   end
