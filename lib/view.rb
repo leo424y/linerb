@@ -37,7 +37,7 @@ def display_info
   <!DOCTYPE html>
   <html>
     <body>
-      <%= request_j %>
+      <%= #{request_j} %>
     </body>
   </html>
   EOF
