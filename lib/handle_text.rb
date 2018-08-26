@@ -9,7 +9,7 @@ def handle_text event, user_id, group_id, m, name, name_uri, link, origin_messag
   elsif origin_message.end_with?('推薦有開嗎') && !group_id
     user_display_name = origin_message.chomp('推薦有開嗎')
     boom_user = User.find_by(display_name: user_display_name)
-    boom = Boom.find(user_id: user_id, boom_user_id: boom_user.user_id) if boom_user
+    boom = Boom.find_by(user_id: user_id, boom_user_id: boom_user.user_id) if boom_user
     if boom
       reply_text event, "已推薦過"
     else
