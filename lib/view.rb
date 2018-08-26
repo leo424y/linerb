@@ -27,10 +27,9 @@ def render_html
 end
 
 def display_info
-  request_j = case params['yy']
-  when (start_with? 'U')
+  request_j = if params['yy'].start_with? 'U'
     JSON.parse(client.get_profile(params['yy']).read_body)['displayName']
-  when (start_with? 'C')
+  elsif params['yy'].start_with? 'C'
     JSON.parse(client.get_group_member_ids(params['yy']).read_body)
   end
   erb <<-EOF
