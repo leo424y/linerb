@@ -4,8 +4,8 @@ def handle_message event, user_id, group_id
 
   case event.type
   when Line::Bot::Event::MessageType::Sticker
-    handle_sticker(event) unless group_id
-    
+    # handle_sticker(event) unless group_id
+
   when Line::Bot::Event::MessageType::Location
     handle_location(event, user_id, group_id, event.message['latitude'], event.message['longitude'], '')
 
