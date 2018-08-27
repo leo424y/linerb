@@ -4,7 +4,7 @@ def handle_button place_id, name, s_link, group_id, user_id
 
   suggest_button = case random_info
   when 0, 3, 4
-    { label: '👍 推薦', type: 'uri', uri: "#{L_MSG_TEXT}1-加有開嗎好友，查詢店家營業時間不落空。#{share_info_url}"}
+    { label: '👍 推薦', type: 'uri', uri: "#{L_MSG_TEXT}加有開嗎好友，查詢店家營業時間不落空。#{share_info_url}"}
 
     # if group_id
     #   { label: '👍 推薦', type: 'uri', uri: "#{L_MSG_TEXT}加【有開嗎】好友，查詢店家營業時間不落空。#{share_info_url}"}
