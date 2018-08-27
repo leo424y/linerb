@@ -1,6 +1,7 @@
 def handle_text event, user_id, group_id, origin_message
   suffixes = IO.readlines("data/keywords").map(&:chomp)
-  name = origin_message.downcase.delete(" .。，,?？\t\r\n").chomp('有沒有開').chomp('開了沒').chomp('有開').chomp('開了').chomp('は開いていますか').chomp('現在')
+  clean_message = origin_message.downcase.delete(" .。，,?？\t\r\n")
+  name = clean_message.chomp('有沒有開').chomp('開了沒').chomp('有開').chomp('開了').chomp('は開いていますか').chomp('現在')
 
   if origin_message.end_with?('附近')
     nickname = Nickname.find_by(nickname: origin_message.chomp('附近'))
@@ -48,7 +49,7 @@ def handle_text event, user_id, group_id, origin_message
     Idea.create(user_id: user_id, content: origin_message)
     reply_text event, '感謝你提供建議，【有開嗎】因你的回饋將變得更好！'
 
-  elsif (origin_message.end_with?(*suffixes) || !group_id) && (name != '')
+  elsif (clean_message.end_with?(*suffixes) || !group_id) && (name != '')
     handle_text_basic event, user_id, group_id, name, origin_message
 
   elsif (origin_message == '有開嗎' || origin_message == '有開嗎指令') || !group_id
