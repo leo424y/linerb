@@ -1,5 +1,5 @@
 def handle_text_end_with event, user_id, group_id, origin_message, name
-  case origin_message.delete name
+  case origin_message.delete(name)
   when '附近'
     nickname = Nickname.find_by(nickname: origin_message.chomp('附近'))
     store = Store.find_by(place_id: nickname.place_id) if nickname
