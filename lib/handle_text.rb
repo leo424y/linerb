@@ -3,22 +3,10 @@ def handle_text event, user_id, group_id, origin_message
   clean_message = origin_message.downcase.delete(" .。，,?？\t\r\n")
   name = clean_message.chomp('有沒有開').chomp('開了沒').chomp('有開').chomp('開了').chomp('は開いていますか').chomp('現在')
 
-  if origin_message.end_with?('附近')
-    nickname = Nickname.find_by(nickname: origin_message.chomp('附近'))
-    store = Store.find_by(place_id: nickname.place_id) if nickname
-    handle_location(event, user_id, group_id, store.lat, store.lng, store.name_sys) if store
+  END_WITH_KEYS = ['附近','推薦有開嗎','放口袋'].freeze
 
-  elsif origin_message.end_with?('推薦有開嗎') && !group_id
-    user_display_name = origin_message.chomp('推薦有開嗎')
-    boom_user = User.find_by(display_name: user_display_name)
-    boom = Boom.find_by(user_id: user_id, boom_user_id: boom_user.user_id) if boom_user
-    if boom
-      reply_text event, "已推薦過"
-    else
-      add_boom_point boom_user.user_id, group_id, 10
-      Boom.create(user_id: user_id, boom_user_id: boom_user.user_id)
-      reply_text event, "#{origin_message}成功！歡迎來查查你心目中的好店"
-    end
+  if origin_message.end_with?(*END_WITH_KEYS)
+    handle_text_end_with event, user_id, group_id, origin_message, name
 
   elsif origin_message.is_number? && !group_id
     place = Store.where(info: user_id).last
@@ -35,9 +23,6 @@ def handle_text event, user_id, group_id, origin_message
 
   elsif (is_cyc? origin_message)
     reply_text event, (count_exercise origin_message)
-
-  elsif origin_message.end_with? '放口袋'
-    reply_text(event, (handle_pocket user_id, name))
 
   elsif origin_message == '口袋有洞'
     open_pocket event, user_id
