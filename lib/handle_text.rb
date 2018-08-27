@@ -3,9 +3,7 @@ def handle_text event, user_id, group_id, origin_message
   clean_message = origin_message.downcase.delete(" .。，,?？\t\r\n")
   name = clean_message.chomp('嗎').chomp('有沒有開').chomp('開了沒').chomp('有開').chomp('開了').chomp('は開いていますか').chomp('現在')
 
-  END_WITH_KEYS = ['附近','推薦有開嗎','放口袋'].freeze
-
-  if origin_message.end_with?(*END_WITH_KEYS)
+  if origin_message.end_with?(['附近','推薦有開嗎','放口袋'])
     handle_text_end_with event, user_id, group_id, origin_message, name
 
   elsif origin_message.is_number? && !group_id
