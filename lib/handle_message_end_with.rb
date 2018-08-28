@@ -3,7 +3,11 @@ def handle_text_end_with event, user_id, group_id, origin_message, name
   when '附近'
     nickname = Nickname.find_by(nickname: origin_message.chomp('附近'))
     store = Store.find_by(place_id: nickname.place_id) if nickname
-    handle_location(event, user_id, group_id, store.lat, store.lng, store.name_sys) if store
+    if store
+      handle_location(event, user_id, group_id, store.lat, store.lng, store.name_sys)
+    else
+      reply_text event, "請先搜尋想去的地點+有開嗎，即可取得附近的好去處！"
+    end
 
   when '推薦有開嗎'
     if !group_id
