@@ -1,9 +1,9 @@
 def handle_button place_id, name, s_link, group_id, user_id
-  random_info = [0, 1, 2, 3, 4].sample
+  random_info = [0, 1].sample
   share_info_url = "#{L_DM}#{name_user user_id}推薦有開嗎"
 
   suggest_button = case random_info
-  when 0, 3, 4
+  when 0
     { label: '👍 推薦', type: 'uri', uri: "#{L_MSG_TEXT}加有開嗎好友，查詢店家營業時間不落空。#{share_info_url}"}
 
     # if group_id
@@ -17,8 +17,8 @@ def handle_button place_id, name, s_link, group_id, user_id
     else
       { label: '👼 贊助', type: 'uri', uri: L_SPONSOR }
     end
-  when 2
-    { label: "👑 開王：#{name_king_user}", type: 'message', text: "開王榜" }
+  # when 2
+  #   { label: "👑 開王：#{name_king_user}", type: 'message', text: "開王榜" }
   end
 
   nearby_button = if place_id
