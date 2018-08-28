@@ -9,6 +9,8 @@ require 'bitly'
 require 'date'
 require 'erb'
 require 'csv'
+require 'wikipedia'
+
 Dir["./lib/*.rb"].each {|file| require file }
 
 get '/x/:yy' do download_csv end
