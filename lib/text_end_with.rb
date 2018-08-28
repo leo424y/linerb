@@ -27,7 +27,8 @@ def handle_text_end_with event, user_id, group_id, origin_message, name
 
   when '？！'
     wiki_data = wikir(name, 'zh')
-    reply_text(event, wiki_data.summary) if wiki_data.summary
+    summary = wiki_data.summary.truncate(100) + %x(ruby bin/bitly.rb "#{wiki_data.fullurl}").chomp
+    reply_text(event, summary) if wiki_data.summary
 
   end
 end
