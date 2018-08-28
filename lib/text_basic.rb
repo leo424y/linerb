@@ -16,45 +16,36 @@ def handle_text_basic event, user_id, group_id, name, origin_message
 
     begin
       unless place_id.nil?
-        res = google_place_by place_id
-        formatted_address = res['formatted_address']
-        address_components = res['address_components']
-        name_sys = res['name']
-        lat = res['geometry']['location']['lat']
-        lng = res['geometry']['location']['lng']
-        if res['opening_hours']
-          place_types = res['types']
-          is_open_now = res['opening_hours']['open_now']
-          periods = res['opening_hours']['periods']
-          weekday_text = res['opening_hours']['weekday_text']
-          point = point + 1 if is_open_now
-          opening_hours = is_open_now ? "😃 現在有開" : "🔴 現在沒開"
+        r = google_place_by place_id
+        if r[:open_now]
+          point = point + 1 if r[:open_now]
+          opening_hour_info = r[:open_now] ? "😃 現在有開" : "🔴 現在沒開"
 
-          message_buttons_text = if_message_buttons_text name, opening_hours, offer_info
-          reply_join_vip_info(name, opening_hours) if user_id && group_id && !(is_vip user_id)
+          message_buttons_text = if_message_buttons_text name, opening_hour_info, offer_info
+          reply_join_vip_info(name, opening_hour_info) if user_id && group_id && !(is_vip user_id)
         else
           message_buttons_text = '😬 無營業時間資訊，請見詳情'
         end
 
-        Nickname.create(place_id: place_id, place_name: name_sys, nickname: name) unless nickname
+        Nickname.create(place_id: place_id, place_name: r[:name_sys], nickname: name) unless nickname
 
         Store.create(
           name: name,
-          name_sys: name_sys,
-          address_components: address_components,
-          formatted_address: formatted_address,
-          lat: lat,
-          lng: lng,
-          place_types: place_types,
           info: user_id,
           group_id: group_id,
           place_id: place_id,
-          opening_hours: res['opening_hours'] ? is_open_now.to_s : 'no',
-          weekday_text: weekday_text,
-          periods: periods,
-          s_link: s_link
+          s_link: s_link,
+          opening_hours: r[:open_now] ? r[:open_now].to_s : 'no',
+          name_sys: r[:name_sys],
+          address_components: r[:address_components],
+          formatted_address: r[:formatted_address],
+          lat: r[:lat],
+          lng: r[:lng],
+          place_types: r[:place_types],
+          weekday_text: r[:weekday_text],
+          periods: r[:periods],
         )
-        control_place user_id, group_id, place_id, name_sys, address_components, formatted_address, lat, lng, place_types, weekday_text, periods
+        control_place user_id, group_id, place_id, r
       else
         message_buttons_text = "⏰ 有多個結果或查無，請附上分店地區#{offer_info}"
       end

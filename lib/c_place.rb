@@ -1,18 +1,18 @@
-def control_place user_id, group_id, place_id, name_sys, address_components, formatted_address, lat, lng, place_types, weekday_text, periods
+def control_place user_id, group_id, place_id,r
   place_name_glink = %x(ruby bin/bitly.rb '#{GG_SEARCH}#{URI.escape(name_sys)}').chomp
   place = Place.find_by(place_id: place_id)
-  
+
   if place
     place.update(
       place_id: place_id,
-      place_name: name_sys,
-      address_components: address_components,
-      formatted_address: formatted_address,
-      lat: lat,
-      lng: lng,
-      place_types: place_types,
-      weekday_text: weekday_text,
-      periods: periods,
+      place_name: r[:name_sys],
+      address_components: r[:address_components],
+      formatted_address: r[:formatted_address],
+      lat: r[:lat],
+      lng: r[:lng],
+      place_types: r[:place_types],
+      weekday_text: r[:weekday_text],
+      periods: r[:periods],
       place_name_glink: place_name_glink
     )
   else
@@ -20,14 +20,14 @@ def control_place user_id, group_id, place_id, name_sys, address_components, for
 
     Place.create(
       place_id: place_id,
-      place_name: name_sys,
-      address_components: address_components,
-      formatted_address: formatted_address,
-      lat: lat,
-      lng: lng,
-      place_types: place_types,
-      weekday_text: weekday_text,
-      periods: periods,
+      place_name: r[:name_sys],
+      address_components: r[:address_components],
+      formatted_address: r[:formatted_address],
+      lat: r[:lat],
+      lng: r[:lng],
+      place_types: r[:place_types],
+      weekday_text: r[:weekday_text],
+      periods: r[:periods],
       place_name_glink: place_name_glink
     )
   end
