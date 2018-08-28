@@ -1,6 +1,6 @@
 def handle_text event, user_id, group_id, origin_message
   suffixes = IO.readlines("data/keywords").map(&:chomp)
-  clean_message = origin_message.downcase.delete(" .。，,?？\t\r\n")
+  clean_message = origin_message.downcase.delete(" .。，,?？！\t\r\n")
   name = clean_message.chomp('嗎').chomp('有沒有開').chomp('開了沒').chomp('有開').chomp('開了').chomp('は開いていますか').chomp('現在').chomp('附近').chomp('推薦').chomp('放口袋')
 
   if origin_message.end_with?('附近', '推薦有開嗎', '放口袋', '？！')
