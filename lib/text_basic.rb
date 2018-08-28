@@ -17,6 +17,8 @@ def handle_text_basic event, user_id, group_id, name, origin_message
     begin
       unless place_id.nil?
         r = google_place_by place_id
+        control_place user_id, group_id, place_id, r
+
         if (r[:open_now] == 'true' || r[:open_now] == 'false')
           point = point + 1 if r[:open_now] == 'true'
           opening_hour_info = (r[:open_now] == 'true') ? "😃 現在有開" : "🔴 現在沒開"
@@ -45,7 +47,6 @@ def handle_text_basic event, user_id, group_id, name, origin_message
           weekday_text: r[:weekday_text],
           periods: r[:periods],
         )
-        control_place user_id, group_id, place_id, r
       else
         message_buttons_text = "⏰ 有多個結果或查無，請附上分店地區#{offer_info}"
       end
