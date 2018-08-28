@@ -1,6 +1,7 @@
-def control_place user_id, group_id, place, place_id, name_sys, address_components, formatted_address, lat, lng, place_types, weekday_text, periods
+def control_place user_id, group_id, place_id, name_sys, address_components, formatted_address, lat, lng, place_types, weekday_text, periods
   place_name_glink = %x(ruby bin/bitly.rb '#{GG_SEARCH}#{URI.escape(name_sys)}').chomp
-
+  place = Place.find_by(place_id: place_id)
+  
   if place
     place.update(
       place_id: place_id,

@@ -16,11 +16,7 @@ def handle_text_basic event, user_id, group_id, name, origin_message
 
     begin
       unless place_id.nil?
-        place = Place.find_by(place_id: place_id)
-
-        place_id_url = "#{GG_DETAIL}?placeid=#{place_id}&language=zh-TW&fields=name,type,address_component,geometry,opening_hours,formatted_address&key=#{GMAP_KEY}"
-        place_id_doc = JSON.parse(open(place_id_url).read, :headers => true)
-        res = place_id_doc['result']
+        res = google_place_by place_id
         formatted_address = res['formatted_address']
         address_components = res['address_components']
         name_sys = res['name']
@@ -58,7 +54,7 @@ def handle_text_basic event, user_id, group_id, name, origin_message
           periods: periods,
           s_link: s_link
         )
-        control_place user_id, group_id, place, place_id, name_sys, address_components, formatted_address, lat, lng, place_types, weekday_text, periods
+        control_place user_id, group_id, place_id, name_sys, address_components, formatted_address, lat, lng, place_types, weekday_text, periods
       else
         message_buttons_text = "⏰ 有多個結果或查無，請附上分店地區#{offer_info}"
       end
