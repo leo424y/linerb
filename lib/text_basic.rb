@@ -17,14 +17,14 @@ def handle_text_basic event, user_id, group_id, name, origin_message
     begin
       unless place_id.nil?
         r = google_place_by place_id
-        if r[:open_now]
-          point = point + 1 if r[:open_now]
-          opening_hour_info = r[:open_now] ? "😃 現在有開" : "🔴 現在沒開"
+        if (r[:open_now] == 'true' || r[:open_now] == 'false')
+          point = point + 1 if r[:open_now] == 'true'
+          opening_hour_info = (r[:open_now] == 'true') ? "😃 現在有開" : "🔴 現在沒開"
 
           message_buttons_text = if_message_buttons_text name, opening_hour_info, offer_info
           reply_join_vip_info(name, opening_hour_info) if user_id && group_id && !(is_vip user_id)
         else
-          message_buttons_text = '😬 無營業時間資訊，請見詳情'
+          message_buttons_text = '😬 請見詳情'
         end
 
         Nickname.create(place_id: place_id, place_name: r[:name_sys], nickname: name) unless nickname
@@ -35,7 +35,7 @@ def handle_text_basic event, user_id, group_id, name, origin_message
           group_id: group_id,
           place_id: place_id,
           s_link: s_link,
-          opening_hours: r[:open_now] ? r[:open_now].to_s : 'no',
+          opening_hours: (r[:open_now] == 'true' || r[:open_now] == 'false') ? r[:open_now].to_s : 'no',
           name_sys: r[:name_sys],
           address_components: r[:address_components],
           formatted_address: r[:formatted_address],
