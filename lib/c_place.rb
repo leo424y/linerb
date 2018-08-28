@@ -1,5 +1,5 @@
-def control_place user_id, group_id, place_id,r
-  place_name_glink = %x(ruby bin/bitly.rb '#{GG_SEARCH}#{URI.escape(name_sys)}').chomp
+def control_place user_id, group_id, place_id, r
+  place_name_glink = %x(ruby bin/bitly.rb '#{GG_SEARCH}#{URI.escape(r[:name_sys])}').chomp
   place = Place.find_by(place_id: place_id)
 
   if place
