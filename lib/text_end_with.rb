@@ -25,8 +25,8 @@ def handle_text_end_with event, user_id, group_id, origin_message, name
   when '放口袋'
     reply_text(event, (handle_pocket user_id, name))
 
-  when '？'
-    wiki_word = origin_message.chomp('？')
+  when '？！'
+    wiki_word = origin_message.chomp('？！')
     wiki_data = wikir(wiki_word, 'zh')
     reply_text(event, wiki_data.summary) if (wiki_data.summary.length > 20)
 
