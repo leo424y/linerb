@@ -26,7 +26,7 @@ def handle_text_end_with event, user_id, group_id, origin_message, name
     reply_text(event, (handle_pocket user_id, name))
 
   when '？！'
-    text = wiki_content name
+    text = wiki_content event, name
     reply_text(event, text) if text
 
   end
