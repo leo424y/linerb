@@ -8,7 +8,7 @@ def handle_text event, user_id, group_id, origin_message
     handle_text_end_with event, user_id, group_id, origin_message, name
 
   elsif !group_id && wiki_text
-    reply_text(event, text)
+    reply_text(event, wiki_text)
 
   elsif origin_message.is_number? && !group_id
     place = Store.where(info: user_id).last
