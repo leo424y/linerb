@@ -26,19 +26,8 @@ def handle_text_end_with event, user_id, group_id, origin_message, name
     reply_text(event, (handle_pocket user_id, name))
 
   when '？！'
-    wiki_data = wikir(name, 'zh')
-    if wiki_data.text
-      text = wiki_data.text.truncate(200) + %x(ruby bin/bitly.rb "#{wiki_data.fullurl}").chomp
-      reply_text(event, text)
-    end
+    text = wiki_content name
+    reply_text(event, text) if text
 
   end
-end
-
-def wikir title, lang
-  Wikipedia.configure {
-    domain "#{lang}.wikipedia.org"
-    path   'w/api.php'
-  }
-  Wikipedia.find(title)
 end
