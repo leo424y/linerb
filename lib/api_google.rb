@@ -11,7 +11,7 @@ def google_place_by place_id
     lng: r['geometry']['location']['lng'],
     opening_hours: r['opening_hours'],
     place_types: r['types'],
-    open_now: r['opening_hours']['open_now'].to_s,
+    open_now: r['opening_hours']['open_now'],
     periods: r['opening_hours']['periods'],
     weekday_text: r['opening_hours']['weekday_text'],
   }

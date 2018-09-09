@@ -19,9 +19,9 @@ def handle_text_basic event, user_id, group_id, name, origin_message
         r = google_place_by place_id
         control_place user_id, group_id, place_id, r
 
-        if (r[:open_now] == 'true' || r[:open_now] == 'false')
-          point = point + 1 if r[:open_now] == 'true'
-          opening_hour_info = (r[:open_now] == 'true') ? "😃 現在有開" : "🔴 現在沒開"
+        if (r[:open_now] && (r[:open_now].to_s == 'true' || r[:open_now].to_s == 'false'))
+          point = point + 1 if r[:open_now].to_s == 'true'
+          opening_hour_info = (r[:open_now].to_s == 'true') ? "😃 現在有開" : "🔴 現在沒開"
 
           message_buttons_text = if_message_buttons_text name, opening_hour_info, offer_info
           reply_join_vip_info(name, opening_hour_info) if user_id && group_id && !(is_vip user_id)
@@ -37,7 +37,7 @@ def handle_text_basic event, user_id, group_id, name, origin_message
           group_id: group_id,
           place_id: place_id,
           s_link: s_link,
-          opening_hours: (r[:open_now] == 'true' || r[:open_now] == 'false') ? r[:open_now].to_s : 'no',
+          opening_hours: (r[:open_now].to_s == 'true' || r[:open_now].to_s == 'false') ? r[:open_now].to_s : 'no',
           name_sys: r[:name_sys],
           address_components: r[:address_components],
           formatted_address: r[:formatted_address],
