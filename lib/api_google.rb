@@ -14,5 +14,5 @@ def google_place_by place_id
     open_now: r['opening_hours']['open_now'],
     periods: r['opening_hours']['periods'],
     weekday_text: r['opening_hours']['weekday_text'],
-  }
+  } if r['opening_hours'].to_s.empty?
 end
