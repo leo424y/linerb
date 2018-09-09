@@ -10,6 +10,8 @@ def count_exercise m
       cyc_j '朝運'
     when '桃運', '桃園運動中心', '桃園國民運動中心'
       cyc_j '桃運'
+    when '壢運', '中壢運動中心', '中壢國民運動中心'
+      cyc_j '壢運'
     when '永運', '永和運動中心', '永和國民運動中心'
       cyc_j '永運'
     when '蘆運', '蘆洲運動中心', '蘆洲國民運動中心'
@@ -39,6 +41,8 @@ def cyc_j m
   case m
   when '桃運'
     cyc_domain = 'tycsc'
+  when '壢運'
+    cyc_domain = 'zlcsc'
   when '朝運'
     cyc_domain = 'cmcsc'
   when '永運'
