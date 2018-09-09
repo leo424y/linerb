@@ -3,7 +3,7 @@ def google_place_by place_id
   place_id_doc = JSON.parse(open(place_id_url).read, headers: true)
   r = place_id_doc['result']
 
-  if r['opening_hours'].to_s.empty?
+  unless r['opening_hours'].to_s.empty?
     {
       formatted_address: r['formatted_address'],
       address_components: r['address_components'],
