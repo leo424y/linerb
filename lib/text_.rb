@@ -32,7 +32,7 @@ def handle_text event, user_id, group_id, origin_message
   elsif origin_message == '開王榜'
     reply_text event, list_king_user_names
 
-  elsif (name.bytesize > 50 && !group_id)
+  elsif (name.bytesize > 70 && !group_id)
     Idea.create(user_id: user_id, content: origin_message)
     reply_text event, '感謝你提供建議，【有開嗎】因你的回饋將變得更好！'
 
