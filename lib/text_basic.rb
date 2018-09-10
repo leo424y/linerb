@@ -32,7 +32,7 @@ def handle_text_basic event, user_id, group_id, name, origin_message
           point = point + 1 if r[:open_now].to_s == 'true'
           opening_hour_info = (r[:open_now].to_s == 'true') ? "😃 現在有開" : "🔴 現在沒開"
 
-          message_buttons_text = "#{opening_hour_info}\n#{offer_info}"
+          message_buttons_text = "#{opening_hour_info}#{offer_info}"
 
           reply_join_vip_info(name, opening_hour_info) if user_id && group_id && !(is_vip user_id)
 
