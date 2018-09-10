@@ -15,6 +15,13 @@ def handle_text_basic event, user_id, group_id, name, origin_message
 
     begin
       if /(運動中心)/.match? name
+        Store.create(
+          name: name,
+          info: user_id,
+          group_id: group_id,
+          place_id: place_id,
+          s_link: s_link,
+        )
         message_buttons_text = if_message_buttons_text_x name
 
       elsif !place_id.nil?
