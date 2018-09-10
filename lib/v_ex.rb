@@ -5,8 +5,8 @@ def count_exercise m
     p_count 'http://www.tssc.tw/', '.number-current', 400, 70
   elsif /\A(板運|板橋運動中心|板橋國民運動中心)\z/.match? m
     p_count 'http://www.bqsports.com.tw/zh-TW/onsitenum?wmode=opaque', '.flow_number', 400, 80
-  elsif is_tpsc? name
-    p_tp_count name
+  elsif is_tpsc? m
+    p_tp_count m
   else
     ice=''
     j = case m
