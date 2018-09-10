@@ -3,6 +3,8 @@ def count_exercise m
     p_count 'http://tndcsc.com.tw/', '.w3_agile_logo p', 350, 130
   elsif /\A(淡運|淡水運動中心|淡水國民運動中心)\z/.match? m
     p_count 'http://www.tssc.tw/', '.number-current', 400, 70
+  elsif /\A(板運|板橋運動中心|板橋國民運動中心)\z/.match? m
+    p_count 'http://www.bqsports.com.tw/zh-TW/onsitenum?wmode=opaque', '.flow_number', 400, 80
   elsif is_tpsc? name
     p_tp_count name
   else
@@ -33,8 +35,16 @@ def p_count url, selector, pool, gym
   count = ''
   url = url
   doc = Nokogiri::HTML(open(url))
-  doc.css(selector).each_with_index do |l, index|
-    count += ("#{l.content}".split.map{|x| x[/\d+/]}[0] + (index==0 ? "/#{pool} 🏊\n" : "/#{gym} 💪"))
+  if selector == '.flow_number'
+    doc.css(selector).each_with_index do |l, index|
+      if index < 2
+        count += ("#{l.content}".split.map{|x| x[/\d+/]}[0] + (index==1 ? "/#{pool} 🏊\n" : "/#{gym} 💪"))
+      end
+    end
+  else
+    doc.css(selector).each_with_index do |l, index|
+      count += ("#{l.content}".split.map{|x| x[/\d+/]}[0] + (index==0 ? "/#{pool} 🏊\n" : "/#{gym} 💪"))
+    end
   end
   count
 end
@@ -63,6 +73,7 @@ def is_tndcsc? name
   [
     '北運', '北區運動中心', '北區國民運動中心', '台中市北區國民運動中心',
     '淡運', '淡水運動中心', '淡水國民運動中心',
+    '板運', '板橋運動中心', '板橋國民運動中心',
   ].include? name
 end
 

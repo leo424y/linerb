@@ -14,7 +14,7 @@ def handle_text_basic event, user_id, group_id, name, origin_message
     place_id = handle_place_id name, name_uri, nickname
 
     begin
-      if /(運動中心)/.match? name
+      if name.end_with? '運動中心'
         Store.create(
           name: name,
           info: user_id,
