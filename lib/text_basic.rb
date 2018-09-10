@@ -16,12 +16,12 @@ def handle_text_basic event, user_id, group_id, name, origin_message
     begin
       if /(運動中心)/.match? name
         message_buttons_text = if_message_buttons_text_x name
-        
+
       elsif !place_id.nil?
         r = google_place_by place_id
         control_place user_id, group_id, place_id, r
 
-        if (r[:open_now] && (r[:open_now].to_s == 'true' || r[:open_now].to_s == 'false'))
+        if (!r[:open_now].to_s.empty? && (r[:open_now].to_s == 'true' || r[:open_now].to_s == 'false'))
           point = point + 1 if r[:open_now].to_s == 'true'
           opening_hour_info = (r[:open_now].to_s == 'true') ? "😃 現在有開" : "🔴 現在沒開"
 
