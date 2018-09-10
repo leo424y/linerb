@@ -21,10 +21,7 @@ def handle_text event, user_id, group_id, origin_message
     reply_text event, "已將【#{store_name}】情報收錄，感謝提供！"
 
   elsif (is_tndcsc? origin_message)
-    reply_text event, (count_exercise '北運')
-
-  # elsif (is_cyc? origin_message)
-  #   reply_text event, (count_exercise origin_message)
+    reply_text event, (count_exercise origin_message)
 
   elsif origin_message == '口袋有洞'
     open_pocket event, user_id
