@@ -12,7 +12,7 @@ def handle_text_basic event, user_id, group_id, name, origin_message
   elsif user_id && (!skip_name.include? name)
     nickname = Nickname.find_by(nickname: name)
     place_id = handle_place_id name, name_uri, nickname
-    handle_review place_id
+    # handle_review place_id
 
     begin
       unless place_id.nil?
