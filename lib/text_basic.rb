@@ -22,7 +22,7 @@ def handle_text_basic event, user_id, group_id, name, origin_message
           place_id: place_id,
           s_link: s_link,
         )
-        message_buttons_text = if_message_buttons_text_x name
+        message_buttons_text = count_exercise name
 
       elsif !place_id.nil?
         r = google_place_by place_id
@@ -32,7 +32,8 @@ def handle_text_basic event, user_id, group_id, name, origin_message
           point = point + 1 if r[:open_now].to_s == 'true'
           opening_hour_info = (r[:open_now].to_s == 'true') ? "😃 現在有開" : "🔴 現在沒開"
 
-          message_buttons_text = if_message_buttons_text name, opening_hour_info, offer_info
+          message_buttons_text = "#{opening_hours}#{offer_info}"
+
           reply_join_vip_info(name, opening_hour_info) if user_id && group_id && !(is_vip user_id)
 
           handle_review place_id
