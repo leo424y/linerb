@@ -34,7 +34,7 @@ def p_count url, selector, pool, gym
   url = url
   doc = Nokogiri::HTML(open(url))
   doc.css(selector).each_with_index do |l, index|
-    count += ("#{l.content}".split.map{|x| x[/\d+/]}[0] + (index==0 ? "/#{pool} 🏊\n" : "/#{gym} 💪\n"))
+    count += ("#{l.content}".split.map{|x| x[/\d+/]}[0] + (index==0 ? "/#{pool} 🏊\n" : "/#{gym} 💪"))
   end
   count
 end
