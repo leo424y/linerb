@@ -12,7 +12,6 @@ def handle_text_basic event, user_id, group_id, name, origin_message
   elsif user_id && (!skip_name.include? name)
     nickname = Nickname.find_by(nickname: name)
     place_id = handle_place_id name, name_uri, nickname
-    # handle_review place_id
 
     begin
       unless place_id.nil?
@@ -25,6 +24,8 @@ def handle_text_basic event, user_id, group_id, name, origin_message
 
           message_buttons_text = if_message_buttons_text name, opening_hour_info, offer_info
           reply_join_vip_info(name, opening_hour_info) if user_id && group_id && !(is_vip user_id)
+
+          handle_review place_id
         else
           message_buttons_text = '😬 請見詳情'
         end
