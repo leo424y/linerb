@@ -10,3 +10,13 @@ def if_message_buttons_text name, opening_hours, offer_info
     "#{opening_hours}#{offer_info}"
   end
 end
+
+def if_message_buttons_text_x name
+  if (is_cyc? name)
+    "#{count_exercise name}"
+  elsif is_tndcsc? name
+    "#{count_exercise '北運'}"
+  elsif is_tpsc? name
+    "#{p_tp_count name}"
+  end
+end
