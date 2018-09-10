@@ -23,8 +23,8 @@ def handle_text event, user_id, group_id, origin_message
   elsif (is_tndcsc? origin_message)
     reply_text event, (count_exercise '北運')
 
-  elsif (is_cyc? origin_message)
-    reply_text event, (count_exercise origin_message)
+  # elsif (is_cyc? origin_message)
+  #   reply_text event, (count_exercise origin_message)
 
   elsif origin_message == '口袋有洞'
     open_pocket event, user_id
