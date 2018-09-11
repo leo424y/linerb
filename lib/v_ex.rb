@@ -5,6 +5,8 @@ def count_exercise m
     p_count 'http://www.tssc.tw/', '.number-current', 400, 70
   elsif /\A(板運|板橋運動中心|板橋國民運動中心)\z/.match? m
     p_count 'http://www.bqsports.com.tw/zh-TW/onsitenum?wmode=opaque', '.flow_number', 400, 80
+  elsif /\A(平運|南平運動中心|桃園市南平運動中心)\z/.match? m
+    p_count 'https://www.npsc.com.tw/counter.txt', 'np', 150, 75
   elsif is_tpsc? m
     p_tp_count m
   else
@@ -41,6 +43,10 @@ def p_count url, selector, pool, gym
         count += ("#{l.content}".split.map{|x| x[/\d+/]}[0] + (index==1 ? "/#{pool} 🏊\n" : "/#{gym} 💪"))
       end
     end
+  elsif selector == 'np'
+    %x(curl "#{url}").split(',').each_with_index do |l, index|
+      count += ("#{l}".split.map{|x| x[/\d+/]}[0] + (index==1 ? "/#{pool} 🏊" : "/#{gym} 💪\n"))
+    end
   else
     doc.css(selector).each_with_index do |l, index|
       count += ("#{l.content}".split.map{|x| x[/\d+/]}[0] + (index==0 ? "/#{pool} 🏊\n" : "/#{gym} 💪"))
@@ -74,6 +80,7 @@ def is_tndcsc? name
     '北運', '北區運動中心', '北區國民運動中心', '台中市北區國民運動中心',
     '淡運', '淡水運動中心', '淡水國民運動中心',
     '板運', '板橋運動中心', '板橋國民運動中心',
+    '平運', '南平運動中心', '桃園市南平運動中心',
   ].include? name
 end
 
