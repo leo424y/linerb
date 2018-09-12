@@ -1,6 +1,7 @@
 def handle_button place_id, name, s_link, group_id, user_id
   random_info = [0, 1].sample
-  share_info_url = "#{L_DM}#{name_user user_id}推薦有開嗎"
+  # share_info_url = "#{L_DM}#{name_user user_id}推薦有開嗎"
+  share_info_url = "#{L_DM}麥當勞中港四店有開嗎？"
 
   suggest_button = case random_info
   when 0
