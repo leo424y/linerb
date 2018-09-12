@@ -10,7 +10,7 @@ L_LOCATION = "line://nv/location"
 L_SPONSOR = 'http://j.mp/open_sponsor'
 L_BOT_URL = 'http://j.mp/_kai'
 # 第一篇
-# L_OPINION = 'line://home/public/post?id=gxs2296l&postId=1153267270308077285'
+L_OPINION = 'line://home/public/post?id=gxs2296l&postId=1153267270308077285'
 
 # 集點活動文
-L_OPINION = 'line://home/public/post?id=gxs2296l&postId=1153518766808074504'
+# L_OPINION = 'line://home/public/post?id=gxs2296l&postId=1153518766808074504'
