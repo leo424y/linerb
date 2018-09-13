@@ -15,5 +15,9 @@ def handle_event event, user_id, group_id
   when Line::Bot::Event::Message
     Group.create(group_id: group_id, status: 'join') unless group
     handle_message event, user_id, group_id
+
+  when Line::Bot::Event::Beacon
+    reply_text(event, "[BEACON]\n#{JSON.generate(event['beacon'])}")
+
   end
 end
