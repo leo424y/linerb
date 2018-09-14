@@ -64,12 +64,14 @@ def add_thumbnail_url title, my_hash
   image_url = case title
   when '口袋有洞'
     "#{MY_DOMAIN}/img/kai.png"
+  else
+    "#{MY_DOMAIN}/img/meow001.png"
   end
 
-  if ['口袋有洞'].include? title
-    my_hash[:template][:thumbnailImageUrl] = image_url
-    my_hash[:template][:imageAspectRatio] = 'square'
-  end
+  # if ['口袋有洞'].include? title
+  my_hash[:template][:thumbnailImageUrl] = image_url
+  my_hash[:template][:imageAspectRatio] = 'square'
+  # end
 
   my_hash
 end
