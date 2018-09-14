@@ -52,18 +52,24 @@ def message_buttons_h title, text, actions
     altText: '...',
     template: {
       type: 'buttons',
-      title: title,
-      text: text,
-      actions: actions,
+      title: 'title',
+      text: 'text',
+      actions: 'actions',
     }
   }
+  add_thumbnail_url title, my_hash
 end
 
-def to_thumbnail_url title
-  case title
+def add_thumbnail_url title, my_hash
+  image_url = case title
   when '口袋有洞'
     "#{MY_DOMAIN}/img/kai.png"
-  else
-    ''
   end
+
+  if ['口袋有洞'].include? title
+    my_hash[:template][:thumbnailImageUrl] = image_url
+    my_hash[:template][:imageAspectRatio] = 'square'
+  end
+  
+  my_hash
 end
