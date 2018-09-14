@@ -66,7 +66,7 @@ def add_thumbnail_url title, my_hash
   when '口袋有洞'
     "#{MY_DOMAIN}/img/kai.png"
   else
-    "#{MY_DOMAIN}/img/meow001.png"
+    ["#{MY_DOMAIN}/img/meow001.png", "#{MY_DOMAIN}/img/meow002.png"].sample(1)[0]
   end
 
   # if ['口袋有洞'].include? title
