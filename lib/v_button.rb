@@ -5,7 +5,7 @@ def handle_button place_id, name, s_link, group_id, user_id
 
   suggest_button = case random_info
   when 0
-    { label: "👨‍👩‍👧‍👦 轉傳好友#{name}的資訊" , type: 'uri', uri: URI.escape(
+    { label: "👨‍👩‍👧‍👦 轉傳#{name}" , type: 'uri', uri: URI.escape(
 "#{L_MSG_TEXT}加有開嗎好友，查詢店家營業時間不落空。#{share_info_url}")}
 
     # if group_id
