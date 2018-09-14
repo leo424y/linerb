@@ -44,13 +44,14 @@ end
 
 def message_buttons_h title, text, actions
   # imageAspectRatio: rectangle / square
-  {
+  # thumbnailImageUrl: "#{to_thumbnail_url title}",
+  # imageAspectRatio: 'square',
+
+  my_hash = {
     type: 'template',
     altText: '...',
     template: {
       type: 'buttons',
-      thumbnailImageUrl: "#{to_thumbnail_url title}",
-      imageAspectRatio: 'square',
       title: title,
       text: text,
       actions: actions,
