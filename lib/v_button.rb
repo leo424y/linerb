@@ -52,9 +52,9 @@ def message_buttons_h title, text, actions
     altText: '...',
     template: {
       type: 'buttons',
-      title: 'title',
-      text: 'text',
-      actions: 'actions',
+      title: title,
+      text: text,
+      actions: actions,
     }
   }
   add_thumbnail_url title, my_hash
@@ -70,6 +70,6 @@ def add_thumbnail_url title, my_hash
     my_hash[:template][:thumbnailImageUrl] = image_url
     my_hash[:template][:imageAspectRatio] = 'square'
   end
-  
+
   my_hash
 end
