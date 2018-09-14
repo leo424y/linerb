@@ -43,12 +43,14 @@ def handle_button place_id, name, s_link, group_id, user_id
 end
 
 def message_buttons_h title, text, actions
+  # imageAspectRatio: rectangle / square
   {
     type: 'template',
     altText: '...',
     template: {
       type: 'buttons',
       thumbnailImageUrl: "#{to_thumbnail_url title}",
+      imageAspectRatio: 'square',
       title: title,
       text: text,
       actions: actions,
