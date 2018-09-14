@@ -61,4 +61,5 @@ def to_thumbnail_url title
   when '口袋有洞'
     "#{MY_DOMAIN}/img/kai.png"
   end
+  "#{MY_DOMAIN}/img/kai.png"
 end
