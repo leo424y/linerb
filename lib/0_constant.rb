@@ -14,3 +14,4 @@ L_OPINION = 'line://home/public/post?id=gxs2296l&postId=1153267270308077285'
 
 # 集點活動文
 # L_OPINION = 'line://home/public/post?id=gxs2296l&postId=1153518766808074504'
+MY_DOMAIN = "http://linerb.herokuapp.com/"
