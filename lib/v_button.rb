@@ -1,11 +1,11 @@
 def handle_button place_id, name, s_link, group_id, user_id
   random_info = [0, 1].sample
   # share_info_url = "#{L_DM}#{name_user user_id}推薦有開嗎"
-  share_info_url = "#{L_DM}麥當勞中港四店有開嗎？"
+  share_info_url = "#{L_DM}#{name}有開嗎？"
 
   suggest_button = case random_info
   when 0
-    { label: '👍 推薦', type: 'uri', uri: URI.escape(
+    { label: "👨‍👩‍👧‍👦 轉傳好友#{name}的資訊" , type: 'uri', uri: URI.escape(
 "#{L_MSG_TEXT}加有開嗎好友，查詢店家營業時間不落空。#{share_info_url}")}
 
     # if group_id
@@ -24,7 +24,7 @@ def handle_button place_id, name, s_link, group_id, user_id
   end
 
   nearby_button = if place_id
-    { label: "💁 #{name}附近", type: 'message', text: "#{name}附近" }
+    { label: "💁 探索#{name}附近", type: 'message', text: "#{name}附近" }
   else
     { label: '💁 我附近', type: 'uri', uri: URI.escape(L_LOCATION) }
   end
@@ -32,7 +32,7 @@ def handle_button place_id, name, s_link, group_id, user_id
   level_up_button = if group_id
     { label: '⭐ 使用有開嗎', type: 'uri', uri: URI.escape("#{share_info_url}")}
   else
-    { label: "👜 #{name}放口袋", type: 'message', text: "#{name}放口袋" }
+    { label: "👜 收藏#{name}進口袋", type: 'message', text: "#{name}放口袋" }
   end
 
   [
