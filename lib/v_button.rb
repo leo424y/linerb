@@ -62,5 +62,7 @@ def to_thumbnail_url title
   case title
   when '口袋有洞'
     "#{MY_DOMAIN}/img/kai.png"
+  else
+    ''
   end
 end
