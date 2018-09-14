@@ -45,7 +45,7 @@ end
 def message_buttons_h title, text, actions
   {
     type: 'template',
-    thumbnailImageUrl: "#{to_thumbnail_url text}",
+    thumbnailImageUrl: "#{to_thumbnail_url title}",
     altText: '...',
     template: {
       type: 'buttons',
@@ -56,9 +56,9 @@ def message_buttons_h title, text, actions
   }
 end
 
-def to_thumbnail_url text
-  case text
+def to_thumbnail_url title
+  case title
   when '口袋有洞'
-    "img/kai.png" 
+    "img/kai.png"
   end
 end
