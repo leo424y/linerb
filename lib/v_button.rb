@@ -70,7 +70,7 @@ def add_thumbnail_url title, my_hash
 
   # if ['口袋有洞'].include? title
   my_hash[:template][:thumbnailImageUrl] = image_url
-  my_hash[:template][:imageAspectRatio] = 'square'
+  my_hash[:template][:imageAspectRatio] = 'rectangle'
   # end
 
   my_hash
