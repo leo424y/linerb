@@ -43,7 +43,7 @@ def handle_button place_id, name, s_link, group_id, user_id
   ].compact
 end
 
-def message_buttons_h title, text, actions
+def message_buttons_h title, text, actions, open_close = '0'
   # imageAspectRatio: rectangle / square
   # thumbnailImageUrl: "#{to_thumbnail_url title}",
   # imageAspectRatio: 'square',
@@ -58,15 +58,28 @@ def message_buttons_h title, text, actions
       actions: actions,
     }
   }
-  add_thumbnail_url title, my_hash
+  add_thumbnail_url title, my_hash, open_close
 end
 
-def add_thumbnail_url title, my_hash
+def add_thumbnail_url title, my_hash, open_close
   image_url = case title
   when '口袋有洞'
-    "#{MY_DOMAIN}/img/kai.png"
+    "#{MY_DOMAIN}/img/meow007.png"
+  when '開民雷達'
+    "#{MY_DOMAIN}/img/meow008.png"
   else
-    ["#{MY_DOMAIN}/img/meow001.png", "#{MY_DOMAIN}/img/meow002.png"].sample(1)[0]
+    [
+      "#{MY_DOMAIN}/img/meow001.png",
+      "#{MY_DOMAIN}/img/meow002.png"
+    ].sample(1)[0]
+  end
+
+  if open_close.match?(/現在有開/)
+    "#{MY_DOMAIN}/img/meow003.png"
+  elsif open_close.match?(/現在沒開/)
+    "#{MY_DOMAIN}/img/meow004.png"
+  elsif open_close.match?(/請見詳情/)
+    "#{MY_DOMAIN}/img/meow005.png"
   end
 
   # if ['口袋有洞'].include? title

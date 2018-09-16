@@ -23,7 +23,8 @@ def handle_text_end_with event, user_id, group_id, origin_message, name
       end
     end
   when '放口袋'
-    reply_text(event, (handle_pocket user_id, name))
+    # reply_text(event, (handle_pocket user_id, name))
+    reply_content(event, message_buttons_h(title, text, []))
 
   when '？！'
     text = wiki_content event, name
