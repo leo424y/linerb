@@ -74,11 +74,11 @@ def add_thumbnail_url title, my_hash, open_close
     ].sample(1)[0]
   end
 
-  if open_close.match?(/現在有開/)
+  if open_close.include?('現在有開')
     "#{MY_DOMAIN}/img/meow003.png"
-  elsif open_close.match?(/現在沒開/)
+  elsif open_close.include?('現在沒開')
     "#{MY_DOMAIN}/img/meow004.png"
-  elsif open_close.match?(/請見詳情/)
+  elsif open_close.include?('請見詳情')
     "#{MY_DOMAIN}/img/meow005.png"
   end
 
