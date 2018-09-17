@@ -34,7 +34,7 @@ def handle_text_basic event, user_id, group_id, name, origin_message
 
           message_buttons_text = "#{opening_hour_info}#{offer_info}"
 
-          reply_join_vip_info(name, opening_hour_info) if user_id && group_id && !(is_vip user_id)
+          reply_join_vip_info(event, name, opening_hour_info) if user_id && group_id && !(is_vip user_id)
 
           handle_review place_id
 

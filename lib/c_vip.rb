@@ -7,7 +7,7 @@ def add_vip(event, user_id, group_id, opening_hours)
   "#{name_user user_id}#{IO.readlines("data/promote_check").join}"
 end
 
-def reply_join_vip_info name, opening_hours
+def reply_join_vip_info event, name, opening_hours
   message = [
     "【#{name}】#{opening_hours}",
     add_vip(event, user_id, group_id, opening_hours),
