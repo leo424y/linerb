@@ -1,10 +1,10 @@
 def handle_pocket user_id, name
-  if (is_vip user_id)
-    Pocket.create(user_id: user_id, place_name: name)
-    "👜 已將#{name}放口袋"
-  else
-    '🥇 請試著邀請【有開嗎】進入任何群組，並成功問到一家有開的店，即能啟用放口袋功能'
-  end
+  # if (is_vip user_id)
+  Pocket.create(user_id: user_id, place_name: name)
+  "👜 已將#{name}放口袋"
+  # else
+  #   '🥇 請試著邀請【有開嗎】進入任何群組，並成功問到一家有開的店，即能啟用放口袋功能'
+  # end
 end
 
 def open_pocket event, user_id
