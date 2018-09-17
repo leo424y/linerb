@@ -3,7 +3,7 @@ def handle_location(event, user_id, group_id, lat, lng, origin_name)
     results = handle_nearby(lat, lng, origin_name)
     result_message = results.empty? ? "🗽 #{origin_name}附近尚無開民蹤影，趕快來當第一吧！" : "🎐 #{origin_name}附近開民在問的地點有..."
     actions_a = results.map { |r|
-      { label: "📍 #{r[0..20]}" , type: 'message', text: "#{r}有開嗎？" }
+      { label: "📍 #{r[0..12]}" , type: 'message', text: "#{r}有開嗎？" }
     }.compact
     if actions_a.empty?
       reply_text(event, "🗽 #{origin_name}附近尚無開民蹤影，趕快來當第一吧！")
