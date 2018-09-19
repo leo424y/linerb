@@ -1,6 +1,6 @@
 def google_place_by place_id, name
   fields = if name.include? '水電'
-    'name,type,address_component,geometry,opening_hours,formatted_address, formatted_phone_number'
+    'name,type,address_component,geometry,opening_hours,formatted_address,formatted_phone_number'
   else
     'name,type,address_component,geometry,opening_hours,formatted_address'
   end
