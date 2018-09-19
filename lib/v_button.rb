@@ -25,7 +25,7 @@ def handle_button place_id, name, s_link, group_id, user_id
 
   nearby_button = if name.include? '水電'
     phone_number = Place.find_by(place_id: place_id).formatted_phone_number
-    { label: "💁 撥打", type: 'uri', uri: "#{phone_number}" }
+    { label: "💁 撥打", type: 'postback', data: "請撥 #{phone_number}" }
   elsif place_id
     { label: "💁 探索#{name}附近", type: 'message', text: "#{name}附近" }
   else
