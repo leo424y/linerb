@@ -23,7 +23,10 @@ def handle_button place_id, name, s_link, group_id, user_id
   #   { label: "👑 開王：#{name_king_user}", type: 'message', text: "開王榜" }
   end
 
-  nearby_button = if place_id
+  nearby_button = if name.include? '水電'
+    phone_number = Place.find_by(place_id: place_id).formatted_phone_number
+    { label: "💁 撥打", type: 'uri', text: "tel:#{phone_number}" }
+  elsif place_id
     { label: "💁 探索#{name}附近", type: 'message', text: "#{name}附近" }
   else
     { label: '💁 我附近', type: 'uri', uri: URI.escape(L_LOCATION) }

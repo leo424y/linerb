@@ -25,7 +25,7 @@ def handle_text_basic event, user_id, group_id, name, origin_message
         message_buttons_text = count_exercise name
 
       elsif !place_id.nil?
-        r = google_place_by place_id
+        r = google_place_by place_id, name
         control_place user_id, group_id, place_id, r
 
         if (!r[:open_now].to_s.empty? && (r[:open_now].to_s == 'true' || r[:open_now].to_s == 'false'))

@@ -1,5 +1,10 @@
-def google_place_by place_id
-  place_id_url = "#{GG_DETAIL}?placeid=#{place_id}&language=zh-TW&fields=name,type,address_component,geometry,opening_hours,formatted_address&key=#{GMAP_KEY}"
+def google_place_by place_id, name
+  fields = if name.include? '水電'
+    'name,type,address_component,geometry,opening_hours,formatted_address, formatted_phone_number'
+  else
+    'name,type,address_component,geometry,opening_hours,formatted_address'
+  end
+  place_id_url = "#{GG_DETAIL}?placeid=#{place_id}&language=zh-TW&fields=#{fields}&key=#{GMAP_KEY}"
   place_id_doc = JSON.parse(open(place_id_url).read, headers: true)
   r = place_id_doc['result']
 
@@ -24,6 +29,6 @@ def google_place_by place_id
       open_now: r['opening_hours']['open_now'],
       periods: r['opening_hours']['periods'],
       weekday_text: r['opening_hours']['weekday_text'],
-    }    
+    }
   end
 end
