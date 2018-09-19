@@ -25,6 +25,9 @@ def handle_text_end_with event, user_id, group_id, origin_message, name
   when '放口袋'
     # reply_text(event, (handle_pocket user_id, name))
     reply_content(event, message_buttons_h('放口袋', (handle_pocket user_id, name), [{ label: '📍 詳情', type: 'uri', uri: URI.escape(%x(ruby bin/bitly.rb "#{GG_SEARCH}#{name}").chomp) }]))
+  when '里長'
+    text = Father.where("name like ?", "%#{name}%").first.join('\n')
+    reply_text(event, text)
 
   when '？！'
     text = wiki_content event, name
