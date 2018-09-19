@@ -11,6 +11,7 @@ def google_place_by place_id, name
   if r['opening_hours'].to_s.empty?
     {
       formatted_address: r['formatted_address'],
+      formatted_phone_number: r['formatted_phone_number'],
       address_components: r['address_components'],
       name_sys: r['name'],
       lat: r['geometry']['location']['lat'],
@@ -20,6 +21,7 @@ def google_place_by place_id, name
   else
     {
       formatted_address: r['formatted_address'],
+      formatted_phone_number: r['formatted_phone_number'],
       address_components: r['address_components'],
       name_sys: r['name'],
       lat: r['geometry']['location']['lat'],
