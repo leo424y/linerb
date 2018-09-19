@@ -8,6 +8,10 @@ def google_place_by place_id, name
   place_id_doc = JSON.parse(open(place_id_url).read, headers: true)
   r = place_id_doc['result']
 
+  if r['formatted_phone_number']
+    r['formatted_phone_number'] = r['formatted_phone_number'].gsub(" ","")
+  end
+
   if r['opening_hours'].to_s.empty?
     {
       formatted_address: r['formatted_address'],

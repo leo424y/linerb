@@ -3,6 +3,13 @@ def handle_button place_id, name, s_link, group_id, user_id
   # share_info_url = "#{L_DM}#{name_user user_id}推薦有開嗎"
   share_info_url = "#{L_DM}#{name}有開嗎？"
 
+  detail_button = if name.include? '運動中心'
+    { label: '🔁 再查一次', type: "message", text: "#{name}有開嗎？" }
+  else
+    { label: '📍 詳情', type: 'uri', uri: URI.escape(s_link) }
+  end
+
+
   suggest_button = case random_info
   when 0
     { label: "👨‍👩‍👧‍👦 轉傳#{name}" , type: 'uri', uri: URI.escape(
@@ -39,7 +46,7 @@ def handle_button place_id, name, s_link, group_id, user_id
   end
 
   [
-    { label: '📍 詳情', type: 'uri', uri: URI.escape(s_link) },
+    detail_button,
     nearby_button,
     suggest_button,
     level_up_button,
