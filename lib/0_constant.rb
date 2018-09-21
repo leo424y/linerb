@@ -7,8 +7,11 @@ L_MSG_TEXT = "line://msg/text/?"
 L_DM = "line://oaMessage/@gxs2296l/?"
 L_DM_DEMO = "line://oaMessage/@gxs2296l/?有開嗎指令"
 L_LOCATION = "line://nv/location"
+
 L_SPONSOR = 'http://j.mp/open_sponsor'
 L_STICKER = 'https://store.line.me/stickershop/product/4719845'
+L_COACH = 'http://j.mp/y-ufly'
+
 L_BOT_URL = 'http://j.mp/_kai'
 
 # 第一篇

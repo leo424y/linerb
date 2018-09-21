@@ -39,6 +39,8 @@ def handle_button place_id, name, s_link, group_id, user_id
 
   level_up_button = if group_id
     { label: '⭐ 使用有開嗎', type: 'uri', uri: URI.escape("#{share_info_url}")}
+  elsif name.include? '運動中心'
+    { label: '💪 找教練', type: 'uri', uri: URI.escape(L_COACH) }
   else
     { label: "👜 收藏#{name}", type: 'message', text: "#{name}放口袋" }
   end
