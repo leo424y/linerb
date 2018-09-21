@@ -9,7 +9,6 @@ def handle_button place_id, name, s_link, group_id, user_id
     { label: '📍 詳情', type: 'uri', uri: URI.escape(s_link) }
   end
 
-
   suggest_button = case random_info
   when 0
     { label: "👨‍👩‍👧‍👦 轉傳#{name}" , type: 'uri', uri: URI.escape(
