@@ -26,10 +26,11 @@ def handle_text_end_with event, user_id, group_id, origin_message, name
     # reply_text(event, (handle_pocket user_id, name))
     reply_content(event, message_buttons_h('放口袋', (handle_pocket user_id, name), [{ label: '📍 詳情', type: 'uri', uri: URI.escape(%x(ruby bin/bitly.rb "#{GG_SEARCH}#{name}").chomp) }]))
   when '里長'
-    father = Father.where("name like ?", "%#{name}里").first
-    text = "🏠 #{father.name}\n☎️ 04#{father.phone}\n📍 #{%x(ruby bin/bitly.rb "#{GG_SEARCH}#{father.address}").chomp}"
+    fathers = Father.where("name like ?", "%#{name}里")
+    fathers.each do |father|
+      text << "🏠 #{father.name}\n☎️ 04#{father.phone}\n📍 #{%x(ruby bin/bitly.rb "#{GG_SEARCH}#{father.address}").chomp}"
+    end
     reply_text(event, text)
-
   when '？！'
     text = wiki_content event, name
     reply_text(event, text) if text
