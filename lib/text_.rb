@@ -10,7 +10,7 @@ def handle_text event, user_id, group_id, origin_message
   elsif (origin_message.length > 15) && (origin_message.match(/想|覺|聽|看|聞|把/) )
     tags = p_tag origin_message
     refs = p_ref origin_message
-    Issue.create(user_id: user_id, group_id: group_id, title: origin_message, tag: tags, ref: refs)
+    Issue.create(user_id: user_id, group_id: group_id, title: origin_message.delete('https://', 'http://').delete(refs), tag: tags, ref: refs)
 
   elsif origin_message.is_number? && !group_id
     place = Store.where(info: user_id).last
@@ -27,6 +27,9 @@ def handle_text event, user_id, group_id, origin_message
 
   elsif origin_message == '口袋有洞'
     open_pocket event, user_id
+
+  elsif origin_message == '居民意見' || origin_message == '居民觀察'
+    open_issue event, user_id, group_id, origin_message
 
   elsif origin_message == '開王榜'
     reply_text event, list_king_user_names
