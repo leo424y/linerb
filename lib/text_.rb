@@ -9,8 +9,8 @@ def handle_text event, user_id, group_id, origin_message
 
   elsif (origin_message.length > 15) && (origin_message.match(/想|覺|聽|看|聞|把/) )
     tags = p_tag origin_message
-    refs = p_ref origin_message
-    Issue.create(user_id: user_id, group_id: group_id, title: origin_message.gsub('https://', '').gsub('http://', '').gsub(refs,''), tag: tags, ref: refs)
+    # refs = p_ref origin_message .gsub('https://', '').gsub('http://', '').gsub(refs,'')
+    Issue.create(user_id: user_id, group_id: group_id, title: origin_message, tag: tags)
 
   elsif origin_message.is_number? && !group_id
     place = Store.where(info: user_id).last
