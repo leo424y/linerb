@@ -7,8 +7,10 @@ def handle_text event, user_id, group_id, origin_message
   if origin_message.end_with?('里長', '附近', '推薦有開嗎', '放口袋', '？！')
     handle_text_end_with event, user_id, group_id, origin_message, name
 
-  # elsif !group_id && wiki_text
-  #   reply_text event, wiki_text
+  elsif (origin_message > 15) && (origin_message.match?(/想|覺|聽|看|聞|把/) )
+    tags = p_tag origin_message
+    refs = p_ref origin_message
+    Issue.create(user_id: user_id, group_id: group_id, title: origin_message, tag: tags, ref: refs)
 
   elsif origin_message.is_number? && !group_id
     place = Store.where(info: user_id).last
@@ -39,5 +41,23 @@ def handle_text event, user_id, group_id, origin_message
   elsif (origin_message == '有開嗎' || origin_message == '有開嗎指令') || !group_id
     reply_text event, IO.readlines("data/intro").map(&:chomp)
 
+  end
+end
+
+def p_tag origin_message
+  if origin_message.match?(/聽|看|聞|把/)
+    'issue'
+  elsif origin_message.match?(/想|覺/)
+    'idea'
+  else
+    ''
+  end
+end
+
+def p_ref origin_message
+  if origin_message.match?(/http|https/)
+    origin_message.split('//').find{|x|x.match(/\./)}
+  else
+    ''
   end
 end

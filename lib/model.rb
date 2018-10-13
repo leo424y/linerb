@@ -3,6 +3,7 @@ class Boom < ActiveRecord::Base; end
 class Father < ActiveRecord::Base; end
 class Group < ActiveRecord::Base; end
 class Idea < ActiveRecord::Base; end
+class Issue < ActiveRecord::Base; end
 class Log < ActiveRecord::Base; end
 class Nickname < ActiveRecord::Base; end
 class Offer < ActiveRecord::Base; end
@@ -23,6 +24,7 @@ def to_model yy
     Father,
     Group,
     Idea,
+    Issue,
     Nickname,
     Offer,
     Place,
