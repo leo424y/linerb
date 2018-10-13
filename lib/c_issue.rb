@@ -1,12 +1,11 @@
 def open_issue event, user_id, group_id, origin_message
   tag = origin_message.end_with?('意見') ? 'idea' : 'issue'
-  issue = Issue.where(user_id: user_id, group_id: group_id, tag: tag).last(3).pluck(:title, :refs)
+  issue = Issue.where(user_id: user_id, group_id: group_id, tag: tag).last(3).pluck(:title, :ref)
   p issue
   if issue
     msgs = []
     issue.each do |p|
-      msgs << "🙋 #{p[0][0..12]}... http://#{(p[1])}"
-      p msgs
+      msgs << "🙋 #{p[0]} http://#{(p[1])}"
     end
     # actions_a = issue.map { |p|
     #   {label: "🙋 #{p[0][0..12]}...", type: 'uri', uri: "http://#{(p[1])}"}
