@@ -45,9 +45,9 @@ def handle_text event, user_id, group_id, origin_message
 end
 
 def p_tag origin_message
-  if origin_message.match?(/聽|看|聞|把/)
+  if origin_message.match(/聽|看|聞|把/)
     'issue'
-  elsif origin_message.match?(/想|覺/)
+  elsif origin_message.match(/想|覺/)
     'idea'
   else
     ''
@@ -55,7 +55,7 @@ def p_tag origin_message
 end
 
 def p_ref origin_message
-  if origin_message.match?(/http|https/)
+  if origin_message.match(/http|https/)
     origin_message.split('//').find{|x|x.match(/\./)}
   else
     ''
