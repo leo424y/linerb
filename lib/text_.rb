@@ -7,7 +7,7 @@ def handle_text event, user_id, group_id, origin_message
   if origin_message.end_with?('里長', '附近', '推薦有開嗎', '放口袋', '？！')
     handle_text_end_with event, user_id, group_id, origin_message, name
 
-  elsif (origin_message.length > 15) && (origin_message.match(/想|覺得|感覺|聽|看|聞/) )
+  elsif (origin_message.length > 15) && (origin_message.match(/#{K_FIND}|#{K_FEEL}|#{K_HAVE}/) )
     tags = p_tag origin_message
     # refs = p_ref origin_message .gsub('https://', '').gsub('http://', '').gsub(refs,'')
     Issue.create(user_id: user_id, group_id: group_id, title: origin_message, tag: tags)
@@ -48,12 +48,12 @@ def handle_text event, user_id, group_id, origin_message
 end
 
 def p_tag origin_message
-  if origin_message.match(/聽|看|聞|發覺|發現/)
-    'issue'
-  elsif origin_message.match(/想|覺得|感覺/)
-    'idea'
-  elsif origin_message.match(/有|提供|可/)
+  if origin_message.match(/#{K_HAVE}/)
     'resource'
+  elsif origin_message.match(/#{K_FIND}/)
+    'issue'       
+  elsif origin_message.match(/#{K_FEEL}/)
+    'idea'
   else
     ''
   end
