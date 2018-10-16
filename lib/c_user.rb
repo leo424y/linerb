@@ -15,13 +15,12 @@ end
 
 def name_user id
   user = User.find_by(user_id: id)
-  display_name = user.display_name
-  unless display_name
+  unless user
     i = JSON.parse(client.get_profile(id).read_body)
     user.update(display_name: i['displayName'], status_message: i['statusMessage'])
     "#{i['displayName']}"
   else
-    "#{display_name}"
+    "#{user.display_name}"
   end
 end
 
