@@ -14,8 +14,8 @@ def name_king_user
 end
 
 def name_user id
-  user = User.find_by(user_id: id)
-  unless user
+  user = User.find_or_create_by(user_id: id)
+  unless user.display_name
     i = JSON.parse(client.get_profile(id).read_body)
     user.update(display_name: i['displayName'], status_message: i['statusMessage'])
     "#{i['displayName']}"

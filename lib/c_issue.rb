@@ -13,7 +13,7 @@ def open_issue event, user_id, group_id, origin_message
     msgs = []
     issue = (issue.count>5) ? issue[-5..-1] : issue
     issue.each do |p|
-      msgs << "🙋 #{name_user p[1]}: #{p[0]}"
+      msgs << "🙋 #{name_user p[1]}✏️ #{p[0]}"
     end
     # actions_a = issue.map { |p|
     #   {label: "🙋 #{p[0][0..12]}...", type: 'uri', uri: "http://#{(p[1])}"}
