@@ -52,6 +52,8 @@ def p_tag origin_message
     'issue'
   elsif origin_message.match(/想|覺得|感覺/)
     'idea'
+  elsif origin_message.match(/有|提供/)
+    'resource'
   else
     ''
   end

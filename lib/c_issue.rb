@@ -1,5 +1,13 @@
 def open_issue event, user_id, group_id, origin_message
-  tag = origin_message.end_with?('意見') ? 'idea' : 'issue'
+  tag = case origin_message[-2..-1]
+  when '意見'
+    'idea'
+  when '觀察'
+    'issue'
+  when '資源'
+    'resource'
+  end
+
   issue = Issue.where(group_id: group_id, tag: tag).pluck(:title, :user_id)
   if issue
     msgs = []
