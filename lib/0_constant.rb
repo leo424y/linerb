@@ -22,6 +22,6 @@ L_OPINION = 'line://home/public/post?id=gxs2296l&postId=1153267270308077285'
 MY_DOMAIN = "https://linerb.herokuapp.com/"
 
 # 關鍵字
-K_HAVE = '有|提供|可'
-K_FEEL = '想|覺得|感覺'
-K_FIND = '聽|看|聞|發覺|發現'
+K_HAVE = '我有|提供|我可'
+K_FEEL = '我想|覺得|感覺'
+K_FIND = '我聽|我看|我聞|發覺|發現'

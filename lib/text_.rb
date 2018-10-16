@@ -28,7 +28,7 @@ def handle_text event, user_id, group_id, origin_message
   elsif origin_message == '口袋有洞'
     open_pocket event, user_id
 
-  elsif origin_message == '居民意見' || origin_message == '居民觀察'
+  elsif origin_message == '居民意見' || origin_message == '居民觀察' || origin_message == '居民資源'
     open_issue event, user_id, group_id, origin_message
 
   elsif origin_message == '開王榜'
