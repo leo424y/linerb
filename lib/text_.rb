@@ -51,7 +51,7 @@ def p_tag origin_message
   if origin_message.match(/#{K_HAVE}/)
     'resource'
   elsif origin_message.match(/#{K_FIND}/)
-    'issue'       
+    'issue'
   elsif origin_message.match(/#{K_FEEL}/)
     'idea'
   else
