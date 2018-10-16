@@ -48,7 +48,7 @@ def handle_text event, user_id, group_id, origin_message
 end
 
 def p_tag origin_message
-  if origin_message.match(/聽|看|聞/)
+  if origin_message.match(/聽|看|聞|發覺|發現/)
     'issue'
   elsif origin_message.match(/想|覺得|感覺/)
     'idea'
