@@ -1,8 +1,9 @@
 def open_issue event, user_id, group_id, origin_message
   tag = origin_message.end_with?('意見') ? 'idea' : 'issue'
-  issue = Issue.where(group_id: group_id, tag: tag).last(10).pluck(:title, :user_id)
+  issue = Issue.where(group_id: group_id, tag: tag).pluck(:title, :user_id)
   if issue
     msgs = []
+    issue = issue.count>5 ? issue[-5..-1] : issue
     issue.each do |p|
       msgs << "🙋 #{name_user p[1]}: #{p[0]}"
     end
