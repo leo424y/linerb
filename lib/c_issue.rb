@@ -3,7 +3,7 @@ def open_issue event, user_id, group_id, origin_message
   issue = Issue.where(group_id: group_id, tag: tag).pluck(:title, :user_id)
   if issue
     msgs = []
-    issue = issue.count>5 ? issue[-5..-1] : issue
+    issue = (issue.count>5) ? issue[-5..-1] : issue
     issue.each do |p|
       msgs << "🙋 #{name_user p[1]}: #{p[0]}"
     end
