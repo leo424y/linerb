@@ -1,7 +1,6 @@
 def open_issue event, user_id, group_id, origin_message
   tag = origin_message.end_with?('意見') ? 'idea' : 'issue'
-  issue = Issue.where(user_id: user_id, group_id: group_id, tag: tag).last(3).pluck(:title, :user_id)
-  p issue
+  issue = Issue.where(group_id: group_id, tag: tag).last(10).pluck(:title, :user_id)
   if issue
     msgs = []
     issue.each do |p|
