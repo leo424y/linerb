@@ -46,8 +46,7 @@ def handle_text_end_with event, user_id, group_id, origin_message, name
     reply_text(event, text) if text
 
   when '+1'
-    nickname = Nickname.find_by(nickname: origin_message.chomp('+1'))
-    my_place = Place.find_by(place_id: nickname.place_id) if nickname
+    my_place = Place.find_by(place_name: origin_message.chomp('+1'))
     if my_place
       gamers = update_game user_id, group_id, my_place.place_name
       gamer_names = []
