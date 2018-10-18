@@ -39,8 +39,18 @@ def handle_text event, user_id, group_id, origin_message
 
   elsif origin_message == '上上下下左右左右BA'
     talks = Talk.where(group_id: group_id)
-    result = talks.count(:user_id)
-    reply_text event, result
+    user_ids = talks.pluck(:user_id)
+    result = []
+    # make the hash default to 0 so that += will work correctly
+    b = Hash.new(0)
+
+    # iterate over the array, counting duplicate entries
+    user_ids.each{|v| b[v] += 1}
+
+    b.each do |k, v|
+      result << "#{name_user k}#{v}"
+    end
+    reply_text event, result.join(' ')
 
   elsif (name.bytesize > 70 && !group_id)
     Idea.create(user_id: user_id, content: origin_message)
