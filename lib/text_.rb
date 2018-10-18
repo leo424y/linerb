@@ -37,6 +37,11 @@ def handle_text event, user_id, group_id, origin_message
   elsif origin_message == '開王榜'
     reply_text event, list_king_user_names
 
+  elsif origin_message == '上上下下左右左右BA'
+    talks = Talk.where(group_id: group_id)
+    result = talks.count(:user_id)
+    reply_text event, result
+
   elsif (name.bytesize > 70 && !group_id)
     Idea.create(user_id: user_id, content: origin_message)
     reply_text event, '感謝你提供建議，【有開嗎】因你的回饋將變得更好！'
