@@ -9,6 +9,15 @@ def handle_text_end_with event, user_id, group_id, origin_message, name
       reply_text event, "請先搜尋想去的地點+有開嗎，即可取得附近的好去處！"
     end
 
+  when '揪團'
+    nickname = Nickname.find_by(nickname: origin_message.chomp('揪團'))
+    my_place = Place.find_by(place_id: nickname.place_id) if nickname
+    if my_place
+      new_game(event, user_id, group_id, my_place.place_name)
+    else
+      reply_text event, "請先搜尋想去的地點+有開嗎，即可取得附近的好去處！"
+    end
+
   when '推薦有開嗎'
     if !group_id
       user_display_name = origin_message.chomp('推薦有開嗎')

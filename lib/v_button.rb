@@ -38,7 +38,7 @@ def handle_button place_id, name, s_link, group_id, user_id
   end
 
   level_up_button = if group_id
-    { label: "👨‍👩‍👧‍👦 揪#{name}", type: 'message', text: "揪#{name}"}
+    { label: "👨‍👩‍👧‍👦 揪#{name}", type: 'message', text: "#{name}揪團"}
     # { label: '⭐ 使用有開嗎', type: 'uri', uri: URI.escape("#{share_info_url}")}
   elsif name.include? '運動中心'
     { label: '👍 按有開嗎讚', type: 'uri', uri: URI.escape(L_FB_URL) }
