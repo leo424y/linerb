@@ -2,6 +2,8 @@ class Book < ActiveRecord::Base; end
 class Boom < ActiveRecord::Base; end
 class Father < ActiveRecord::Base; end
 class Group < ActiveRecord::Base; end
+class Game < ActiveRecord::Base; end
+class GameMember < ActiveRecord::Base; end
 class Idea < ActiveRecord::Base; end
 class Issue < ActiveRecord::Base; end
 class Log < ActiveRecord::Base; end
@@ -22,6 +24,8 @@ def to_model yy
     Book,
     Boom,
     Father,
+    Game,
+    GameMember,
     Group,
     Idea,
     Issue,

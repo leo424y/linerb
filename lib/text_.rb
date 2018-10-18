@@ -7,6 +7,9 @@ def handle_text event, user_id, group_id, origin_message
   if origin_message.end_with?('里長', '附近', '推薦有開嗎', '放口袋', '？！')
     handle_text_end_with event, user_id, group_id, origin_message, name
 
+  elsif origin_message.start_with?('揪')
+    handle_text_start_with event, user_id, group_id, origin_message, name
+
   elsif (origin_message.length > 15) && (origin_message.match(/#{K_FIND}|#{K_FEEL}|#{K_HAVE}/) )
     tags = p_tag origin_message
     # refs = p_ref origin_message .gsub('https://', '').gsub('http://', '').gsub(refs,'')

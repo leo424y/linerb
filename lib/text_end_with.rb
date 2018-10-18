@@ -1,5 +1,5 @@
 def handle_text_end_with event, user_id, group_id, origin_message, name
-  case origin_message.delete(name)
+  case origin_message.gsub(name, "")
   when '附近'
     nickname = Nickname.find_by(nickname: origin_message.chomp('附近'))
     my_place = Place.find_by(place_id: nickname.place_id) if nickname
@@ -36,5 +36,14 @@ def handle_text_end_with event, user_id, group_id, origin_message, name
     text = wiki_content event, name
     reply_text(event, text) if text
 
+  when '+1'
+    nickname = Nickname.find_by(nickname: origin_message.chomp('+1'))
+    my_place = Place.find_by(place_id: nickname.place_id) if nickname
+    if my_place
+      update_game user_id, group_id, place_name
+      reply_text(event, "#{place_name}加一成功") 
+    else
+      reply_text event, "請先搜尋想去的地點+有開嗎！"
+    end
   end
 end
