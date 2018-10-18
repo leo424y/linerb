@@ -40,8 +40,10 @@ def handle_text_end_with event, user_id, group_id, origin_message, name
     nickname = Nickname.find_by(nickname: origin_message.chomp('+1'))
     my_place = Place.find_by(place_id: nickname.place_id) if nickname
     if my_place
-      update_game user_id, group_id, place_name
-      reply_text(event, "#{place_name}加一成功") 
+      gamers = update_game user_id, group_id, place_name
+      gamer_names = []
+      gamer_names << gamers.each {|x| name_user x}
+      reply_text(event, "#{place_name}團加一成功，#{gamer_names.join(', ')}已參加")
     else
       reply_text event, "請先搜尋想去的地點+有開嗎！"
     end

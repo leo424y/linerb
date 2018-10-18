@@ -8,6 +8,7 @@ def handle_text event, user_id, group_id, origin_message
     handle_text_end_with event, user_id, group_id, origin_message, name
 
   elsif origin_message.start_with?('揪')
+    p '揪'
     handle_text_start_with event, user_id, group_id, origin_message, name
 
   elsif (origin_message.length > 15) && (origin_message.match(/#{K_FIND}|#{K_FEEL}|#{K_HAVE}/) )
