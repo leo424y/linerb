@@ -1,13 +1,14 @@
 def new_game event, user_id, group_id, place_name
+  p 'new_game'
   Game.create(
     user_id: user_id,
     group_id: group_id,
-    place_name: place_name,
+    place_name: place_name
   )
   reply_content(event, message_buttons_h(
     "#{place_name}開團", '來加一吧！',
     [
-      { label: '☝️ 加一', type: 'message', text: "#{place_name}+1" },
+      { label: '☝️ 加一', type: 'message', text: "#{place_name}+1" }
     ]))
   # reply_content(event, message_buttons_h(
   #   "#{place_name}團", '請選預計時間',
