@@ -21,7 +21,7 @@ end
 
 def update_game user_id, group_id, place_name
   game = Game.find_by(group_id: group_id, place_name: place_name)
-  GameMember.create(game_id: game.id, user_id: user_id)
-  
+  GameMember.find_or_create_by(game_id: game.id, user_id: user_id)
+
   GameMember.where(game_id: game.id).pluck(:user_id)
 end
