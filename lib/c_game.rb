@@ -1,4 +1,4 @@
-def new_game user_id, group_id, place_name
+def new_game event, user_id, group_id, place_name
   Game.create(
     user_id: user_id,
     group_id: group_id,
