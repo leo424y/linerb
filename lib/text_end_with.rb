@@ -53,7 +53,7 @@ def handle_text_end_with event, user_id, group_id, origin_message, name
       gamers = update_game user_id, group_id, my_place.place_name
       gamer_names = []
       gamers.each_with_index {|x, index| gamer_names << "#{index+1}. #{name_user(x)}"}
-      reply_text(event, "#{my_place.place_name}團加一成功\n#{gamer_names.join(", \n")}\n已參加")
+      reply_text(event, "#{my_place.place_name}團加一成功\n#{gamer_names.join("\n")}\n已參加")
     # else
     #   reply_text event, "請先搜尋想去的地點+有開嗎！"
     end
