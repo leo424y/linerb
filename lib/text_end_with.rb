@@ -5,8 +5,8 @@ def handle_text_end_with event, user_id, group_id, origin_message, name
     my_place = Place.find_by(place_id: nickname.place_id) if nickname
     if my_place
       handle_location(event, user_id, group_id, my_place.lat, my_place.lng, my_place.place_name)
-    else
-      reply_text event, "請先搜尋想去的地點+有開嗎，即可取得附近的好去處！"
+    # else
+    #   reply_text event, "請先搜尋想去的地點+有開嗎，即可取得附近的好去處！"
     end
 
   when '揪團'
