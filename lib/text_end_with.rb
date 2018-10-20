@@ -11,11 +11,11 @@ def handle_text_end_with event, user_id, group_id, origin_message, name
 
   when '揪揪團'
     input = origin_message.chomp('揪揪團')
-    nickname = Nickname.find_by(nickname: input)
-    my_place = Place.find_by(place_id: nickname.place_id) if nickname
-    place_sub = my_place.nil? ? input : my_place.place_name
+    # nickname = Nickname.find_by(nickname: input)
+    # my_place = Place.find_by(place_id: nickname.place_id) if nickname
+    # place_sub = my_place.nil? ? input : my_place.place_name
 
-    new_game(event, user_id, group_id, place_sub)
+    new_game(event, user_id, group_id, input)
 
   when '推薦有開嗎'
     if !group_id
