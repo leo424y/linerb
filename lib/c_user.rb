@@ -18,10 +18,12 @@ def name_user id
   unless user.display_name
     i = JSON.parse(client.get_profile(id).read_body)
     user.update(display_name: i['displayName'], status_message: i['statusMessage'])
-    "#{i['displayName']}"
+    result = "#{i['displayName']}"
   else
-    "#{user.display_name}"
+    result = "#{user.display_name}"
   end
+
+  result=='' ? random_emoji : result
 end
 
 def user_info id
@@ -35,4 +37,8 @@ def user_info id
   else
     "#{display_name} #{status_message}"
   end
+end
+
+def random_emoji
+  %w(🐵 🐶 🐺 🦊 🐱 🦁 🐯 🐴 🦄 🐮 🐷 🐭 🐹 🐰 🐻 🐼 🐨 🐔 🐲 🐸 🐧 🐤).sample
 end
