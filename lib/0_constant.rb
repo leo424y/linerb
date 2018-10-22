@@ -12,8 +12,8 @@ L_SPONSOR = 'http://j.mp/open_sponsor'
 L_STICKER = 'http://bit.ly/y-meow'
 L_COACH = 'http://j.mp/y-ufly'
 
+# url 
 L_BOT_URL = 'http://j.mp/_kai'
-
 L_FB_URL = 'https://www.facebook.com/openmeow'
 
 # 第一篇
