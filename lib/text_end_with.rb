@@ -11,10 +11,6 @@ def handle_text_end_with event, user_id, group_id, origin_message, name
 
   when '揪揪團'
     input = origin_message.chomp('揪揪團')
-    # nickname = Nickname.find_by(nickname: input)
-    # my_place = Place.find_by(place_id: nickname.place_id) if nickname
-    # place_sub = my_place.nil? ? input : my_place.place_name
-
     new_game(event, user_id, group_id, input)
 
   when '推薦有開嗎'
@@ -44,17 +40,11 @@ def handle_text_end_with event, user_id, group_id, origin_message, name
     text = wiki_content event, name
     reply_text(event, text) if text
 
-  when '+1'
+  when '++1'
     input = origin_message.chomp('+1')
-    nickname = Nickname.find_by(nickname: input)
-    my_place = nickname ? Place.find_by(place_id: nickname.place_id) : Place.find_by(place_name: input)
-    if my_place
-      gamers = update_game user_id, group_id, my_place.place_name
-      gamer_names = []
-      gamers.each_with_index {|x, index| gamer_names << "#{index+1}. #{name_user(x)}"}
-      reply_text(event, "#{my_place.place_name}團加一成功\n#{gamer_names.join("\n")}\n已參加")
-    # else
-    #   reply_text event, "請先搜尋想去的地點+有開嗎！"
-    end
+    gamers = update_game user_id, group_id, my_place.place_name
+    gamer_names = []
+    gamers.each_with_index {|x, index| gamer_names << "#{index+1}. #{name_user(x)}"}
+    reply_text(event, "#{my_place.place_name}團加一成功\n#{gamer_names.join("\n")}\n已參加")
   end
 end
