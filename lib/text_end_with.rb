@@ -40,8 +40,8 @@ def handle_text_end_with event, user_id, group_id, origin_message, name
     text = wiki_content event, name
     reply_text(event, text) if text
 
-  when '++1'
-    input = origin_message.chomp('++1')
+  when '加加一'
+    input = origin_message.chomp('加加一')
     gamers = update_game user_id, group_id, input
     gamer_names = []
     gamers.each_with_index {|x, index| gamer_names << "#{index+1}. #{name_user(x)}"}

@@ -41,8 +41,8 @@ def reply_game event, place_name, more
               "style": "primary",
               "action": {
                 "type": 'message',
-                "label": '☝️ ++1',
-                "text": "#{place_name}++1"
+                "label": '☝️ 加加一',
+                "text": "#{place_name}加加一"
               }
             }
           ]
