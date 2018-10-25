@@ -25,3 +25,6 @@ MY_DOMAIN = "https://linerb.herokuapp.com/"
 K_HAVE = '我有|提供|我可'
 K_FEEL = '我想|覺得|感覺'
 K_FIND = '我聽|我看|我聞|發覺|發現'
+
+# picture
+HORIZONTAL_THUMBNAIL_URL="#{MY_DOMAIN}/img/meow008.png"

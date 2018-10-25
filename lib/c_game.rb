@@ -19,6 +19,12 @@ def new_game event, user_id, group_id, place_name
           }
         ]
       },
+      hero: {
+        type: "image",
+        url: HORIZONTAL_THUMBNAIL_URL,
+        size: "full",
+        aspectRatio: "4:3"
+      },
       body: {
         type: "box",
         layout: "vertical",
