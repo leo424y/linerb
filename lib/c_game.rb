@@ -28,7 +28,12 @@ def reply_game event, place_name, more
           [
             {
               "type": "text",
-              "text": "#{place_name}團#{more}",
+              "text": "#{place_name}團",
+              "wrap": false
+            },
+            {
+              "type": "text",
+              "text": ".#{more}",
               "wrap": false
             },
             {
@@ -38,15 +43,6 @@ def reply_game event, place_name, more
                 "type": 'message',
                 "label": '☝️ ++1',
                 "text": "#{place_name}++1"
-              }
-            },
-            {
-              "type": "button",
-              "style": "secondary",
-              "action": {
-                "type": "uri",
-                "label": "📍 位置",
-                "uri": URI.escape("#{GG_SEARCH}#{place_name}")
               }
             }
           ]
