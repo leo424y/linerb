@@ -9,50 +9,40 @@ def new_game event, user_id, group_id, place_name
     type: "flex",
     altText: "this is a flex message",
     contents: {
-      type: "bubble",
-      header: {
-        type: "box",
-        layout: "vertical",
-        contents: [
-          {
-            type: "text",
-            text: "揪揪團！來++1"
-          }
-        ]
-      },
-      hero: {
-        type: "image",
-        url: HORIZONTAL_THUMBNAIL_URL,
-        size: "full",
-        aspectRatio: "4:3"
-      },
-      body: {
-        type: "box",
-        layout: "vertical",
-        contents: [
-          {
-            type: "text",
-            text: "#{place_name}開團囉",
-          }
-        ]
-      },
-      footer: {
-        type: "box",
-        layout: "vertical",
-        contents: [
-          {
-            type: "button",
-            style: "primary",
-            action: {
-              type: 'message',
-              label: '☝️ ++1',
-              text: "#{place_name}++1"
+      "type": "bubble",
+      "body": {
+        "type": "box",
+        "layout": "vertical",
+        "spacing": "md",
+        "contents":
+          [
+            {
+              "type": "text",
+              "text": "#{place_name}開團囉"
+            },
+            {
+              "type": "button",
+              "style": "primary",
+              "action": {
+                "type": 'message',
+                "label": '☝️ ++1',
+                "text": "#{place_name}++1"
+              }
+            },
+            {
+              "type": "button",
+              "style": "secondary",
+              "action": {
+                "type": "uri",
+                "label": "📍 位置",
+                "uri": URI.escape("#{GG_SEARCH}#{place_name}")
+              }
             }
-          }
-        ]
+          ]
+        }
       }
-    }
-  })
+  }
+)
 end
 
 def update_game user_id, group_id, place_name
