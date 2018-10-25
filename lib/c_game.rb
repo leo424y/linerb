@@ -38,13 +38,15 @@ def new_game event, user_id, group_id, place_name
       },
       footer: {
         type: "box",
-        layout: "vertical",
+        layout: "horizontal",
         contents: [
           {
-            type: "text",
-            text: "Footer text",
-            align: "center",
-            color: "#888888"
+            type: "button",
+            style: "primary",
+            action: [
+              { label: '☝️ ++1', type: 'message', text: "#{place_name}++1" },
+              { label: '📍 位置', type: 'uri', uri: URI.escape("#{GG_SEARCH}#{place_name}") }
+            ]
           }
         ]
       }
