@@ -16,7 +16,7 @@ def new_game event, user_id, group_id, place_name
         contents: [
           {
             type: "text",
-            text: "Header text"
+            text: "揪揪團！來++1"
           }
         ]
       },
@@ -38,15 +38,16 @@ def new_game event, user_id, group_id, place_name
       },
       footer: {
         type: "box",
-        layout: "horizontal",
+        layout: "vertical",
         contents: [
           {
             type: "button",
             style: "primary",
-            action: [
-              { label: '☝️ ++1', type: 'message', text: "#{place_name}++1" },
-              { label: '📍 位置', type: 'uri', uri: URI.escape("#{GG_SEARCH}#{place_name}") }
-            ]
+            action: {
+              type: "uri",
+              label: "Go",
+              uri: "https://example.com"
+            }
           }
         ]
       }
