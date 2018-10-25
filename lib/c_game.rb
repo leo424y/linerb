@@ -32,7 +32,7 @@ def new_game event, user_id, group_id, place_name
         contents: [
           {
             type: "text",
-            text: "Body text",
+            text: "#{place_name}",
           }
         ]
       },
@@ -40,15 +40,8 @@ def new_game event, user_id, group_id, place_name
         type: "box",
         layout: "vertical",
         contents: [
-          {
-            type: "button",
-            style: "primary",
-            action: {
-              type: "uri",
-              label: "Go",
-              uri: "https://example.com"
-            }
-          }
+          { label: '☝️ ++1', type: 'message', text: "++1" },
+          { label: '📍 位置', type: 'uri', uri: URI.escape("#{GG_SEARCH}#{place_name}") }
         ]
       }
     }
