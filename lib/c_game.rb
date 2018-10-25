@@ -5,6 +5,17 @@ def new_game event, user_id, group_id, place_name
     place_name: place_name
   )
 
+  reply_game event, place_name, more
+end
+
+def update_game user_id, group_id, place_name
+  game = Game.find_by(group_id: group_id, place_name: place_name)
+  GameMember.find_or_create_by(game_id: game.id, user_id: user_id)
+
+  GameMember.where(game_id: game.id).pluck(:user_id)
+end
+
+def reply_game event, place_name, more
   reply_content(event, {
     type: "flex",
     altText: "this is a flex message",
@@ -18,7 +29,7 @@ def new_game event, user_id, group_id, place_name
           [
             {
               "type": "text",
-              "text": "#{place_name}開團囉"
+              "text": "#{place_name}團\n#{more}"
             },
             {
               "type": "button",
@@ -41,13 +52,6 @@ def new_game event, user_id, group_id, place_name
           ]
         }
       }
-  }
-)
-end
-
-def update_game user_id, group_id, place_name
-  game = Game.find_by(group_id: group_id, place_name: place_name)
-  GameMember.find_or_create_by(game_id: game.id, user_id: user_id)
-
-  GameMember.where(game_id: game.id).pluck(:user_id)
+    }
+  )
 end
