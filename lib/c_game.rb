@@ -28,12 +28,7 @@ def reply_game event, place_name, more
           [
             {
               "type": "text",
-              "text": "#{place_name}團",
-              "wrap": false
-            },
-            {
-              "type": "text",
-              "text": "#{more}",
+              "text": "#{place_name}團#{more}",
               "wrap": false
             },
             {
