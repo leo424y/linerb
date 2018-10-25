@@ -4,8 +4,7 @@ def new_game event, user_id, group_id, place_name
     group_id: group_id,
     place_name: place_name
   )
-
-  reply_game event, place_name, more
+  reply_game event, place_name, ''
 end
 
 def update_game user_id, group_id, place_name
