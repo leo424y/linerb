@@ -29,7 +29,7 @@ def reply_game event, place_name, more
           [
             {
               "type": "button",
-              "style": "primary",
+              "style": "secondary",
               "margin": "xxl",
               "height": "sm",
               "gravity": "top",
