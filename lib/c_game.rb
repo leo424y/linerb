@@ -14,8 +14,8 @@ def show_gamers user_id, group_id, game_id
 end
 
 def reply_game event, place_name, more
-  info_link = URI.extract(place_name)
-  place_name = place_name.gsub(info_link[0], '') if info_link[0]
+  # info_link = URI.extract(place_name)
+  # place_name = place_name.gsub(info_link[0], '') if info_link[0]
   reply_content(event, {
     type: "flex",
     altText: "this is a flex message",

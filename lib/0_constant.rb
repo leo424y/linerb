@@ -1,4 +1,5 @@
 GG_SEARCH = "https://www.google.com/maps/search/?api=1&query="
+G_SEARCH = "https://www.google.com/search?q="
 GG_FIND = "https://maps.googleapis.com/maps/api/place/findplacefromtext/json"
 GG_DETAIL = 'https://maps.googleapis.com/maps/api/place/details/json'
 GMAP_KEY = ENV["GMAP_API_KEY"]
