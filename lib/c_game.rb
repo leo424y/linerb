@@ -28,6 +28,18 @@ def reply_game event, place_name, more
         "contents":
           [
             {
+              "type": "text",
+              "margin": "xxl",
+              "text": "#{place_name}團 #{more}",
+              "wrap": true,
+              "action": {
+                "type":"uri",
+                "label":".",
+                "uri": URI.escape("#{GG_SEARCH}#{place_name}")
+              },
+              "flex": 3
+            },
+            {
               "type": "button",
               "style": "primary",
               "margin": "xxl",
@@ -39,18 +51,6 @@ def reply_game event, place_name, more
                 "text": "#{place_name}加加一"
               },
               "flex": 1
-            },
-            {
-              "type": "text",
-              "margin": "xxl",
-              "text": "#{place_name}團 #{more}",
-              "wrap": true,
-              "action": {
-                "type":"uri",
-                "label":".",
-                "uri": URI.escape("#{GG_SEARCH}#{place_name}")
-              },
-              "flex": 3
             }
           ]
         }
