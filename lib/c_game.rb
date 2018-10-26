@@ -46,7 +46,7 @@ def reply_game event, place_name, more
               "action": {
                 "type":"uri",
                 "label":".",
-                "uri":"http://google.com"
+                "uri": URI.escape("#{GG_SEARCH}#{place_name}")
               },
               "flex": 3
             }
