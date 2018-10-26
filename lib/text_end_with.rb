@@ -49,9 +49,9 @@ def handle_text_end_with event, user_id, group_id, origin_message, name
 
       gamers = show_gamers user_id, group_id, game.id
       gamer_names = []
-      gamers.each_with_index {|x, index| gamer_names << "#{(index+1).to_s.rjust(2, "0")}. #{name_user(x)}"}
+      gamers.each_with_index {|x, index| gamer_names << "#{name_user(x)}"}
 
-      reply_game event, input, "👫#{gamer_names.count}\n#{gamer_names.join("\n")} "
+      reply_game event, input, "👫#{gamer_names.count} #{gamer_names.join(" ")} "
     end
   end
 end
