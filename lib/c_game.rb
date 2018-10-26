@@ -40,7 +40,7 @@ def reply_game event, place_name, more
               "action": {
                 "type": 'message',
                 "label": '加一',
-                "text": "#{place_name}加加一"
+                "text": "#{place_name}++1"
               },
               "flex": 1
             }
