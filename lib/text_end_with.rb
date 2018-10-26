@@ -43,7 +43,7 @@ def handle_text_end_with event, user_id, group_id, origin_message, name
   when '加加一'
     input = origin_message.chomp('加加一')
 
-    game = Game.find_by(group_id: group_id, place_name: place_name)
+    game = Game.find_by(group_id: group_id, place_name: input)
     unless GameMember.find_by(game_id: game.id, user_id: user_id)
       GameMember.create(game_id: game.id, user_id: user_id)
 
