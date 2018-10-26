@@ -26,12 +26,6 @@ def reply_game event, place_name, more
         "contents":
           [
             {
-              "type": "text",
-              "text": "#{place_name}團 #{more}",
-              "wrap": true,
-              "flex": 3
-            },
-            {
               "type": "button",
               "style": "primary",
               "margin": "xxl",
@@ -43,6 +37,12 @@ def reply_game event, place_name, more
                 "text": "#{place_name}加加一"
               },
               "flex": 1
+            },            
+            {
+              "type": "text",
+              "text": "#{place_name}團 #{more}",
+              "wrap": true,
+              "flex": 3
             }
           ]
         }
