@@ -15,7 +15,7 @@ end
 
 def reply_game event, place_name, more
   info_link = URI.extract(place_name)
-  place_name = place_name.gsub(info_link, '')
+  place_name = place_name.gsub(info_link, '') if info_link
   reply_content(event, {
     type: "flex",
     altText: "this is a flex message",
@@ -48,7 +48,7 @@ def reply_game event, place_name, more
               "action": {
                 "type":"uri",
                 "label":".",
-                "uri": info_link ? info_link : URI.escape("#{GG_SEARCH}#{place_name}")
+                "uri": URI.escape("#{GG_SEARCH}#{place_name}")
               },
               "flex": 3
             }
