@@ -15,7 +15,7 @@ end
 
 def reply_game event, place_name, more
   info_link = URI.extract(place_name)
-  place_name = place_name.gsub(info_link, '') if info_link
+  place_name = place_name.gsub(info_link[0], '') if info_link[0]
   reply_content(event, {
     type: "flex",
     altText: "this is a flex message",
