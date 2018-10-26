@@ -37,11 +37,17 @@ def reply_game event, place_name, more
                 "text": "#{place_name}加加一"
               },
               "flex": 1
-            },            
+            },
             {
               "type": "text",
+              "margin": "xxl",
               "text": "#{place_name}團 #{more}",
               "wrap": true,
+              "action": {
+                "type":"uri",
+                "label":".",
+                "uri":"http://google.com"
+              },
               "flex": 3
             }
           ]
