@@ -29,7 +29,7 @@ def reply_game event, place_name, more
               "type": "text",
               "text": "#{place_name}團 #{more}",
               "wrap": true,
-              "flex": 2
+              "flex": 3
             },
             {
               "type": "button",
@@ -39,7 +39,7 @@ def reply_game event, place_name, more
               "gravity": "top",
               "action": {
                 "type": 'message',
-                "label": '加加一',
+                "label": '加一',
                 "text": "#{place_name}加加一"
               },
               "flex": 1
