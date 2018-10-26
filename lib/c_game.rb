@@ -21,14 +21,15 @@ def reply_game event, place_name, more
       "type": "bubble",
       "body": {
         "type": "box",
-        "layout": "vertical",
+        "layout": "horizontal",
         "spacing": "xs",
         "contents":
           [
             {
               "type": "text",
               "text": "#{place_name}團 #{more}",
-              "wrap": true
+              "wrap": true,
+              "flex": 3
             },
             {
               "type": "button",
@@ -40,7 +41,8 @@ def reply_game event, place_name, more
                 "type": 'message',
                 "label": '☝️ 加加一',
                 "text": "#{place_name}加加一"
-              }
+              },
+              "flex": 2
             }
           ]
         }
