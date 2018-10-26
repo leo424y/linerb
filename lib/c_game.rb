@@ -6,7 +6,7 @@ def new_game event, user_id, group_id, place_name
   )
   GameMember.create(game_id: game.id, user_id: user_id)
 
-  reply_game event, place_name, "📣#{name_user user_id}"
+  reply_game event, place_name, "#{name_user user_id}"
 end
 
 def show_gamers user_id, group_id, game_id
@@ -27,12 +27,7 @@ def reply_game event, place_name, more
           [
             {
               "type": "text",
-              "text": "#{place_name}團",
-              "wrap": true
-            },
-            {
-              "type": "text",
-              "text": "#{more}",
+              "text": "#{place_name}團 #{more}",
               "wrap": true
             },
             {
