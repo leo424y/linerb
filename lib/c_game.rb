@@ -39,8 +39,8 @@ def reply_game event, place_name, more
               "gravity": "top",
               "action": {
                 "type": 'message',
-                "label": '加一',
-                "text": "#{place_name}++1"
+                "label": '+1',
+                "text": "#{place_name}加加一"
               },
               "flex": 1
             }
