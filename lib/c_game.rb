@@ -32,7 +32,7 @@ def reply_game event, place_name, more
             },
             {
               "type": "text",
-              "text": ".#{more}",
+              "text": "#{more}",
               "wrap": true
             },
             {
