@@ -1,10 +1,12 @@
 def new_game event, user_id, group_id, place_name
-  Game.create(
+  game = Game.create(
     user_id: user_id,
     group_id: group_id,
     place_name: place_name
   )
-  reply_game event, place_name, ''
+  GameMember.create(game_id: game.id, user_id: user_id)
+
+  reply_game event, place_name, "📣#{name_user user_id}"
 end
 
 def show_gamers user_id, group_id, game_id
