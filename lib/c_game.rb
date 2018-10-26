@@ -50,7 +50,7 @@ def reply_game event, place_name, more
                 "label":".",
                 "uri": URI.escape("#{GG_SEARCH}#{place_name}")
               },
-              "flex": 4
+              "flex": 3
             }
           ]
         }
