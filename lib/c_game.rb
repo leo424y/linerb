@@ -29,20 +29,20 @@ def reply_game event, place_name, more
               "type": "text",
               "text": "#{place_name}團 #{more}",
               "wrap": true,
-              "flex": 3
+              "flex": 2
             },
             {
               "type": "button",
-              "style": "secondary",
+              "style": "primary",
               "margin": "xxl",
               "height": "sm",
               "gravity": "top",
               "action": {
                 "type": 'message',
-                "label": '☝️ 加加一',
+                "label": '加加一',
                 "text": "#{place_name}加加一"
               },
-              "flex": 2
+              "flex": 1
             }
           ]
         }
