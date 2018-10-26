@@ -42,10 +42,16 @@ def handle_text_end_with event, user_id, group_id, origin_message, name
 
   when '加加一'
     input = origin_message.chomp('加加一')
-    gamers = update_game user_id, group_id, input
-    gamer_names = []
-    gamers.each_with_index {|x, index| gamer_names << "#{index+1}. #{name_user(x)}"}
 
-    reply_game event, input, "#{gamer_names.join("\n")} "
+    game = Game.find_by(group_id: group_id, place_name: place_name)
+    unless GameMember.find_by(game_id: game.id, user_id: user_id)
+      GameMember.create(game_id: game.id, user_id: user_id)
+
+      gamers = show_gamers user_id, group_id, game.id
+      gamer_names = []
+      gamers.each_with_index {|x, index| gamer_names << "#{name_user(x)} "}
+
+      reply_game event, input, "👫#{gamer_names.count}📣#{gamer_names.first}#{gamer_names.join("\n")} "
+    end
   end
 end

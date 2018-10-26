@@ -7,11 +7,8 @@ def new_game event, user_id, group_id, place_name
   reply_game event, place_name, ''
 end
 
-def update_game user_id, group_id, place_name
-  game = Game.find_by(group_id: group_id, place_name: place_name)
-  GameMember.find_or_create_by(game_id: game.id, user_id: user_id)
-
-  GameMember.where(game_id: game.id).pluck(:user_id)
+def show_gamers user_id, group_id, game_id
+  GameMember.where(game_id: game_id).pluck(:user_id)
 end
 
 def reply_game event, place_name, more
