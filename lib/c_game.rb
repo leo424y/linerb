@@ -22,7 +22,6 @@ def reply_game event, place_name, more
       "body": {
         "type": "box",
         "layout": "vertical",
-        "spacing": "md",
         "contents":
           [
             {
