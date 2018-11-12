@@ -10,7 +10,7 @@ def count_exercise m
   elsif /\A(萬運|萬華運動中心|萬華國民運動中心)\z/.match? m
     p_count 'http://whsc.com.tw/', 'wh', 180, 200
   elsif /\A(宜運|宜蘭運動中心|宜蘭國民運動中心)\z/.match? m
-    p_count 'https://yilansports.com.tw/', '.notice', 80, 150
+    p_count 'https://yilansports.com.tw/', '.notice', 150, 80
   elsif is_tpsc? m
     p_tp_count m
   else
