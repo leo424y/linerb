@@ -52,12 +52,14 @@ def p_count url, selector, pool, gym
       end
     end
   elsif (selector == 'sy')
+    selector = '.notice'
     doc.css(selector).each_with_index do |l, index|
       if index < 2
         count += ("#{l.content}".split.map{|x| x[/\d+/]}[0] + (index==1 ? "/#{pool} 🏊\n" : "/#{gym} 💪"))
       end
     end
   elsif (selector == 'yy')
+    selector = '.notice'
     doc.css(selector).each_with_index do |l, index|
       if index == 2
         count += ("#{l.content}".split.map{|x| x[/\d+/]}[0] + "/#{gym} 💪")
