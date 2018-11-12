@@ -11,6 +11,10 @@ def count_exercise m
     p_count 'http://whsc.com.tw/', 'wh', 180, 200
   elsif /\A(宜運|宜蘭運動中心|宜蘭國民運動中心)\z/.match? m
     p_count 'https://yilansports.com.tw/', '.notice', 150, 80
+  elsif /\A(三運|三鶯運動中心|三鶯國民運動中心)\z/.match? m
+    p_count 'https://scysports.com.tw/', 'sy', 300, 80
+  elsif /\A(鶯運|鶯歌運動中心|鶯歌國民運動中心)\z/.match? m
+    p_count 'https://scysports.com.tw/', 'yy', 0, 70
   elsif is_tpsc? m
     p_tp_count m
   else
@@ -45,6 +49,18 @@ def p_count url, selector, pool, gym
     doc.css(selector).each_with_index do |l, index|
       if index < 2
         count += ("#{l.content}".split.map{|x| x[/\d+/]}[0] + (index==1 ? "/#{pool} 🏊\n" : "/#{gym} 💪"))
+      end
+    end
+  elsif (selector == 'sy')
+    doc.css(selector).each_with_index do |l, index|
+      if index < 2
+        count += ("#{l.content}".split.map{|x| x[/\d+/]}[0] + (index==1 ? "/#{pool} 🏊\n" : "/#{gym} 💪"))
+      end
+    end
+  elsif (selector == 'yy')
+    doc.css(selector).each_with_index do |l, index|
+      if index == 2
+        count += ("#{l.content}".split.map{|x| x[/\d+/]}[0] + "/#{gym} 💪")
       end
     end
   elsif selector == 'np'
