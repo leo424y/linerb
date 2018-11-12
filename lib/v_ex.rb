@@ -9,6 +9,8 @@ def count_exercise m
     p_count 'https://www.npsc.com.tw/counter.txt', 'np', 150, 75
   elsif /\A(萬運|萬華運動中心|萬華國民運動中心)\z/.match? m
     p_count 'http://whsc.com.tw/', 'wh', 180, 200
+  elsif /\A(宜運|宜蘭運動中心|宜蘭國民運動中心)\z/.match? m
+    p_count 'https://yilansports.com.tw/', '.notice', 80, 150
   elsif is_tpsc? m
     p_tp_count m
   else
@@ -39,7 +41,7 @@ def p_count url, selector, pool, gym
   count = ''
   url = url
   doc = Nokogiri::HTML(open(url))
-  if selector == '.flow_number'
+  if (selector == '.flow_number') || (selector == '.notice')
     doc.css(selector).each_with_index do |l, index|
       if index < 2
         count += ("#{l.content}".split.map{|x| x[/\d+/]}[0] + (index==1 ? "/#{pool} 🏊\n" : "/#{gym} 💪"))
