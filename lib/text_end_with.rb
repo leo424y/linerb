@@ -58,6 +58,6 @@ def handle_text_end_with event, user_id, group_id, origin_message, name
     input = origin_message.chomp('ggl')
     url = "http://www.google.com/search?q=#{URI.escape(input)}&btnI"
     text = %x(ruby bin/bitly.rb "#{url}").chomp
-    reply_text(event, text) if text
+    reply_text(event, "Google [#{input}]\n#{text}") if text
   end
 end
