@@ -2,10 +2,10 @@ def handle_text event, user_id, group_id, origin_message
   suffixes = IO.readlines("data/keywords").map(&:chomp)
   # clean_message = origin_message.downcase.delete(".。，,?？！|\t\r\n")
   clean_message = origin_message.downcase.delete("?？")
-  name = clean_message.chomp('嗎').chomp('有沒有開').chomp('開了沒').chomp('有開').chomp('開了').chomp('は開いていますか').chomp('現在').chomp('附近').chomp('推薦').chomp('放口袋').chomp('里長').chomp('揪揪團').chomp('加加一')
+  name = clean_message.chomp('嗎').chomp('有沒有開').chomp('開了沒').chomp('有開').chomp('開了').chomp('は開いていますか').chomp('現在').chomp('附近').chomp('推薦').chomp('放口袋').chomp('里長').chomp('揪揪團').chomp('加加一').chomp('ggl')
   # wiki_text = wiki_content event, name
 
-  if origin_message.end_with?('里長', '附近', '揪揪團', '推薦有開嗎', '放口袋', '？！', '加加一')
+  if origin_message.end_with?('里長', '附近', '揪揪團', '推薦有開嗎', '放口袋', '？！', '加加一','ggl')
     handle_text_end_with event, user_id, group_id, origin_message, name
 
   # elsif origin_message.start_with?('揪')

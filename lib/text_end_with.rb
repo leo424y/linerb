@@ -53,5 +53,11 @@ def handle_text_end_with event, user_id, group_id, origin_message, name
 
       reply_game event, input, "\n+#{gamer_names.count}👫#{gamer_names.join(" ")} "
     end
+    
+  when 'ggl'
+    input = origin_message.chomp('ggl')
+    url = "http://www.google.com/search?q=#{input}&btnI"
+    text = %x(ruby bin/bitly.rb "#{url}").chomp
+    reply_text(event, text) if text
   end
 end
