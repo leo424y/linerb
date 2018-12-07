@@ -55,9 +55,9 @@ def handle_text_end_with event, user_id, group_id, origin_message, name
     end
     
   when 'ggl'
-    input = origin_message.downcase.delete("?？").chomp('ggl')
+    input = origin_message.chomp('ggl')
     url = "http://www.google.com/search?q=#{URI.escape(input.downcase)}&btnI"
-    # text = %x(ruby bin/bitly.rb "#{url}").chomp
-    reply_text(event, "Google [#{origin_message}]\n#{text}") if text
+    text = %x(ruby bin/bitly.rb "#{url}").chomp
+    reply_text(event, "Google [#{origin_message}]\n#{text}")
   end
 end
