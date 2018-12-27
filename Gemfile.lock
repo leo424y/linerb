@@ -68,6 +68,9 @@ GEM
     rake (12.3.1)
     regexp_parser (1.3.0)
     rubyzip (1.2.2)
+    rumors-api-client (0.1.3)
+      httparty (~> 0.16)
+      tf-idf-similarity (~> 0.1)
     selenium-webdriver (3.141.0)
       childprocess (~> 0.5)
       rubyzip (~> 1.2, >= 1.2.2)
@@ -79,10 +82,13 @@ GEM
     sinatra-activerecord (2.0.13)
       activerecord (>= 3.2)
       sinatra (>= 1.0)
+    tf-idf-similarity (0.1.6)
+      unicode_utils (~> 1.4)
     thread_safe (0.3.6)
     tilt (2.0.8)
     tzinfo (1.2.5)
       thread_safe (~> 0.1)
+    unicode_utils (1.4.0)
     wikipedia-client (1.10.0)
     xpath (3.2.0)
       nokogiri (~> 1.8)
@@ -97,6 +103,7 @@ DEPENDENCIES
   nokogiri
   pg
   rake
+  rumors-api-client
   selenium-webdriver
   sinatra
   sinatra-activerecord

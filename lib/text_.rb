@@ -32,6 +32,11 @@ def handle_text event, user_id, group_id, origin_message
   elsif origin_message == '口袋有洞'
     open_pocket event, user_id
 
+  elsif origin_message == 'rumor'
+    rumor = "行政院最新公告～元旦放七天嘍！收到這訊息。千萬別點閱，因為有病毒，已有朋友中獎了，請大家告訴大家!如果有收到，元旦放七天，的那個是釣魚網站，別點。"
+    response = Rumors::Api::Client.search rumor
+    reply_text event, response
+
   elsif origin_message == '居民意見' || origin_message == '居民觀察' || origin_message == '居民資源'
     open_issue event, user_id, group_id, origin_message
 
