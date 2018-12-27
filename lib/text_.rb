@@ -1,3 +1,5 @@
+require 'rumors-api-client'
+
 def handle_text event, user_id, group_id, origin_message
   suffixes = IO.readlines("data/keywords").map(&:chomp)
   # clean_message = origin_message.downcase.delete(".。，,?？！|\t\r\n")
