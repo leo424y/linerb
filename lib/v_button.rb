@@ -12,7 +12,8 @@ def handle_button place_id, name, s_link, group_id, user_id
   suggest_button = case random_info
   when 0
     # { label: "👨‍👩‍👧‍👦 轉傳#{name}" , type: 'uri', uri: URI.escape("#{L_MSG_TEXT}加有開嗎好友，查詢店家營業時間不落空。#{share_info_url}")}
-    { label: '😻 領養有開喵', type: 'uri', uri: URI.escape(L_STICKER) }
+    # { label: '😻 領養有開喵', type: 'uri', uri: URI.escape(L_STICKER) }
+    { label: '🌹 獻花支持', type: 'uri', uri: URI.escape(L_SPONSOR) }
     # if group_id
     #   { label: '👍 推薦', type: 'uri', uri: "#{L_MSG_TEXT}加【有開嗎】好友，查詢店家營業時間不落空。#{share_info_url}"}
     # else
@@ -22,7 +23,7 @@ def handle_button place_id, name, s_link, group_id, user_id
     if group_id
       { label: '💡 建議', type: 'uri', uri: URI.escape(L_OPINION) }
     else
-      { label: '👼 贊助', type: 'uri', uri: URI.escape(L_SPONSOR) }
+      { label: '🌹 獻花支持', type: 'uri', uri: URI.escape(L_SPONSOR) }
     end
   # when 2
   #   { label: "👑 開王：#{name_king_user}", type: 'message', text: "開王榜" }
